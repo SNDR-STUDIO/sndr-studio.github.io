@@ -130,6 +130,29 @@
   /**
    * Init isotope layout and filters
    */
+
+
+  window.addEventListener("load", () => {
+  const grid = document.querySelector(".isotope-container");
+  if (!grid) return;
+
+  // 1) дождаться картинок
+  imagesLoaded(grid, () => {
+    // 2) дождаться того, что видео получили размеры (metadata/poster)
+    const videos = grid.querySelectorAll("video");
+    const waits = Array.from(videos).map(v => {
+      if (v.readyState >= 1) return Promise.resolve(); // metadata уже есть
+      return new Promise(res => v.addEventListener("loadedmetadata", res, { once:true }));
+    });
+
+    Promise.all(waits).then(() => {
+      // init isotope после того как размеры стабильны
+      const iso = new Isotope(grid, { itemSelector: ".isotope-item", layoutMode: "masonry" });
+      iso.layout();
+    });
+  });
+});
+
   document.querySelectorAll('.isotope-layout').forEach(function(isotopeItem) {
     let layout = isotopeItem.getAttribute('data-layout') ?? 'masonry';
     let filter = isotopeItem.getAttribute('data-default-filter') ?? '*';
