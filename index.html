@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <title>SNDR STUDIO</title>
-  <meta name="description" content="SNDR studio — motion design and web-developing">
+  <meta name="description" content="SNDR studio вЂ” motion design and web-developing">
   <link rel="canonical" href="https://sndr-studio.github.io/">
   <meta content="" name="keywords">
 
@@ -18,41 +18,52 @@
 
   <!-- <link href="https://fonts.googleapis.com" rel="preconnect">
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin> -->
+  <link href="assets/RussoOne-Regular.ttf" rel="preconnect">
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+
   <!-- Fonts -->
 
 
-
-  <!-- ✅ Bootstrap CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-
-   <noscript>
+  <noscript>
     <link rel="stylesheet" href="assets/css/minify_main.css">
   </noscript>
-
-  <!-- <link href="../assets/fonts/google-fonts.css"   rel="stylesheet"> -->
   <link
     href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
     rel="stylesheet">
+  <!-- вњ… Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 
-  <!-- ✅ Bootstrap Icons -->
+
+  <!-- вњ… Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+  <!-- <link href="../assets/fonts/google-fonts.css"   rel="stylesheet"> -->
+
 
   <!-- <link  rel="stylesheet" href="../assets/css/bootstrap-icons.css"  > -->
 
-  <!-- ✅ Swiper -->
+  <!-- вњ… Swiper -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
 
-  <!-- ✅ AOS (Animate On Scroll) -->
+  <!-- вњ… AOS (Animate On Scroll) -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
 
-  <!-- ✅ GLightbox -->
+  <!-- вњ… GLightbox -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
 
   <!-- Main CSS -->
   <link rel="preload" href="assets/css/minify_main.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
- 
+  <style>
+    .portfolio .portrait-frame-video {
+      width: 100%;
+      display: block;
+      aspect-ratio: 16 / 9;
+      object-fit: contain;
+      background: #111;
+    }
+  </style>
+
 
   <!-- Vendor CSS Files -->
   <!-- <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"> -->
@@ -107,7 +118,10 @@
     <i class="header-toggle d-xl-none bi bi-list"></i>
 
     <div class="profile-img">
-      <img loading="lazy" src="assets/img/my-profile-img-min.webp" alt="" class="img-fluid rounded-circle">
+      <video class="img-fluid rounded-circle ava_video" autoplay muted loop playsinline preload="metadata"
+        style="margin:15px auto;display:block;width:200px;height: 200px; border:8px solid color-mix(in srgb, var(--default-color), transparent 85%);object-fit:cover;">
+        <source src="assets/video/hiking-edit.mp4" type="video/mp4">
+      </video>
     </div>
 
     <a href="/" class="logo d-flex align-items-center justify-content-center">
@@ -170,7 +184,6 @@
   </header>
 
   <main class="main">
-
     <!-- Hero Section -->
     <!-- <section id="hero" class=" hero section dark-background"> -->
     <!-- <div class="logo" style="background-image: url(assets/img/logo.svg);"></div> -->
@@ -207,6 +220,9 @@
     <!-- About Section -->
     <section id="about" class="about section" data-bs-spy="scroll" data-bs-target="#list-example"
       data-bs-smooth-scroll="true" class="scrollspy-example" tabindex="0">
+      <video class="about-bg-video" autoplay muted loop playsinline preload="metadata" aria-hidden="true">
+        <source src="assets/video/Cinematic_Smoke_and_Atmosphere_Loops.webm" type="video/webm">
+      </video>
 
       <div class="container section-title" data-aos="fade-up">
         <h2>About</h2>
@@ -219,13 +235,13 @@
       <div class="container" data-aos="fade-up" data-aos-delay="100">
 
         <div class="row gy-4 justify-content-center">
-          <div class="col-lg-4">
+          <!-- <div class="col-lg-4">
             <img loading="lazy" src="assets/img/my-profile-img-min.webp" class="img-fluid" alt="">
-          </div>
-          <div class="col-lg-8 content">
+          </div> -->
+          <div class="col-lg-12 content">
             <h2>Motion design &amp; Web Development.</h2>
             <p class=" py-3">
-              We believe that motion is more than just movement — it’s emotion, rhythm, and storytelling.
+              We believe that motion is more than just movement - it is emotion, rhythm, and storytelling.
               Our team blends creativity with technical precision to design experiences that feel alive and memorable.
               From sleek website interactions to bold social media animations, we turn ideas into visuals that connect
               with people and inspire action.
@@ -247,7 +263,7 @@
               </div>
             </div>
             <p class="py-3">
-              Our animations don’t just catch the eye—they strengthen brand recognition and drive measurable results.
+              Our animations do not just catch the eye - they strengthen brand recognition and drive measurable results.
             </p>
 
 
@@ -313,8 +329,8 @@
 
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
-        <h2>My works</h2>
-        <p>This section features some of the projects I’ve worked on over the past few years. It includes examples of
+        <h2>PORTFOLIO</h2>
+        <p>This section features some of the projects IвЂ™ve worked on over the past few years. It includes examples of
           websites, animations, and design work created for different clients and purposes. I always try to make each
           project clear, well-structured, and focused on helping clients achieve their real goals.
           My aim is to create results that look modern while staying functional and easy to use. In my work, I combine
@@ -335,6 +351,53 @@
           </ul><!-- End Portfolio Filters -->
 
           <div class="row gy-4 isotope-container" data-aos="fade-up" data-aos-delay="200">
+
+
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-product">
+              <div class="portfolio-content h-100">
+
+                <video class="img-fluid bg-video lazy-video portrait-frame-video" preload="none" loop loop muted
+                  playsinline poster="assets/video/ONE_MEDIA_HIRING.png" loading="lazy">
+                  <source src="assets/video/ONE_MEDIA_HIRING.mp4" data-src="assets/video/ONE_MEDIA_HIRING.mp4"
+                    type="video/mp4">
+                  <source src="assets/video/ONE_MEDIA_HIRING.mp4" data-src="assets/video/ONE_MEDIA_HIRING.mp4"
+                    type="video/webm">
+                  don't support
+                </video>
+                <div class="portfolio-info">
+                  <h4>ONE MEDIA HIRING</h4>
+                  <p>Website</p>
+                  <a href="assets/video/ONE_MEDIA_HIRING.mp4" title="Some works"
+                    data-gallery="portfolio-gallery-product" class="glightbox preview-link"><i
+                      class="bi bi-zoom-in"></i></a>
+
+                </div>
+              </div>
+            </div>
+
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-product">
+              <div class="portfolio-content h-100">
+                <!-- <img src="assets/img/portfolio/product-2-min.jpg" class="img-fluid" alt=""> -->
+                <video class="img-fluid bg-video lazy-video portrait-frame-video" preload="none" loop muted playsinline
+                  poster="assets/video/Geozilla.png" loading="lazy">
+                  <source src="assets/video/Geozilla.mp4" data-src="assets/video/Geozilla.mp4" type="video/mp4">
+                  <source src="assets/video/Geozilla.mp4" data-src="assets/video/Geozilla.mp4" type="video/webm">
+                  don't support
+                </video>
+                <div class="portfolio-info">
+                  <h4>Geozilla App</h4>
+                  <p>Animation</p>
+                  <a href="assets/video/Geozilla.mp4" title="Geozilla App" data-gallery="portfolio-gallery-product"
+                    class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+                  <!-- <a href="portfolio-details.html" title="More Details" class="details-link"><i
+                      class="bi bi-link-45deg"></i></a> -->
+                </div>
+              </div>
+            </div>
+
+
             <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-product">
 
               <div class="portfolio-content h-100">
@@ -472,9 +535,9 @@
               </div> -->
             </div>
 
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-product">
+            <!-- <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-product">
               <div class="portfolio-content h-100">
-                <!-- <img src="assets/img/portfolio/product-2-min.jpg" class="img-fluid" alt=""> -->
+            
                 <video class="img-fluid bg-video lazy-video" preload="none" loop muted
                   poster="assets/video/someworks-min.png" loading="lazy">
                   <source src="assets/video/Main-min.mp4" data-src="assets/video/Main-min.mp4" type="video/mp4">
@@ -486,11 +549,15 @@
                   <p>Website</p>
                   <a href="assets/video/Main-min.mp4" title="Some works" data-gallery="portfolio-gallery-product"
                     class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
-                  <!-- <a href="portfolio-details.html" title="More Details" class="details-link"><i
-                      class="bi bi-link-45deg"></i></a> -->
+                 
                 </div>
               </div>
             </div>
+ -->
+
+
+
+
 
             <!-- End Portfolio Item -->
 
@@ -585,7 +652,8 @@
       <div class="container section-title" data-aos="fade-up">
         <h2>Services</h2>
         <p>At our studio, we merge creativity, technology, and motion to deliver complete digital solutions.
-          From websites and branding to motion design and social media visuals — we help brands move, connect, and grow
+          From websites and branding to motion design and social media visuals вЂ” we help brands move, connect, and
+          grow
           in the digital world.</p>
       </div><!-- End Section Title -->
 
@@ -599,9 +667,10 @@
               <!-- <i class="bi bi-briefcase"></i> -->
             </div>
             <div>
-              <h4 class="title"><a href="#" class="stretched-link">Web Development</a></h4>
+              <h4 class="title"><a href="#services" class="stretched-link">Web Development</a></h4>
               <p class="description">Clean, responsive, and scalable websites built with performance and user experience
-                in mind. From landing pages to full-scale platforms — we turn design into functional digital spaces.</p>
+                in mind. From landing pages to full-scale platforms вЂ” we turn design into functional digital spaces.
+              </p>
             </div>
           </div>
           <!-- End Service Item -->
@@ -612,7 +681,7 @@
               <!-- <i class="bi bi-card-checklist"></i> -->
             </div>
             <div>
-              <h4 class="title"><a href="#" class="stretched-link">Motion Design</a></h4>
+              <h4 class="title"><a href="#services" class="stretched-link">Motion Design</a></h4>
               <p class="description">Dynamic motion graphics, logo reveals, and brand animations that tell stories
                 through movement. We make visuals come alive across websites, videos, and social media.</p>
             </div>
@@ -624,8 +693,8 @@
               <!-- <i class="bi bi-bar-chart"></i> -->
             </div>
             <div>
-              <h4 class="title"><a href="#" class="stretched-link">Brand Identity</a></h4>
-              <p class="description">We craft unique brand systems — from logo design to visual language — ensuring
+              <h4 class="title"><a href="#services" class="stretched-link">Brand Identity</a></h4>
+              <p class="description">We craft unique brand systems вЂ” from logo design to visual language вЂ” ensuring
                 consistency and recognition across all platforms.</p>
             </div>
           </div><!-- End Service Item -->
@@ -636,7 +705,7 @@
               <i class="bi bi-instagram"></i>
             </div>
             <div>
-              <h4 class="title"><a href="#" class="stretched-link">Social Media Content</a></h4>
+              <h4 class="title"><a href="#services" class="stretched-link">Social Media Content</a></h4>
               <p class="description">Eye-catching animations, posts, and short videos tailored for social media
                 engagement. Designed to make your brand stand out in every scroll.</p>
             </div>
@@ -648,7 +717,7 @@
               <i class="bi bi-window"></i>
             </div>
             <div>
-              <h4 class="title"><a href="#" class="stretched-link">UI / UX Design</a></h4>
+              <h4 class="title"><a href="#services" class="stretched-link">UI / UX Design</a></h4>
               <p class="description">Modern, intuitive interfaces designed to feel smooth and responsive. Every detail
                 is tested to enhance usability and aesthetic harmony.</p>
             </div>
@@ -660,8 +729,9 @@
               <i class="bi bi-camera-video"></i>
             </div>
             <div>
-              <h4 class="title"><a href="#" class="stretched-link">Video Production</a></h4>
-              <p class="description">From idea to edit — we create engaging video content that connects emotionally with
+              <h4 class="title"><a href="#services" class="stretched-link">Video Production</a></h4>
+              <p class="description">From idea to edit вЂ” we create engaging video content that connects emotionally
+                with
                 your audience and strengthens your brand story.</p>
             </div>
           </div><!-- End Service Item -->
@@ -678,7 +748,8 @@
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
         <h2>Testimonials</h2>
-        <p>I’m thankful for the opportunity to work with different clients and teams. Their feedback inspires me to keep
+        <p>IвЂ™m thankful for the opportunity to work with different clients and teams. Their feedback inspires me to
+          keep
           developing my skills and improving the quality of my work. Every project has been a valuable experience that
           helped me grow and better understand what makes great collaboration.</p>
       </div><!-- End Section Title -->
@@ -718,7 +789,7 @@
               <div class="testimonial-item">
                 <p>
                   <i class="bi bi-quote quote-icon-left"></i>
-                  <span>One of the most engaged members of the team — always ready to support others and genuinely
+                  <span>One of the most engaged members of the team вЂ” always ready to support others and genuinely
                     invested in the final outcome. It was a pleasure working with this person. They have a clear
                     understanding of deadlines and consistently demonstrate excellent communication within the
                     team.</span>
@@ -735,7 +806,7 @@
                 <p>
                   <i class="bi bi-quote quote-icon-left"></i>
                   <span>We received more than we expected from this person, which had a positive impact on the overall
-                    quality of the company’s work. We were fully satisfied with their contribution.</span>
+                    quality of the companyвЂ™s work. We were fully satisfied with their contribution.</span>
                   <i class="bi bi-quote quote-icon-right"></i>
                 </p>
                 <img loading="lazy" src="assets/img/allo-logo_small22-min.webp" class="testimonial-img" alt="">
@@ -880,14 +951,12 @@
             <a href="#testimonials" class="nav-link px-2 text-body-secondary">Testimonials</a>
           </li>
         </ul>
-        <p>© 2025 <span>Copyright</span> <strong class="px-1 sitename">SNDR studio</strong>
+        <p>В© 2025 <span>Copyright</span> <strong class="px-1 sitename">SNDR studio</strong>
         </p>
       </div>
     </div>
 
   </footer>
-
-
 
   <!-- Scroll Top -->
   <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
@@ -896,27 +965,21 @@
   <!-- Preloader -->
   <div id="preloader"></div>
 
-
-
-
   <!-- Vendor JS Files -->
   <!-- <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js" async ></script> -->
   <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" async ></script> -->
 
-
-
-  <!-- ✅ Bootstrap JS (включает Popper) -->
+  <!-- вњ… Bootstrap JS (РІРєР»СЋС‡Р°РµС‚ Popper) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
 
-  <!-- ✅ Swiper -->
+  <!-- вњ… Swiper -->
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
 
-  <!-- ✅ AOS -->
+  <!-- вњ… AOS -->
   <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js" defer></script>
 
-  <!-- ✅ GLightbox -->
+  <!-- вњ… GLightbox -->
   <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js" defer></script>
-
 
   <!-- <script src="assets/vendor/php-email-form/validate.js"></script> -->
   <!-- <script src="assets/vendor/aos/aos.js"></script> -->
@@ -925,13 +988,13 @@
   <script src="assets/vendor/waypoints/noframework.waypoints.js" defer></script>
   <!-- <script src="assets/vendor/glightbox/js/glightbox.min.js" defer ></script> -->
   <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js" defer></script>
-  
+
   <script src="assets/vendor/swiper/swiper-bundle.min.js" defer></script>
 
   <!-- Main JS File -->
   <script src="assets/js/main.js" defer></script>
-<script src="assets/vendor/isotope-layout/isotope.pkgd.min.js" defer></script>
-  <!-- Коли змінюєш картинки/відео — просто міняй CACHE_VERSION = "v2" і деплой. -->
+  <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js" defer></script>
+  <!-- РљРѕР»Рё Р·РјС–РЅСЋС”С€ РєР°СЂС‚РёРЅРєРё/РІС–РґРµРѕ вЂ” РїСЂРѕСЃС‚Рѕ РјС–РЅСЏР№ CACHE_VERSION = "v2" С– РґРµРїР»РѕР№. -->
 
   <script>
     if ("serviceWorker" in navigator) {
@@ -951,7 +1014,7 @@
       if (videos.length === 0) return;
 
       const loadVideoIfNeeded = (v) => {
-        // 1) якщо src на <video data-src="...">
+        // 1) СЏРєС‰Рѕ src РЅР° <video data-src="...">
         if (v.dataset && v.dataset.src && !v.src) {
           v.src = v.dataset.src;
           delete v.dataset.src;
@@ -959,7 +1022,7 @@
           return;
         }
 
-        // 2) якщо src через <source data-src="...">
+        // 2) СЏРєС‰Рѕ src С‡РµСЂРµР· <source data-src="...">
         const source = v.querySelector("source[data-src]");
         if (source && !source.src) {
           source.src = source.dataset.src;
@@ -994,8 +1057,19 @@
     })();
   </script>
 
+  <script>
+    const videos = document.querySelectorAll(".bg-video");
 
+    videos.forEach(video => {
+      video.addEventListener("mouseenter", () => {
+        video.muted = false;
+      });
 
+      video.addEventListener("mouseleave", () => {
+        video.muted = true;
+      });
+    });
+  </script>
 
   <!-- <script>
     AOS.init();

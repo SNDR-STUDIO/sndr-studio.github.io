@@ -1,4 +1,4 @@
-
+﻿
 (function() {
   "use strict";
 
@@ -24,6 +24,25 @@
       }
     });
 
+  });
+
+  /**
+   * Smooth scroll for navmenu anchor links
+   */
+  document.querySelectorAll('#navmenu a[href^="#"]').forEach((navmenuLink) => {
+    navmenuLink.addEventListener('click', (e) => {
+      const targetId = navmenuLink.getAttribute('href');
+      if (!targetId) return;
+
+      const targetSection = document.querySelector(targetId);
+      if (!targetSection) return;
+
+      e.preventDefault();
+      targetSection.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    });
   });
 
   /**
@@ -136,17 +155,17 @@
   const grid = document.querySelector(".isotope-container");
   if (!grid) return;
 
-  // 1) дождаться картинок
+  // 1) РґРѕР¶РґР°С‚СЊСЃСЏ РєР°СЂС‚РёРЅРѕРє
   imagesLoaded(grid, () => {
-    // 2) дождаться того, что видео получили размеры (metadata/poster)
+    // 2) РґРѕР¶РґР°С‚СЊСЃСЏ С‚РѕРіРѕ, С‡С‚Рѕ РІРёРґРµРѕ РїРѕР»СѓС‡РёР»Рё СЂР°Р·РјРµСЂС‹ (metadata/poster)
     const videos = grid.querySelectorAll("video");
     const waits = Array.from(videos).map(v => {
-      if (v.readyState >= 1) return Promise.resolve(); // metadata уже есть
+      if (v.readyState >= 1) return Promise.resolve(); // metadata СѓР¶Рµ РµСЃС‚СЊ
       return new Promise(res => v.addEventListener("loadedmetadata", res, { once:true }));
     });
 
     Promise.all(waits).then(() => {
-      // init isotope после того как размеры стабильны
+      // init isotope РїРѕСЃР»Рµ С‚РѕРіРѕ РєР°Рє СЂР°Р·РјРµСЂС‹ СЃС‚Р°Р±РёР»СЊРЅС‹
       const iso = new Isotope(grid, { itemSelector: ".isotope-item", layoutMode: "masonry" });
       iso.layout();
     });
@@ -242,6 +261,88 @@
   window.addEventListener('load', navmenuScrollspy);
   document.addEventListener('scroll', navmenuScrollspy);
 
+  /**
+   * Hero subtitle letter-by-letter reveal
+   */
+  function initHeroSubtitleReveal() {
+    const subtitle = document.querySelector('.hero-content__p p');
+    if (!subtitle || subtitle.dataset.lettersInit === 'true') return;
+
+    const text = subtitle.textContent;
+    subtitle.textContent = '';
+
+    Array.from(text).forEach((char, index) => {
+      const letter = document.createElement('span');
+      letter.className = 'hero-letter';
+      letter.textContent = char === ' ' ? '\u00A0' : char;
+      letter.style.animationDelay = `${index * 0.04}s`;
+      subtitle.appendChild(letter);
+    });
+
+    subtitle.dataset.lettersInit = 'true';
+  }
+
+    /**
+   * Hero title scatter on scroll to the next section
+   */
+  function initHeroTitleScatterOnScroll() {
+    const hero = document.querySelector('#hero');
+    const title = document.querySelector('#hero .hero-content h1');
+    if (!hero || !title || title.dataset.scatterInit === 'true') return;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
+    const text = title.textContent || '';
+    title.textContent = '';
+
+    const chars = Array.from(text);
+    const count = Math.max(chars.length - 1, 1);
+
+    chars.forEach((char, index) => {
+      const span = document.createElement('span');
+      const angle = (index / count) * Math.PI * 2;
+      const radius = 95 + (index % 5) * 24;
+      const x = Math.cos(angle) * radius + (index % 2 === 0 ? 20 : -20);
+      const y = Math.sin(angle) * radius - 40 - (index % 3) * 12;
+      const rotate = (index % 2 === 0 ? 1 : -1) * (14 + (index % 4) * 6);
+
+      span.className = 'hero-title-letter';
+      if (char === ' ') {
+        span.classList.add('hero-title-space');
+        span.textContent = '\u00A0';
+      } else {
+        span.textContent = char;
+      }
+
+      span.style.setProperty('--scatter-x', `${x.toFixed(1)}px`);
+      span.style.setProperty('--scatter-y', `${y.toFixed(1)}px`);
+      span.style.setProperty('--scatter-r', `${rotate.toFixed(1)}deg`);
+      title.appendChild(span);
+    });
+
+    title.dataset.scatterInit = 'true';
+
+    let ticking = false;
+    const updateScatter = () => {
+      const progress = Math.min(Math.max(window.scrollY / (hero.offsetHeight * 0.7), 0), 1);
+      title.style.setProperty('--scatter-progress', progress.toFixed(4));
+      ticking = false;
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateScatter);
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    onScroll();
+  }
+
+  window.addEventListener('load', initHeroTitleScatterOnScroll);
 
   // MouseMove 3D View section
   document.addEventListener('mousemove', e => {
@@ -258,6 +359,8 @@
 
 
 })();
+
+
 
 
 
