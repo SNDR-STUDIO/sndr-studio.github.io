@@ -879,6 +879,7 @@ section {
   transition: all ease-in-out 0.3s;
   background: rgb(0 0 0/0.6);
   padding: 15px;
+  margin: 0 10px;
 }
 .portfolio .portfolio-content .portfolio-info h4 {
   font-size: 14px;
