@@ -219,63 +219,60 @@
 
     <!-- About Section -->
     <section id="about" class="about section" data-bs-spy="scroll" data-bs-target="#list-example"
-      data-bs-smooth-scroll="true" class="scrollspy-example" tabindex="0">
+      data-bs-smooth-scroll="true" tabindex="0">
       <video class="about-bg-video" autoplay muted loop playsinline preload="metadata" aria-hidden="true">
-        <source src="assets/video/Cinematic_Smoke_and_Atmosphere_Loops.webm" type="video/webm">
+        <source src="assets/video/motion_timelaps.mp4" type="video/mp4">
+        <source src="assets/video/Motion_Desig.mp4" type="video/mp4">
       </video>
+      <div class="about-video-overlay" aria-hidden="true"></div>
 
-      <div class="container section-title" data-aos="fade-up">
-        <h2>About</h2>
-        <p> Hi! We create digital stories through code and motion.
-          Our studio combines clean web design, responsive development, and captivating animation to help brands stand
-          out online.
-          Every pixel, frame, and movement is crafted with purpose.</p>
-      </div>
+      <div class="container about-shell">
+        <div class="row g-4 align-items-start">
+          <div class="col-lg-5 about-intro" data-aos="fade-up">
+            <div class="section-title about-section-title">
+              <h2>About</h2>
+              <p>Motion design &amp; Web Development.</p>
+            </div>
 
-      <div class="container" data-aos="fade-up" data-aos-delay="100">
-
-        <div class="row gy-4 justify-content-center">
-          <!-- <div class="col-lg-4">
-            <img loading="lazy" src="assets/img/my-profile-img-min.webp" class="img-fluid" alt="">
-          </div> -->
-          <div class="col-lg-12 content">
-            <h2>Motion design &amp; Web Development.</h2>
-            <p class=" py-3">
-              We believe that motion is more than just movement - it is emotion, rhythm, and storytelling.
-              Our team blends creativity with technical precision to design experiences that feel alive and memorable.
-              From sleek website interactions to bold social media animations, we turn ideas into visuals that connect
-              with people and inspire action.
-            </p>
-            <div class="row">
-              <div class="col-lg-6">
-                <ul>
-                  <li><i class="bi bi-chevron-right"></i> <strong>Client Request</strong></li>
-                  <li><i class="bi bi-chevron-right"></i> <strong>Concept & Planning</strong> </li>
-                  <li><i class="bi bi-chevron-right"></i> <strong>Design</strong></li>
-
-                </ul>
-              </div>
-              <div class="col-lg-6">
-                <ul>
-                  <li><i class="bi bi-chevron-right"></i> <strong>Animation & Realization</strong></li>
-                  <li><i class="bi bi-chevron-right"></i> <strong>Review & Delivery</strong></li>
-                </ul>
+            <div class="workflow" aria-label="Workflow steps">
+              <span class="workflow-label">Workflow</span>
+              <div class="workflow-grid">
+                <span class="workflow-step">01 / Client Request</span>
+                <span class="workflow-step">02 / Concept &amp; Planning</span>
+                <span class="workflow-step">03 / Design</span>
+                <span class="workflow-step">04 / Animation &amp; Realization</span>
+                <span class="workflow-step">05 / Review &amp; Delivery</span>
               </div>
             </div>
-            <p class="py-3">
-              Our animations do not just catch the eye - they strengthen brand recognition and drive measurable results.
-            </p>
+          </div>
 
-
+          <div class="col-lg-7 about-copy" data-aos="fade-up" data-aos-delay="120">
+            <div class="about-copy-card">
+              <p class="about-lead">
+                Hi! We create digital stories through code and motion. Our studio combines clean web design,
+                responsive development, and captivating animation to help brands stand out online. Every pixel,
+                frame, and movement is crafted with purpose.
+              </p>
+              <p>
+                We believe that motion is more than just movement - it is emotion, rhythm, and storytelling. Our
+                team blends creativity with technical precision to design experiences that feel alive and memorable.
+                From sleek website interactions to bold social media animations, we turn ideas into visuals that
+                connect with people and inspire action.
+              </p>
+              <p class="about-value">
+                Our animations do not just catch the eye - they strengthen brand recognition and drive measurable
+                results.
+              </p>
+            </div>
           </div>
         </div>
-
       </div>
 
     </section>
 
     <!-- Stats Section -->
     <section id="stats" class="stats section">
+      <div class="stats-three-bg" aria-hidden="true"></div>
 
       <div class="container" data-aos="fade-up" data-aos-delay="100">
 
@@ -351,8 +348,6 @@
           </ul><!-- End Portfolio Filters -->
 
           <div class="row gy-4 isotope-container" data-aos="fade-up" data-aos-delay="200">
-
-
 
             <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-product">
               <div class="portfolio-content h-100">
@@ -990,6 +985,7 @@
   <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js" defer></script>
 
   <script src="assets/vendor/swiper/swiper-bundle.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.min.js" defer></script>
 
   <!-- Main JS File -->
   <script src="assets/js/main.js" defer></script>

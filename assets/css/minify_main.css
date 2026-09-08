@@ -568,18 +568,30 @@ section {
 }
 #about {
   overflow: hidden;
-  padding: 60px 0;
+  padding: 84px 0;
   font-family: "Rousseau", "Russo One", sans-serif;
   font-size: 16px;
 }
 #about::before {
-  background: rgb(4 11 20/0.45);
+  background: rgb(4 11 20/0.2);
   z-index: 1;
 }
 #about .about-bg-video {
   object-position: center;
   z-index: 0;
   pointer-events: none;
+  transform: translate3d(0, 0, 0) scale(1.05);
+  transition: transform 120ms linear;
+}
+#about .about-video-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgb(4 11 20/0.68), rgb(4 11 20/0.5) 42%, rgb(4 11 20/0.72)),
+    rgb(4 11 20/0.32);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
 }
 #about > .container {
   position: relative;
@@ -604,6 +616,74 @@ section {
 #about .section-title p {
   font-size: 21.33px;
   line-height: 1.45;
+  max-width: 14ch;
+}
+#about .about-shell {
+  margin-top: 18px;
+}
+#about .about-intro {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+#about .about-copy-card,
+#about .workflow-step {
+  border: 1px solid rgb(255 255 255/0.14);
+  background: rgb(255 255 255/0.08);
+  box-shadow: 0 16px 40px rgb(0 0 0/0.18);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+#about .about-copy-card {
+  padding: 28px 28px 30px;
+  border-radius: 24px;
+}
+#about .about-lead {
+  font-size: 22px;
+  line-height: 1.55;
+  margin-bottom: 22px;
+}
+#about .about-copy p:last-child {
+  margin-bottom: 0;
+}
+#about .about-value {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid rgb(255 255 255/0.18);
+  font-size: 18px;
+  letter-spacing: 0.01em;
+}
+#about .workflow {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+#about .workflow-label {
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgb(255 255 255/0.72);
+}
+#about .workflow-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+#about .workflow-step {
+  display: flex;
+  align-items: center;
+  min-height: 60px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  font-size: 14px;
+  line-height: 1.25;
+  letter-spacing: 0.03em;
+}
+#about .workflow-step:nth-child(1) {
+  grid-column: 1 / -1;
+}
+#about .workflow-step:nth-child(4) {
+  grid-column: 1 / -1;
 }
 .about .content h2 {
   font-weight: 700;
@@ -658,6 +738,12 @@ section {
 #about .container[data-aos].aos-animate .content > p.py-3:last-of-type {
   animation: about-rise-in 0.7s ease-in 1.12s both;
 }
+@media (min-width: 992px) {
+  #about .about-intro {
+    position: sticky;
+    top: 120px;
+  }
+}
 @media (max-width: 1200px) {
   #about .section-title h2 {
     font-size: 32px;
@@ -665,29 +751,35 @@ section {
   #about .section-title p {
     font-size: 16px;
   }
-  #about .content h2 {
-    font-size: 25.33px;
+  #about .about-copy-card {
+    padding: 24px;
   }
-  #about .content p {
-    font-size: 14.67px;
+  #about .about-lead {
+    font-size: 18px;
   }
-  #about .content ul li {
-    font-size: 14px;
+  #about .about-value {
+    font-size: 15px;
+  }
+  #about .workflow-step {
+    font-size: 12px;
   }
 }
 @media (max-width: 768px) {
+  #about {
+    padding: 72px 0;
+  }
   #about .section-title h2 {
     font-size: 24px;
   }
   #about .section-title p {
     font-size: 13.33px;
   }
-  #about .content h2 {
-    font-size: 20px;
+  #about .about-copy-card {
+    padding: 20px;
   }
-  #about .content p,
-  #about .content ul li {
-    font-size: 12px;
+  #about .about-lead,
+  #about .about-value {
+    font-size: 14px;
   }
 }
 @media (max-width: 575px) {
@@ -699,19 +791,134 @@ section {
   #about .section-title p {
     font-size: 10.67px;
   }
-  #about .content h2 {
+  #about .about-copy-card {
+    border-radius: 18px;
+  }
+  #about .workflow-line {
+    gap: 10px;
+  }
+  #about .workflow-step {
+    min-height: 52px;
+    padding: 10px 12px;
+    flex: 0 0 auto;
+  }
+}
+
+#about .workflow {
+  margin-top: 24px;
+}
+#about .workflow-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  color: var(--accent-color);
+  font-family: var(--heading-font);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+#about .workflow-line {
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
+}
+#about .workflow-line::-webkit-scrollbar {
+  height: 6px;
+}
+#about .workflow-line::-webkit-scrollbar-thumb {
+  background: rgb(255 255 255/0.18);
+  border-radius: 999px;
+}
+#about .workflow-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+  white-space: nowrap;
+  min-height: 58px;
+  padding: 12px 16px;
+  border: 1px solid rgb(255 255 255/0.12);
+  border-radius: 999px;
+  background: rgb(0 0 0/0.18);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  color: #fff;
+  font-family: var(--heading-font);
+  font-size: 13px;
+}
+#about .workflow-step i {
+  color: var(--accent-color);
+  font-size: 18px;
+  line-height: 1;
+}
+#about .workflow-arrow {
+  align-self: center;
+  flex: 0 0 auto;
+  color: rgb(255 255 255/0.55);
+  font-size: 18px;
+}
+#about .workflow-step span:last-child {
+  display: inline-block;
+}
+@media (max-width: 768px) {
+  #about .workflow-line {
+    gap: 10px;
+  }
+  #about .workflow-arrow {
     font-size: 16px;
+  }
+  #about .workflow-step {
+    font-size: 12px;
   }
 }
 .stats {
-  background: url(/assets/video/office.mp4) no-repeat center center;
-  background-size: cover;
-  background: #000;
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at calc(50% + var(--stats-bx, 0px)) calc(40% + var(--stats-by, 0px)), rgb(20 157 221/0.22), transparent 34%),
+    linear-gradient(180deg, #03070d 0%, #070b12 48%, #000 100%);
   color: #fff !important;
+  isolation: isolate;
+}
+.stats::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(90deg, rgb(0 0 0/0.42), rgb(0 0 0/0.12) 48%, rgb(0 0 0/0.42)),
+    rgb(0 0 0/0.2);
+  pointer-events: none;
+}
+.stats .stats-three-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  transform: perspective(900px) rotateX(var(--stats-rot-x, 0deg)) rotateY(var(--stats-rot-y, 0deg)) scale(1.04);
+  transition: transform 180ms ease-out;
+  will-change: transform;
+}
+.stats .stats-three-bg canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.stats > .container {
+  position: relative;
+  z-index: 2;
 }
 .stats .stats-item {
   padding: 30px;
   width: 100%;
+  border: 1px solid rgb(255 255 255/0.08);
+  background: rgb(0 0 0/0.14);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
 }
 .stats .stats-item i {
   color: var(--accent-color);
@@ -745,6 +952,17 @@ section {
     0 0 4px rgb(255 255 255/0.9),
     0 0 10px rgb(20 157 221/0.95),
     0 0 18px rgb(20 157 221/0.75);
+}
+@media (max-width: 767px) {
+  .stats .stats-three-bg {
+    transform: perspective(700px) rotateX(var(--stats-rot-x, 0deg)) rotateY(var(--stats-rot-y, 0deg)) scale(1.08);
+  }
+  .stats .stats-item {
+    padding: 24px;
+  }
+  .stats .stats-item .purecounter {
+    font-size: 40px;
+  }
 }
 .skills .progress {
   height: 60px;

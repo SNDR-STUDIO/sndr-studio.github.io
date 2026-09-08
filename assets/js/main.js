@@ -89,6 +89,33 @@
   document.addEventListener('scroll', toggleScrollTop);
 
   /**
+   * About background video parallax
+   */
+  const aboutSection = document.querySelector('#about');
+  const aboutVideo = document.querySelector('#about .about-bg-video');
+  if (aboutSection && aboutVideo) {
+    let parallaxRaf = 0;
+
+    const updateAboutParallax = () => {
+      parallaxRaf = 0;
+      const rect = aboutSection.getBoundingClientRect();
+      const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+      const progress = 1 - Math.min(Math.max((rect.top + rect.height * 0.5) / (viewportHeight + rect.height), 0), 1);
+      const translateY = (progress - 0.5) * 40;
+      aboutVideo.style.transform = `translate3d(0, ${translateY}px, 0) scale(1.08)`;
+    };
+
+    const requestAboutParallax = () => {
+      if (parallaxRaf) return;
+      parallaxRaf = window.requestAnimationFrame(updateAboutParallax);
+    };
+
+    updateAboutParallax();
+    window.addEventListener('scroll', requestAboutParallax, { passive: true });
+    window.addEventListener('resize', requestAboutParallax);
+  }
+
+  /**
    * Animation on scroll function and init
    */
   function aosInit() {
@@ -121,6 +148,142 @@
    * Initiate Pure Counter
    */
   new PureCounter();
+
+  /**
+   * Stats section Three.js particle background
+   */
+  function initStatsParticles() {
+    const statsSection = document.querySelector('#stats');
+    const mount = document.querySelector('#stats .stats-three-bg');
+    const canUseThree = typeof THREE !== 'undefined' && statsSection && mount;
+    if (!canUseThree) return;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let renderer;
+
+    try {
+      renderer = new THREE.WebGLRenderer({
+        alpha: true,
+        antialias: true,
+        powerPreference: 'high-performance'
+      });
+    } catch (error) {
+      return;
+    }
+
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.8));
+    mount.appendChild(renderer.domElement);
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(60, 1, 1, 1200);
+    camera.position.z = 240;
+
+    const particleCount = window.innerWidth < 768 ? 520 : 950;
+    const positions = new Float32Array(particleCount * 3);
+    const colors = new Float32Array(particleCount * 3);
+    const color = new THREE.Color();
+
+    for (let i = 0; i < particleCount; i += 1) {
+      const index = i * 3;
+      positions[index] = (Math.random() - 0.5) * 620;
+      positions[index + 1] = (Math.random() - 0.5) * 260;
+      positions[index + 2] = (Math.random() - 0.5) * 520;
+
+      color.setHSL(0.56 + Math.random() * 0.08, 0.75, 0.62 + Math.random() * 0.28);
+      colors[index] = color.r;
+      colors[index + 1] = color.g;
+      colors[index + 2] = color.b;
+    }
+
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+    const material = new THREE.PointsMaterial({
+      size: 2.1,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.9,
+      depthWrite: false
+    });
+
+    const points = new THREE.Points(geometry, material);
+    scene.add(points);
+
+    let rafId = 0;
+    let visible = true;
+    let pointerX = 0;
+    let pointerY = 0;
+
+    const resize = () => {
+      const width = Math.max(statsSection.clientWidth, 1);
+      const height = Math.max(statsSection.clientHeight, 1);
+      renderer.setSize(width, height, false);
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+    };
+
+    const render = () => {
+      if (!visible) {
+        rafId = 0;
+        return;
+      }
+
+      points.rotation.y += prefersReducedMotion ? 0.0004 : 0.0014;
+      points.rotation.x += prefersReducedMotion ? 0.0001 : 0.00035;
+      camera.position.x += (pointerX * 18 - camera.position.x) * 0.025;
+      camera.position.y += (pointerY * 10 - camera.position.y) * 0.025;
+      camera.lookAt(scene.position);
+      renderer.render(scene, camera);
+      rafId = window.requestAnimationFrame(render);
+    };
+
+    const start = () => {
+      if (!rafId) rafId = window.requestAnimationFrame(render);
+    };
+
+    const stop = () => {
+      if (rafId) window.cancelAnimationFrame(rafId);
+      rafId = 0;
+    };
+
+    const onPointerMove = (event) => {
+      const rect = statsSection.getBoundingClientRect();
+      const x = ((event.clientX - rect.left) / rect.width - 0.5) || 0;
+      const y = ((event.clientY - rect.top) / rect.height - 0.5) || 0;
+      pointerX = x;
+      pointerY = -y;
+      statsSection.style.setProperty('--stats-rot-y', `${x * 10}deg`);
+      statsSection.style.setProperty('--stats-rot-x', `${y * 8}deg`);
+      statsSection.style.setProperty('--stats-bx', `${x * 70}px`);
+      statsSection.style.setProperty('--stats-by', `${y * 50}px`);
+    };
+
+    const resetPointer = () => {
+      pointerX = 0;
+      pointerY = 0;
+      statsSection.style.setProperty('--stats-rot-y', '0deg');
+      statsSection.style.setProperty('--stats-rot-x', '0deg');
+      statsSection.style.setProperty('--stats-bx', '0px');
+      statsSection.style.setProperty('--stats-by', '0px');
+    };
+
+    resize();
+    start();
+    window.addEventListener('resize', resize);
+    statsSection.addEventListener('pointermove', onPointerMove, { passive: true });
+    statsSection.addEventListener('pointerleave', resetPointer, { passive: true });
+
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        visible = entries[0].isIntersecting;
+        visible ? start() : stop();
+      }, { threshold: 0.05 });
+      observer.observe(statsSection);
+    }
+  }
+
+  initStatsParticles();
 
   /**
    * Animate the skills items on reveal
