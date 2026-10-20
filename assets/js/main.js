@@ -3,16 +3,78 @@
   "use strict";
 
   /**
+   * Smooth scroll (Lenis) synced with GSAP ScrollTrigger.
+   * Lenis drives the real window scroll, so every existing scroll listener
+   * (hero spread, marquee, scrollspy) keeps working unchanged.
+   */
+  const prefersReducedMotionGlobal = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let lenis = null;
+
+  if (window.gsap && window.ScrollTrigger) {
+    gsap.registerPlugin(ScrollTrigger);
+  }
+
+  if (typeof window.Lenis === 'function' && !prefersReducedMotionGlobal) {
+    lenis = new Lenis({
+      lerp: 0.1,
+      smoothWheel: true,
+      wheelMultiplier: 1
+    });
+
+    if (window.gsap && window.ScrollTrigger) {
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add((time) => lenis.raf(time * 1000));
+      gsap.ticker.lagSmoothing(0);
+    } else {
+      const lenisLoop = (time) => {
+        lenis.raf(time);
+        requestAnimationFrame(lenisLoop);
+      };
+      requestAnimationFrame(lenisLoop);
+    }
+  }
+  window.sndrLenis = lenis;
+
+  const smoothScrollTo = (target) => {
+    if (lenis) {
+      lenis.scrollTo(target, { duration: 1.4 });
+      return;
+    }
+    if (typeof target === 'number') {
+      window.scrollTo({ top: target, behavior: 'smooth' });
+    } else {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  /**
    * Header toggle
    */
   const headerToggleBtn = document.querySelector('.header-toggle');
 
   function headerToggle() {
-    document.querySelector('#header').classList.toggle('header-show');
+    const open = document.querySelector('#header').classList.toggle('header-show');
     headerToggleBtn.classList.toggle('bi-list');
     headerToggleBtn.classList.toggle('bi-x');
+    headerToggleBtn.setAttribute('aria-expanded', open);
+    headerToggleBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
   }
   headerToggleBtn.addEventListener('click', headerToggle);
+
+  /**
+   * Close the side menu with Escape or a click outside it
+   */
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && document.querySelector('.header-show')) {
+      headerToggle();
+      headerToggleBtn.focus();
+    }
+  });
+  document.addEventListener('click', (e) => {
+    if (document.querySelector('.header-show') && !e.target.closest('#header')) {
+      headerToggle();
+    }
+  });
 
   /**
    * Hide mobile nav on same-page/hash links
@@ -27,9 +89,9 @@
   });
 
   /**
-   * Smooth scroll for navmenu anchor links
+   * Smooth scroll for navmenu and footer anchor links
    */
-  document.querySelectorAll('#navmenu a[href^="#"]').forEach((navmenuLink) => {
+  document.querySelectorAll('#navmenu a[href^="#"], #footer a[href^="#"]').forEach((navmenuLink) => {
     navmenuLink.addEventListener('click', (e) => {
       const targetId = navmenuLink.getAttribute('href');
       if (!targetId) return;
@@ -38,10 +100,7 @@
       if (!targetSection) return;
 
       e.preventDefault();
-      targetSection.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
+      smoothScrollTo(targetSection);
     });
   });
 
@@ -79,41 +138,12 @@
   }
   scrollTop.addEventListener('click', (e) => {
     e.preventDefault();
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
+    smoothScrollTo(0);
   });
 
   window.addEventListener('load', toggleScrollTop);
   document.addEventListener('scroll', toggleScrollTop);
 
-  /**
-   * About background video parallax
-   */
-  const aboutSection = document.querySelector('#about');
-  const aboutVideo = document.querySelector('#about .about-bg-video');
-  if (aboutSection && aboutVideo) {
-    let parallaxRaf = 0;
-
-    const updateAboutParallax = () => {
-      parallaxRaf = 0;
-      const rect = aboutSection.getBoundingClientRect();
-      const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
-      const progress = 1 - Math.min(Math.max((rect.top + rect.height * 0.5) / (viewportHeight + rect.height), 0), 1);
-      const translateY = (progress - 0.5) * 40;
-      aboutVideo.style.transform = `translate3d(0, ${translateY}px, 0) scale(1.08)`;
-    };
-
-    const requestAboutParallax = () => {
-      if (parallaxRaf) return;
-      parallaxRaf = window.requestAnimationFrame(updateAboutParallax);
-    };
-
-    updateAboutParallax();
-    window.addEventListener('scroll', requestAboutParallax, { passive: true });
-    window.addEventListener('resize', requestAboutParallax);
-  }
 
   /**
    * Animation on scroll function and init
@@ -150,7 +180,8 @@
   new PureCounter();
 
   /**
-   * Stats section Three.js particle background
+   * Stats section Three.js background: starfield
+   * Small round particles that slowly drift and now and then twinkle.
    */
   function initStatsParticles() {
     const statsSection = document.querySelector('#stats');
@@ -171,7 +202,8 @@
       return;
     }
 
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.8));
+    const pixelRatio = Math.min(window.devicePixelRatio || 1, 1.8);
+    renderer.setPixelRatio(pixelRatio);
     mount.appendChild(renderer.domElement);
 
     const scene = new THREE.Scene();
@@ -181,6 +213,9 @@
     const particleCount = window.innerWidth < 768 ? 520 : 950;
     const positions = new Float32Array(particleCount * 3);
     const colors = new Float32Array(particleCount * 3);
+    const sizes = new Float32Array(particleCount);
+    const phases = new Float32Array(particleCount);
+    const speeds = new Float32Array(particleCount);
     const color = new THREE.Color();
 
     for (let i = 0; i < particleCount; i += 1) {
@@ -189,22 +224,66 @@
       positions[index + 1] = (Math.random() - 0.5) * 260;
       positions[index + 2] = (Math.random() - 0.5) * 520;
 
-      color.setHSL(0.56 + Math.random() * 0.08, 0.75, 0.62 + Math.random() * 0.28);
+      color.setHSL(0.53 + Math.random() * 0.08, 0.7, 0.7 + Math.random() * 0.25);
       colors[index] = color.r;
       colors[index + 1] = color.g;
       colors[index + 2] = color.b;
+
+      // mostly tiny dust, a few slightly bigger "stars"
+      sizes[i] = Math.random() < 0.9 ? 0.8 + Math.random() * 0.9 : 1.8 + Math.random() * 1.2;
+      phases[i] = Math.random() * Math.PI * 2;
+      speeds[i] = 0.3 + Math.random() * 1.1;
     }
 
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
     geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    geometry.setAttribute('aSize', new THREE.BufferAttribute(sizes, 1));
+    geometry.setAttribute('aPhase', new THREE.BufferAttribute(phases, 1));
+    geometry.setAttribute('aSpeed', new THREE.BufferAttribute(speeds, 1));
 
-    const material = new THREE.PointsMaterial({
-      size: 2.1,
+    // Round soft points; twinkle = slow base shimmer + rare bright flash
+    const material = new THREE.ShaderMaterial({
+      uniforms: {
+        uTime: { value: 0 },
+        uPixelRatio: { value: pixelRatio },
+        uTwinkle: { value: prefersReducedMotion ? 0 : 1 }
+      },
+      vertexShader: `
+        attribute float aSize;
+        attribute float aPhase;
+        attribute float aSpeed;
+        varying vec3 vColor;
+        varying float vAlpha;
+        uniform float uTime;
+        uniform float uPixelRatio;
+        uniform float uTwinkle;
+        void main() {
+          vColor = color;
+          float t = uTime * aSpeed + aPhase;
+          float shimmer = 0.55 + 0.25 * sin(t);
+          // sharp peak that only reaches 1 for a short moment each cycle
+          float flash = pow(max(sin(t * 0.37 + aPhase * 1.7), 0.0), 24.0);
+          vAlpha = mix(0.75, shimmer + flash * 0.6, uTwinkle);
+          vec4 mv = modelViewMatrix * vec4(position, 1.0);
+          gl_PointSize = aSize * (1.0 + flash * 0.8 * uTwinkle) * uPixelRatio * (240.0 / -mv.z);
+          gl_Position = projectionMatrix * mv;
+        }
+      `,
+      fragmentShader: `
+        varying vec3 vColor;
+        varying float vAlpha;
+        void main() {
+          float d = length(gl_PointCoord - 0.5);
+          float a = smoothstep(0.5, 0.0, d);
+          if (a < 0.01) discard;
+          gl_FragColor = vec4(vColor, a * vAlpha);
+        }
+      `,
       vertexColors: true,
       transparent: true,
-      opacity: 0.9,
-      depthWrite: false
+      depthWrite: false,
+      blending: THREE.AdditiveBlending
     });
 
     const points = new THREE.Points(geometry, material);
@@ -214,6 +293,7 @@
     let visible = true;
     let pointerX = 0;
     let pointerY = 0;
+    const clock = new THREE.Clock();
 
     const resize = () => {
       const width = Math.max(statsSection.clientWidth, 1);
@@ -229,8 +309,9 @@
         return;
       }
 
-      points.rotation.y += prefersReducedMotion ? 0.0004 : 0.0014;
-      points.rotation.x += prefersReducedMotion ? 0.0001 : 0.00035;
+      material.uniforms.uTime.value = clock.getElapsedTime();
+      points.rotation.y += prefersReducedMotion ? 0.0002 : 0.0006;
+      points.rotation.x += prefersReducedMotion ? 0.00005 : 0.00015;
       camera.position.x += (pointerX * 18 - camera.position.x) * 0.025;
       camera.position.y += (pointerY * 10 - camera.position.y) * 0.025;
       camera.lookAt(scene.position);
@@ -306,7 +387,9 @@
    * Initiate glightbox
    */
   const glightbox = GLightbox({
-    selector: '.glightbox'
+    selector: '.glightbox',
+    onOpen: () => lenis && lenis.stop(),
+    onClose: () => lenis && lenis.start()
   });
 
   /**
@@ -318,17 +401,17 @@
   const grid = document.querySelector(".isotope-container");
   if (!grid) return;
 
-  // 1) РґРѕР¶РґР°С‚СЊСЃСЏ РєР°СЂС‚РёРЅРѕРє
+  // 1) дождаться картинок
   imagesLoaded(grid, () => {
-    // 2) РґРѕР¶РґР°С‚СЊСЃСЏ С‚РѕРіРѕ, С‡С‚Рѕ РІРёРґРµРѕ РїРѕР»СѓС‡РёР»Рё СЂР°Р·РјРµСЂС‹ (metadata/poster)
+    // 2) дождаться того, что видео получили размеры (metadata/poster)
     const videos = grid.querySelectorAll("video");
     const waits = Array.from(videos).map(v => {
-      if (v.readyState >= 1) return Promise.resolve(); // metadata СѓР¶Рµ РµСЃС‚СЊ
+      if (v.readyState >= 1) return Promise.resolve(); // metadata уже есть
       return new Promise(res => v.addEventListener("loadedmetadata", res, { once:true }));
     });
 
     Promise.all(waits).then(() => {
-      // init isotope РїРѕСЃР»Рµ С‚РѕРіРѕ РєР°Рє СЂР°Р·РјРµСЂС‹ СЃС‚Р°Р±РёР»СЊРЅС‹
+      // init isotope после того как размеры стабильны
       const iso = new Isotope(grid, { itemSelector: ".isotope-item", layoutMode: "masonry" });
       iso.layout();
     });
@@ -352,8 +435,11 @@
 
     isotopeItem.querySelectorAll('.isotope-filters li').forEach(function(filters) {
       filters.addEventListener('click', function() {
-        isotopeItem.querySelector('.isotope-filters .filter-active').classList.remove('filter-active');
+        const current = isotopeItem.querySelector('.isotope-filters .filter-active');
+        current.classList.remove('filter-active');
+        current.setAttribute('aria-pressed', 'false');
         this.classList.add('filter-active');
+        this.setAttribute('aria-pressed', 'true');
         initIsotope.arrange({
           filter: this.getAttribute('data-filter')
         });
@@ -361,6 +447,12 @@
           aosInit();
         }
       }, false);
+      filters.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          this.click();
+        }
+      });
     });
 
   });
@@ -392,11 +484,8 @@
       if (document.querySelector(window.location.hash)) {
         setTimeout(() => {
           let section = document.querySelector(window.location.hash);
-          let scrollMarginTop = getComputedStyle(section).scrollMarginTop;
-          window.scrollTo({
-            top: section.offsetTop - parseInt(scrollMarginTop),
-            behavior: 'smooth'
-          });
+          let scrollMarginTop = parseInt(getComputedStyle(section).scrollMarginTop) || 0;
+          smoothScrollTo(section.getBoundingClientRect().top + window.scrollY - scrollMarginTop);
         }, 100);
       }
     }
@@ -412,8 +501,10 @@
       if (!navmenulink.hash) return;
       let section = document.querySelector(navmenulink.hash);
       if (!section) return;
-      let position = window.scrollY + 200;
-      if (position >= section.offsetTop && position <= (section.offsetTop + section.offsetHeight)) {
+      // page coordinates: offsetTop is relative to a positioned parent
+      // (sections 04–06 sit inside .neon-flow), so it can't be used here
+      const rect = section.getBoundingClientRect();
+      if (rect.top <= 200 && rect.bottom >= 200) {
         document.querySelectorAll('.navmenu a.active').forEach(link => link.classList.remove('active'));
         navmenulink.classList.add('active');
       } else {
@@ -445,80 +536,397 @@
     subtitle.dataset.lettersInit = 'true';
   }
 
-    /**
-   * Hero title scatter on scroll to the next section
+  /**
+   * HERO TITLE — "SNDR STUDIO"
+   * 1) On page load the letters rise from below and fade in one by one.
+   * 2) On scroll the letters scatter: each one drifts and tilts its own way.
+   * The video is drawn inside the glyphs by initHeroVideoText(), which reads
+   * the live position and opacity of each .hero-title-glyph every frame.
    */
-  function initHeroTitleScatterOnScroll() {
+  function initHeroTitle() {
     const hero = document.querySelector('#hero');
-    const title = document.querySelector('#hero .hero-content h1');
-    if (!hero || !title || title.dataset.scatterInit === 'true') return;
+    const title = document.querySelector('#hero .hero-video-text__title');
+    if (!hero || !title || title.dataset.splitInit === 'true') return;
 
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) return;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const chars = Array.from((title.dataset.videoText || title.textContent || '').trim());
+    const centre = (chars.length - 1) / 2;
+    // stable pseudo-random 0..1 per letter (same scatter on every visit)
+    const rand = (n) => {
+      const v = Math.sin(n * 12.9898 + 78.233) * 43758.5453;
+      return v - Math.floor(v);
+    };
 
-    const text = title.textContent || '';
     title.textContent = '';
-
-    const chars = Array.from(text);
-    const count = Math.max(chars.length - 1, 1);
-
     chars.forEach((char, index) => {
-      const span = document.createElement('span');
-      const angle = (index / count) * Math.PI * 2;
-      const radius = 95 + (index % 5) * 24;
-      const x = Math.cos(angle) * radius + (index % 2 === 0 ? 20 : -20);
-      const y = Math.sin(angle) * radius - 40 - (index % 3) * 12;
-      const rotate = (index % 2 === 0 ? 1 : -1) * (14 + (index % 4) * 6);
+      const letter = document.createElement('span');
+      const glyph = document.createElement('span');
+      letter.className = 'hero-title-letter';
+      letter.setAttribute('aria-hidden', 'true');
+      letter.style.setProperty('--i', index);
+      // drift (em) + tilt (deg) at full scroll progress
+      const c = index - centre;
+      const sx = c * 0.16 + (rand(index + 1) - 0.5) * 0.35;
+      const sy = (rand(index + 11) - 0.5) * 0.9;
+      const sr = (index % 2 === 0 ? -1 : 1) * (12 + rand(index + 21) * 26);
+      letter.style.setProperty('--sx', sx.toFixed(3));
+      letter.style.setProperty('--sy', sy.toFixed(3));
+      letter.style.setProperty('--sr', sr.toFixed(2));
+      glyph.className = 'hero-title-glyph';
+      glyph.style.setProperty('--i', index);
 
-      span.className = 'hero-title-letter';
       if (char === ' ') {
-        span.classList.add('hero-title-space');
-        span.textContent = '\u00A0';
+        letter.classList.add('hero-title-space');
+        glyph.textContent = '\u00A0';
       } else {
-        span.textContent = char;
+        glyph.textContent = char;
       }
 
-      span.style.setProperty('--scatter-x', `${x.toFixed(1)}px`);
-      span.style.setProperty('--scatter-y', `${y.toFixed(1)}px`);
-      span.style.setProperty('--scatter-r', `${rotate.toFixed(1)}deg`);
-      title.appendChild(span);
+      letter.appendChild(glyph);
+      title.appendChild(letter);
     });
 
-    title.dataset.scatterInit = 'true';
+    title.dataset.splitInit = 'true';
+    title.classList.add('is-split');
 
+    // 1) Reveal: start once the preloader is gone (window load), with a safety timeout.
+    let revealed = false;
+    const reveal = () => {
+      if (revealed) return;
+      revealed = true;
+      // two frames so the initial (hidden) state is painted before the transition starts
+      requestAnimationFrame(() => requestAnimationFrame(() => title.classList.add('is-revealed')));
+    };
+    if (document.readyState === 'complete') reveal();
+    else window.addEventListener('load', reveal, { once: true });
+    setTimeout(reveal, 3500);
+
+    // 2) Scatter on scroll: progress 0..1 over the first half of the hero height
+    if (reduceMotion) return;
     let ticking = false;
-    const updateScatter = () => {
-      const progress = Math.min(Math.max(window.scrollY / (hero.offsetHeight * 0.7), 0), 1);
-      title.style.setProperty('--scatter-progress', progress.toFixed(4));
+    const update = () => {
+      const progress = Math.min(Math.max(window.scrollY / (hero.offsetHeight * 0.5), 0), 1);
+      title.style.setProperty('--hero-p', progress.toFixed(4));
       ticking = false;
     };
-
     const onScroll = () => {
       if (!ticking) {
-        window.requestAnimationFrame(updateScatter);
         ticking = true;
+        requestAnimationFrame(update);
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    update();
+  }
+
+  initHeroTitle();
+
+  /**
+   * Hero video rendered inside the title glyphs via canvas mask.
+   */
+  function initHeroVideoText() {
+    const section = document.querySelector('.hero-video-text');
+    const video = document.querySelector('#motionVideo');
+    const title = document.querySelector('.hero-video-text__title');
+    const videoLayer = section?.querySelector('.hero-video-text__video');
+
+    if (!section || !video || !title || !videoLayer) return;
+    if (section.dataset.videoTextInit === 'true') return;
+
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d', { alpha: true });
+    const maskCanvas = document.createElement('canvas');
+    const maskCtx = maskCanvas.getContext('2d', { alpha: true });
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    if (!ctx || !maskCtx) return;
+
+    canvas.className = 'hero-video-canvas';
+    videoLayer.appendChild(canvas);
+    section.dataset.videoTextInit = 'true';
+
+    let dpr = 1;
+    let frameId = 0;
+
+    const getRect = () => videoLayer.getBoundingClientRect();
+    const titleText = (title.dataset.videoText || title.textContent || 'SNDR studio').trim();
+
+    const drawMask = () => {
+      const rect = getRect();
+      const titleRect = title.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+
+      maskCtx.clearRect(0, 0, maskCanvas.width, maskCanvas.height);
+      maskCtx.save();
+      maskCtx.scale(dpr, dpr);
+
+      const computed = getComputedStyle(title);
+      const fontSize = parseFloat(computed.fontSize);
+      const fontWeight = computed.fontWeight && computed.fontWeight !== 'normal'
+        ? computed.fontWeight
+        : '950';
+      const fontFamily = computed.fontFamily || 'sans-serif';
+
+      maskCtx.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
+      maskCtx.textAlign = 'center';
+      maskCtx.textBaseline = 'middle';
+      maskCtx.fillStyle = '#fff';
+      maskCtx.lineJoin = 'round';
+      maskCtx.lineCap = 'round';
+      maskCtx.imageSmoothingEnabled = true;
+      maskCtx.imageSmoothingQuality = 'high';
+
+      const thickenGlyph = (text, x, y) => {
+        const spread = Math.max(fontSize * 0.014, 1.4);
+        const offsets = [
+          [0, 0],
+          [-spread, 0],
+          [spread, 0],
+          [0, -spread],
+          [0, spread],
+          [-spread * 0.65, -spread * 0.65],
+          [spread * 0.65, -spread * 0.65],
+          [-spread * 0.65, spread * 0.65],
+          [spread * 0.65, spread * 0.65]
+        ];
+
+        offsets.forEach(([offsetX, offsetY]) => {
+          maskCtx.fillText(text, x + offsetX, y + offsetY);
+        });
+      };
+
+      const glyphs = title.querySelectorAll('.hero-title-glyph');
+
+      if (glyphs.length) {
+        glyphs.forEach(glyph => {
+          const char = glyph.textContent || '';
+          if (!char.trim()) return;
+
+          const letter = glyph.parentElement;
+          const alpha = (Number.parseFloat(getComputedStyle(glyph).opacity) || 0) *
+            (Number.parseFloat(getComputedStyle(letter).opacity) || 0);
+          if (alpha <= 0.001) return;
+
+          // centre of the (rotated) glyph box = centre of the glyph
+          const glyphRect = glyph.getBoundingClientRect();
+          const x = glyphRect.left - rect.left + glyphRect.width / 2;
+          const y = glyphRect.top - rect.top + glyphRect.height / 2;
+
+          // tilt of the letter, read from its live CSS transform matrix
+          const m = new DOMMatrixReadOnly(getComputedStyle(letter).transform);
+          const angle = Math.atan2(m.b, m.a);
+
+          maskCtx.save();
+          maskCtx.globalAlpha = Math.min(alpha, 1);
+          maskCtx.translate(x, y);
+          maskCtx.rotate(angle);
+          thickenGlyph(char, 0, 0);
+          maskCtx.restore();
+        });
+      } else {
+        thickenGlyph(
+          titleText,
+          titleRect.left - rect.left + titleRect.width / 2,
+          titleRect.top - rect.top + titleRect.height / 2
+        );
+      }
+
+      maskCtx.restore();
+    };
+
+    const resize = () => {
+      const rect = getRect();
+      if (!rect.width || !rect.height) return;
+
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(rect.width * dpr);
+      canvas.height = Math.round(rect.height * dpr);
+      maskCanvas.width = canvas.width;
+      maskCanvas.height = canvas.height;
+      canvas.style.width = `${rect.width}px`;
+      canvas.style.height = `${rect.height}px`;
+
+      drawMask();
+    };
+
+    const render = () => {
+      const rect = getRect();
+
+      if (video.readyState >= 2 && rect.width && rect.height && video.videoWidth && video.videoHeight) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawMask();
+
+        const videoRatio = video.videoWidth / video.videoHeight;
+        const canvasRatio = rect.width / rect.height;
+        let drawWidth;
+        let drawHeight;
+        let offsetX;
+        let offsetY;
+
+        if (videoRatio > canvasRatio) {
+          drawHeight = rect.height;
+          drawWidth = drawHeight * videoRatio;
+          offsetX = (rect.width - drawWidth) / 2;
+          offsetY = 0;
+        } else {
+          drawWidth = rect.width;
+          drawHeight = drawWidth / videoRatio;
+          offsetX = 0;
+          offsetY = (rect.height - drawHeight) / 2;
+        }
+
+        ctx.drawImage(
+          video,
+          offsetX * dpr,
+          offsetY * dpr,
+          drawWidth * dpr,
+          drawHeight * dpr
+        );
+
+        ctx.globalCompositeOperation = 'destination-in';
+        ctx.drawImage(maskCanvas, 0, 0);
+        ctx.globalCompositeOperation = 'source-over';
+        section.classList.add('is-canvas-ready');
+      }
+
+      if (!reduceMotion.matches) {
+        frameId = window.requestAnimationFrame(render);
       }
     };
 
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-    onScroll();
+    const applyMotionPreference = () => {
+      if (reduceMotion.matches) {
+        window.cancelAnimationFrame(frameId);
+        video.pause();
+        render();
+      } else {
+        video.play().catch(() => {});
+        window.cancelAnimationFrame(frameId);
+        frameId = window.requestAnimationFrame(render);
+      }
+    };
+
+    video.muted = true;
+    video.playsInline = true;
+
+    const handleVideoReady = () => {
+      resize();
+      applyMotionPreference();
+    };
+
+    video.addEventListener('loadedmetadata', handleVideoReady);
+    video.addEventListener('loadeddata', handleVideoReady);
+    window.addEventListener('resize', resize, { passive: true });
+    if (typeof reduceMotion.addEventListener === 'function') {
+      reduceMotion.addEventListener('change', applyMotionPreference);
+    } else if (typeof reduceMotion.addListener === 'function') {
+      reduceMotion.addListener(applyMotionPreference);
+    }
+
+    if ('ResizeObserver' in window) {
+      const resizeObserver = new ResizeObserver(resize);
+      resizeObserver.observe(section);
+      resizeObserver.observe(title);
+    }
+
+    resize();
+    applyMotionPreference();
   }
 
-  window.addEventListener('load', initHeroTitleScatterOnScroll);
+  window.addEventListener('DOMContentLoaded', initHeroVideoText);
 
-  // MouseMove 3D View section
+  // MouseMove 3D View section (hero layers tilt)
+  const rootStyle = document.documentElement.style;
   document.addEventListener('mousemove', e => {
-	Object.assign(document.documentElement, {
-		style: `
-		--move-x: ${(e.clientX - window.innerWidth / 2) * -.005}deg;
-		--move-y: ${(e.clientY - window.innerHeight / 2) * .01}deg;
-		`
-	})
-})
+    rootStyle.setProperty('--move-x', `${(e.clientX - window.innerWidth / 2) * -.005}deg`);
+    rootStyle.setProperty('--move-y', `${(e.clientY - window.innerHeight / 2) * .01}deg`);
+  }, { passive: true });
 
+  /**
+   * SECTION 2 — ABOUT scroll animations (GSAP ScrollTrigger)
+   */
+  function initAbout() {
+    const section = document.querySelector('#about');
+    if (!section) return;
+    const lead = section.querySelector('.about-lead');
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!window.gsap || !window.ScrollTrigger || reduce) return; // static, fully visible fallback
 
+    // 1) Lead paragraph lights up word by word, tied to scroll position
+    if (lead && !lead.dataset.wordsInit) {
+      const words = lead.textContent.trim().split(/\s+/);
+      lead.setAttribute('aria-label', lead.textContent.trim());
+      lead.textContent = '';
+      words.forEach((w, i) => {
+        const span = document.createElement('span');
+        span.className = 'word';
+        span.setAttribute('aria-hidden', 'true');
+        span.textContent = w;
+        lead.appendChild(span);
+        if (i < words.length - 1) lead.appendChild(document.createTextNode(' '));
+      });
+      lead.dataset.wordsInit = 'true';
 
+      const wordEls = lead.querySelectorAll('.word');
+      const dim = 0.16;
+      wordEls.forEach(el => el.style.setProperty('--word-o', dim));
+      ScrollTrigger.create({
+        trigger: lead,
+        start: 'top 85%',
+        end: 'bottom 45%',
+        scrub: true,
+        onUpdate: (self) => {
+          const lit = self.progress * (wordEls.length + 2);
+          wordEls.forEach((el, i) => {
+            const o = Math.min(Math.max(lit - i, 0), 1);
+            el.style.setProperty('--word-o', (dim + (1 - dim) * o).toFixed(3));
+          });
+        }
+      });
+    }
+
+    // 2) Kicker line draws in, labels and secondary text slide up
+    gsap.fromTo(section.querySelector('.about-kicker'), { '--kicker-line': 0 }, {
+      '--kicker-line': 1, duration: 1.4, ease: 'power3.out',
+      scrollTrigger: { trigger: section, start: 'top 75%' }
+    });
+    gsap.from(section.querySelectorAll('.about-kicker span'), {
+      yPercent: 120, opacity: 0, duration: 0.9, ease: 'power3.out', stagger: 0.12,
+      scrollTrigger: { trigger: section, start: 'top 75%' }
+    });
+    gsap.from(section.querySelectorAll('.about-story p + p, .about-location'), {
+      y: 32, opacity: 0, duration: 1, ease: 'power3.out', stagger: 0.12,
+      scrollTrigger: { trigger: section.querySelector('.about-story'), start: 'top 65%' }
+    });
+
+    // 3) Founder card: curtain opens from the bottom, photo settles from extra zoom
+    const card = section.querySelector('.founder-card');
+    if (card) {
+      gsap.fromTo(card, { '--curtain': '100%', '--intro': 1 }, {
+        '--curtain': '0%', '--intro': 0, duration: 1.6, ease: 'expo.out',
+        scrollTrigger: { trigger: card, start: 'top 80%' }
+      });
+      gsap.from(card.querySelectorAll('.founder-copy, .founder-capabilities span'), {
+        y: 24, opacity: 0, duration: 0.8, ease: 'power3.out', stagger: 0.06, delay: 0.5,
+        scrollTrigger: { trigger: card, start: 'top 80%' }
+      });
+    }
+
+    // 4) Parallax: background video drifts slower than the page
+    const video = section.querySelector('.about-video');
+    if (video) {
+      gsap.fromTo(video, { yPercent: -5 }, {
+        yPercent: 5, ease: 'none',
+        scrollTrigger: { trigger: section, start: 'top bottom', end: 'bottom top', scrub: true }
+      });
+    }
+
+    // sizes change once fonts/videos arrive
+    window.addEventListener('load', () => ScrollTrigger.refresh(), { once: true });
+  }
+
+  initAbout();
 
 
 })();

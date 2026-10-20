@@ -88,9 +88,7 @@
   --surface-color: #151f2b;
   --contrast-color: #ffffff;
 }
-:root {
-  scroll-behavior: smooth;
-}
+/* scroll-behavior: smooth removed: smooth scrolling is handled by Lenis (main.js) */
 @font-face {
   font-family: "Rousseau";
   src: url(../fonts/RussoOne-Regular.ttf) format("truetype");
@@ -610,8 +608,10 @@ section {
   color: #fff;
 }
 #about .section-title h2 {
-  font-size: 42.67px;
-  line-height: 1.1;
+  font-size: clamp(50px, 9vw, 140px);
+  line-height: 1.4;
+  letter-spacing: -.03em;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 #about .section-title p {
   font-size: 21.33px;
@@ -863,6 +863,64 @@ section {
 }
 #about .workflow-step span:last-child {
   display: inline-block;
+}
+
+#about .about-lower {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: clamp(24px, 4vw, 48px);
+  margin-top: clamp(30px, 4vw, 60px);
+}
+
+
+
+/* Responsive adjustments for different screen sizes */
+@media (max-width: 992px) {
+  #about .about-lower {
+    grid-template-columns: 1fr;
+  }
+
+  #about .founder-card {
+    min-height: 400px; /* Reduce height on smaller screens */
+  }
+}
+
+@media (max-width: 768px) {
+  #about .about-lower {
+    gap: clamp(16px, 3vw, 32px);
+    margin-top: clamp(20px, 3vw, 40px);
+  }
+
+  #about .founder-card {
+    min-height: 350px;
+  }
+
+  #about .about-story {
+    font-size: clamp(15px, 2.5vw, 18px);
+  }
+
+  #about .about-location {
+    font-size: clamp(9px, 2vw, 11px);
+  }
+}
+
+@media (max-width: 575px) {
+  #about .about-lower {
+    gap: clamp(12px, 4vw, 24px);
+    margin-top: clamp(16px, 4vw, 32px);
+  }
+
+  #about .founder-card {
+    min-height: 300px;
+  }
+
+  #about .about-story {
+    font-size: clamp(14px, 3vw, 16px);
+  }
+
+  #about .about-location {
+    font-size: clamp(8px, 2.5vw, 10px);
+  }
 }
 @media (max-width: 768px) {
   #about .workflow-line {
@@ -1435,6 +1493,14 @@ section {
   margin-right: 8px;
   color: var(--accent-color);
 }
+
+@media (max-width: 400px) {
+  #about .about-lower {
+    gap: clamp(20px, 6vw, 30px); /* Reduced gap for stacked elements on very small screens */
+    margin-top: clamp(20px, 5vw, 40px); /* Also reduce top margin */
+  }
+}
+
 :root {
   --default-font:
     "Roboto", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
@@ -1445,7 +1511,7 @@ section {
 }
 .hero-content h1 {
   font-family: var(--heading-font);
-  font-size: 8em;
+  font-size: clamp(5.8rem, 12.5vw, 16rem);
   color: #fff !important;
   font-weight: 900;
   text-shadow:
@@ -1455,28 +1521,47 @@ section {
     0 0 26px rgb(255 255 255/0.45);
   animation: hero-title-glow 4.8s ease-in-out infinite;
 }
-.hero-content h1 .hero-title-letter {
+.hero-video-text {
+  position: relative;
+  isolation: isolate;
+  width: min(1660px, 96vw);
+  max-width: 100%;
+}
+.hero-video-text__title {
+  position: relative;
+  z-index: 2;
   display: inline-block;
-  transform: translate3d(
-      calc(var(--scatter-progress, 0) * var(--scatter-x, 0px)),
-      calc(var(--scatter-progress, 0) * var(--scatter-y, 0px)),
-      0
-    )
-    rotate(calc(var(--scatter-progress, 0) * var(--scatter-r, 0deg)));
-  opacity: calc(1 - (var(--scatter-progress, 0) * 0.95));
-  filter: blur(calc(var(--scatter-progress, 0) * 1.6px));
-  will-change: transform, opacity, filter;
+  margin: 0;
+  letter-spacing: -0.035em;
+  line-height: 0.78;
+  transform: scaleX(1.1);
+  transform-origin: center;
 }
-.hero-content h1 .hero-title-space {
-  min-width: 0.22em;
+.hero-video-text.is-canvas-ready .hero-video-text__title {
+  opacity: 0;
+  text-shadow: none;
 }
-@media (prefers-reduced-motion: reduce) {
-  .hero-content h1 .hero-title-letter {
-    transform: none;
-    opacity: 1;
-    filter: none;
-  }
+.hero-video-text__video {
+  position: absolute;
+  inset: -260px -340px;
+  z-index: 1;
+  pointer-events: none;
 }
+.hero-video-text__video video {
+  display: none;
+}
+.hero-video-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+  filter:
+    drop-shadow(0 0 7px rgb(56 245 255 / 0.38))
+    drop-shadow(0 0 18px rgb(255 79 216 / 0.18));
+}
+/* hero title letter styles moved to neon.css */
 .logo_main2 {
   --logo-size: calc(var(--index) * 7.8);
   width: var(--logo-size);
@@ -1541,14 +1626,15 @@ section {
   margin-top: calc(var(--index) * 5.5);
 }
 .hero-content__p {
-  text-transform: none;
-  letter-spacing: normal;
-  font-size: calc(var(--index) * 0.73);
-  line-height: 3;
+
+  text-transform: uppercase;
+  letter-spacing: 5px;
+  font-size: calc(var(--index) * 2.73);
+  line-height: 5;
 }
 .hero-content__p p {
   margin: 0;
-  color: #2f2f2f !important;
+  color: #000000de !important;
 }
 .hero-content__p .hero-letter {
   display: inline-block;
@@ -1562,6 +1648,12 @@ section {
     animation: none;
     opacity: 1;
     transform: none;
+  }
+  .hero-video-text__title {
+    animation: none;
+  }
+  .hero-video-canvas {
+    filter: drop-shadow(0 0 12px rgb(56 245 255 / 0.35));
   }
 }
 .button-start {
@@ -1613,7 +1705,10 @@ section {
 }
 @media (max-width: 1366px) and (min-width: 575px) {
   .hero-content h1 {
-    font-size: clamp(4.75rem, 7.4vw, 6.4rem);
+    font-size: clamp(5.2rem, 11.5vw, 10rem);
+  }
+  .hero-video-text {
+    width: min(1040px, 96vw);
   }
   .hero-content__p {
     font-size: clamp(0.95rem, 1.45vw, 1.25rem);
@@ -1622,7 +1717,13 @@ section {
 }
 @media (max-width: 575px) {
   .hero-content h1 {
-    font-size: 4em;
+    font-size: clamp(2.6rem, 12vw, 5rem);
+  }
+  .hero-video-text {
+    width: 94vw;
+  }
+  .hero-video-text__title {
+    -webkit-text-stroke-width: 1px;
   }
   .layer-1 {
     transform: translateZ(-55px) scale(1.2);
@@ -1630,9 +1731,20 @@ section {
   .layer-2 {
     transform: translateZ(80px) scale(1.2);
   }
+  
+}
+@media (max-width: 768px) {
+   .hero-content__p p {
+    margin: 0;
+    color: #000000de !important;
+    font-size: 7px !important;
+    letter-spacing: 1px;
+}
+
 }
 @media (max-width: 425px) and (min-width: 200px) {
     .hero-content h1 {
-    font-size: 2em;
+    font-size: clamp(2.2rem, 12vw, 4.2rem);
   }
+ 
 }

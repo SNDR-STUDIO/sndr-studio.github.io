@@ -1,0 +1,10 @@
+# Local tool / assistant state
+.claude/settings.local.json
+.clinerules
+memory/
+
+# Working backups and scratch notes
+_backup_before_s1/
+assets/cloude_version/
+semafoor.txt
+*fix_verification.txt
