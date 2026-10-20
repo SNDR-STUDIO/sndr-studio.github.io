@@ -1,11 +1,13 @@
 ﻿<!DOCTYPE html>
+<!-- Test comment -->
 <html lang="en">
 
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta name="color-scheme" content="dark">
   <title>SNDR STUDIO</title>
-  <meta name="description" content="SNDR studio вЂ” motion design and web-developing">
+  <meta name="description" content="SNDR studio — motion design and web-developing">
   <link rel="canonical" href="https://sndr-studio.github.io/">
   <meta content="" name="keywords">
 
@@ -31,11 +33,11 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
     rel="stylesheet">
-  <!-- вњ… Bootstrap CSS -->
+  <!-- ✅ Bootstrap CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 
 
-  <!-- вњ… Bootstrap Icons -->
+  <!-- ✅ Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
   <!-- <link href="../assets/fonts/google-fonts.css"   rel="stylesheet"> -->
@@ -43,24 +45,468 @@
 
   <!-- <link  rel="stylesheet" href="../assets/css/bootstrap-icons.css"  > -->
 
-  <!-- вњ… Swiper -->
+  <!-- ✅ Swiper -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
 
-  <!-- вњ… AOS (Animate On Scroll) -->
+  <!-- ✅ AOS (Animate On Scroll) -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
 
-  <!-- вњ… GLightbox -->
+  <!-- ✅ GLightbox -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
 
   <!-- Main CSS -->
   <link rel="preload" href="assets/css/minify_main.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <style>
+    :root{
+      --border: rgba(20,157,221,0.3);
+      --accent: #149ddd;
+      --muted: rgba(255,255,255,0.7);
+      --muted-2: rgba(255,255,255,0.8);
+      --font-display: 'Poppins', sans-serif;
+      --font-body: 'Roboto', sans-serif;
+      --font-mono: 'RussoOne', sans-serif;
+    }
+
+    /* ============ ABOUT TITLE REVEAL (hero title logic lives in main.js + neon.css) ============ */
+    #about-title span {
+      opacity: 0;
+      transform: translateY(50px);
+      display: inline-block;
+    }
+
+    body.loaded #about-title span {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+      transition-delay: calc(var(--i) * 0.05s);
+    }
+
+    /* Enhanced hover effect for about-title: stronger dispersion + scattered particles */
+    #about-title:hover span {
+      transform: translateY(0) translateX(calc((var(--i) - (var(--total)-1)/2) * 24px)) rotate(calc(var(--i) * 15deg - 180deg)) scale(0.6);
+      opacity: calc(0.3 + var(--i) * 0.01);
+      transition: transform 0.5s ease, opacity 0.5s ease;
+    }
+
     .portfolio .portrait-frame-video {
       width: 100%;
       display: block;
       aspect-ratio: 16 / 9;
       object-fit: contain;
       background: #111;
+    }
+    .hover-zoom {
+      transition: transform 0.3s;
+    }
+    .hover-zoom:hover {
+      transform: scale(1.05);
+    }
+    /* Section title background overlay */
+    .container.section-title {
+      position: relative;
+      background: rgba(0,0,0,0.1);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .about-details {
+      margin: 20px 0;
+    }
+    .detail-item {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 12px;
+      font-size: 0.95rem;
+      color: rgba(255, 255, 255, 0.8);
+    }
+    .detail-item span {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 4px 10px;
+      border-radius: 4px;
+    }
+    .detail-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 15px;
+    }
+    .detail-tags span {
+      background: rgba(20,157,221,0.2);
+      color: #149ddd;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      border: 1px solid rgba(20,157,221,0.3);
+    }
+    .founder-img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      object-position: top;
+    }
+    .about-content-square{
+      position:relative;
+      width:100%;
+      aspect-ratio:1/1;
+      background:rgba(0,0,0,0.6);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      overflow:hidden;
+      padding:15px;
+      box-sizing:border-box;
+    }
+    .about-content-square img{
+      width:100%;
+      max-width:260px;
+      height:auto;
+      object-fit:cover;
+      object-position:top;
+    }
+    .about-content-square .about-details{
+      color:#fff;
+      margin-top:20px;
+      text-align:center;
+    }
+    /* ============ MARQUEE ============ */
+    .marquee-section{background:#000;color:#fff;padding:26px 0;overflow:hidden;}
+    .marquee-track{display:flex;width:max-content;will-change:transform;}
+    .marquee-track span{font-family:var(--font-display);font-weight:600;font-size:clamp(28px,4vw,48px);padding:0 28px;white-space:nowrap;display:flex;align-items:center;gap:28px;color:#fff;}
+    .marquee-track span i{width:8px;height:8px;border-radius:50%;background:var(--accent);display:inline-block;}
+    .icon-overlay{
+      position:absolute;
+      inset:0;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:15px;
+      font-size:2rem;
+      color:rgba(255,255,255,0.8);
+      pointer-events:none;
+    }
+/* ============ ABOUT SECTION (REFERENCE STYLE) ============ */
+#about{
+  isolation:isolate;
+  overflow:hidden;
+  padding:0;
+  background:#09090b;
+  color:#f5f5f2;
+}
+.about-video{
+  position:absolute;
+  inset:0;
+  z-index:-3;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  opacity:.32;
+  filter:saturate(.65) contrast(1.08);
+}
+.about-backdrop{
+  position:absolute;
+  opacity:0.5;
+  inset:0;
+  z-index:-2;
+  background:linear-gradient(104deg,rgba(8,8,10,.97) 0%,rgba(8,8,10,.84) 46%,rgba(8,8,10,.72) 100%);
+}
+.about-noise{
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  opacity:.2;
+  pointer-events:none;
+  background-image:radial-gradient(rgba(255,255,255,.38) .55px,transparent .7px);
+  background-size:5px 5px;
+  mix-blend-mode:soft-light;
+}
+.studio-about-inner{
+  padding-top:clamp(120px,16vw,60px);
+  padding-bottom:clamp(96px,11vw,164px);
+}
+.about-kicker{
+  display:flex;
+  justify-content:space-between;
+  gap:24px;
+  padding-bottom:26px;
+  border-bottom:1px solid rgba(245,245,242,.24);
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:rgba(245,245,242,.66);
+}
+.about-statement{
+  max-width:1360px;
+  margin-top:clamp(45px,7vw,100px);
+  font-family:var(--font-display);
+  font-size:clamp(46px,8.25vw,130px);
+  font-weight:600;
+  line-height:.92;
+  letter-spacing:-.055em;
+  text-transform:uppercase;
+}
+.about-statement em{
+  font-style:normal;
+  color:#7c90ff;
+}
+.about-lower{
+  display:grid;
+  grid-template-columns:minmax(0,1.08fr) minmax(300px,.92fr);
+  gap:clamp(36px,7vw,132px);
+  margin-top:clamp(64px,9vw,144px);
+}
+.about-story{
+  max-width:710px;
+  font-size:clamp(20px,2.15vw,32px);
+  line-height:1.22;
+  letter-spacing:-.03em;
+}
+.about-story p + p{
+  margin-top:22px;
+  color:rgba(245,245,242,.67);
+  font-size:clamp(15px,1.15vw,18px);
+  line-height:1.55;
+  letter-spacing:0;
+  max-width:555px;
+}
+.about-location{
+  display:inline-flex;
+  align-items:center;
+  gap:9px;
+  margin-top:36px;
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:rgba(245,245,242,.67);
+}
+.about-location::before{
+  content:'';
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#7c90ff;
+  box-shadow:0 0 0 5px rgba(124,144,255,.14);
+}
+.founder-card{
+  position:relative;
+  min-height:570px;
+  overflow:hidden;
+  border:1px solid rgba(245,245,242,.25);
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  padding:clamp(21px,3vw,38px);
+  background:#15151a;
+}
+.founder-card::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg,rgba(8,8,10,.04) 28%,rgba(8,8,10,.94) 100%);
+  z-index:1;
+  pointer-events:none;
+}
+.founder-card img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  filter:grayscale(1) contrast(1.12) brightness(.65);
+  transform:scale(1);
+  transition:transform 1.2s var(--ease-out), filter .8s var(--ease-out);
+}
+.founder-card:hover img{
+  transform:scale(1.15);
+  filter:grayscale(.75) contrast(1.08) brightness(.73);
+  transition:transform .3s ease, filter .3s ease;
+}
+.founder-mark{
+  position:absolute;
+  top:20px;
+  left:22px;
+  right:22px;
+  z-index:2;
+  display:flex;
+  justify-content:space-between;
+  font-family:var(--font-mono);
+  font-size:10px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:rgba(245,245,242,.76);
+}
+.founder-mark span:last-child{
+  color:#9eacff;
+}
+.founder-copy{
+  position:relative;
+  z-index:2;
+}
+.founder-copy h3{
+  font-size:clamp(28px,3vw,47px);
+  letter-spacing:-.05em;
+}
+.founder-copy p{
+  margin-top:9px;
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:.055em;
+  text-transform:uppercase;
+  color:rgba(245,245,242,.67);
+}
+.founder-capabilities{
+  position:relative;
+  z-index:2;
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  margin-top:28px;
+}
+.founder-capabilities span{
+  padding:7px 9px;
+  border:1px solid rgba(245,245,242,.27);
+  font-family:var(--font-mono);
+  font-size:9px;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+  color:rgba(245,245,242,.8);
+}
+
+/* Keep existing hover-zoom */
+.hover-zoom{
+  transition:transform 0.3s;
+}
+.hover-zoom:hover{
+  transform:scale(1.05);
+}
+
+/* ============ WHAT WE OFFER SECTION ============ */
+.what-we-offer{
+  padding:clamp(102px,13vw,60px) 0 0;
+  overflow:hidden;
+  isolation:isolate;
+  background:#070a14;
+  color:#eef1ff;
+}
+.what-we-offer .eyebrow{
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:rgba(224,230,255,.7);
+}
+.services-list{
+  border-top:1px solid var(--border);
+  margin-top:clamp(72px,9vw,135px);
+}
+.service-row{
+  border-bottom:1px solid var(--border);
+  display:grid;
+  grid-template-columns:70px 1fr auto;
+  align-items:center;
+  padding:26px 0;
+  gap:20px;
+  cursor:pointer;
+  transition:padding 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.service-row .num{
+  font-family:var(--font-mono);
+  font-size:13px;
+  color:var(--muted-2);
+}
+.service-row h3{
+  font-size:clamp(22px,4vw,52px);
+  font-weight:600;
+  transition:transform 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.service-row .arrow{
+  font-size:22px;
+  transition:transform 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.service-row .service-detail{
+  grid-column:1/-1;
+  max-height:0;
+  overflow:hidden;
+  transition:max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.4s cubic-bezier(0.4,0,0.2,1);
+  opacity:0;
+}
+.service-row .service-detail p{
+  color:var(--muted);
+  max-width:520px;
+  padding-top:18px;
+  font-size:15px;
+}
+.service-row.open{
+  padding:36px 0;
+}
+.service-row.open .service-detail{
+  max-height:200px;
+  opacity:1;
+}
+.service-row.open h3{
+  transform:translateX(14px);
+  color:var(--accent);
+}
+.service-row.open .arrow{
+  transform:rotate(45deg);
+}
+/* responsive */
+@media (max-width:900px){
+  .service-row{grid-template-columns:64px 1fr;}
+}
+@media (max-width:600px){
+  .service-row{grid-template-columns:1fr; gap:14px;}
+  .service-row p,.service-row .service-detail{grid-column:auto;}
+  .service-row:hover{padding-left:0; padding-right:0; background:transparent;}
+}
+  </style>
+
+  <style>
+  /* ============ MORE MUTED STATS SECTION ============ */
+  .stats-item i {
+    color: var(--muted);
+    opacity: 0.7;
+  }
+
+  .stats-item .purecounter {
+    color: var(--muted-2);
+    opacity: 0.8;
+  }
+
+  .stats-item p {
+    color: var(--muted);
+    opacity: 0.7;
+  }
+
+  .stats-item p strong {
+    color: var(--muted-2);
+    opacity: 0.8;
+  }
+
+    /* ============ ENHANCED WHAT WE OFFER SECTION ============ */
+    .what-we-offer .service-row h3{
+      font-size:clamp(18px,3vw,28px); /* Reduced font size */
+      font-weight:500; /* Reduced font weight for lighter appearance */
+      color:var(--muted); /* More muted color */
+      transition:transform var(--dur-ui) var(--ease-out), color var(--dur-ui) var(--ease-out);
+    }
+
+    .what-we-offer .service-row .service-detail p{
+      font-size:15px; /* Slightly increased for better readability */
+      line-height:1.6; /* Improved readability */
+      color:#fff; /* White text for visibility */
+    }
+
+    /* Enhanced hover effects for better UX */
+    .what-we-offer .service-row:hover h3{
+      color:var(--accent);
+    }
+
+    .what-we-offer .service-row:hover .arrow{
+      transform:rotate(15deg);
     }
   </style>
 
@@ -74,7 +520,7 @@
 
 
 
-  <link rel="preload" as="image" href="assets/img/layer-11min.png">
+  <link rel="preload" as="image" href="assets/img/layer-11-min.png">
   <link rel="preload" as="image" href="assets/img/layer-22-min.webp">
   <link rel="preload" as="image" href="assets/img/layer-55-min.webp">
   <!-- <link rel="preload" href="../assets/css/main2.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -110,18 +556,289 @@
       y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
     })(window, document, "clarity", "script", "uxqnyfxhkx");
   </script>
+<style>
+/* Custom fixes per user request */
+/* Increase hero h1 size */
+.hero-video-text__title {
+  font-size: clamp(3.5rem, 9vw, 6rem);
+  font-weight: 600;
+  letter-spacing: -.05em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+/* Remove letter dispersion hover effect on about title, keep only bottom-up reveal */
+#about-title:hover span {
+  transform: none !important;
+  opacity: 1 !important;
+  transition: none !important;
+}
+
+/* Portfolio section background stretch */
+#portfolio {
+  background-image: url('assets/img/apps-banner.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  color: #fff; /* lighten text */
+}
+#portfolio::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.6); /* darker overlay */
+  z-index: 0;
+}
+#portfolio > .container {
+  position: relative;
+  z-index: 1;
+  padding: 50px;
+}
+#portfolio h2,
+#portfolio p {
+  color: #fff;
+}
+
+/* Increase portfolio description text size */
+#portfolio .container.section-title p {
+  font-size: clamp(1.25rem, 2.5vw, 2rem);
+  line-height: 1.6;
+  width: 100% !important;
+  max-width: none !important;
+}
+
+/* Restore normal case for about title (remove uppercase) */
+#about-title {
+  text-transform: none !important;
+}
+
+/* Remove overlay for Services and Testimonials section titles */
+#services .container.section-title,
+#testimonials .container.section-title {
+  background: transparent !important;
+}
+
+/* Content Stream Section Styles */
+.content-stream {
+  background: #000;
+  overflow: hidden;
+  position: relative;
+  padding: 60px 0;
+}
+
+.content-stream .section-title {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.content-stream .section-title h2 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 15px;
+  color: #fff;
+  position: relative;
+}
+
+.content-stream .section-title h2:after {
+  content: "";
+  position: absolute;
+  display: block;
+  width: 50px;
+  height: 3px;
+  background: var(--accent);
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -10px;
+}
+
+.content-stream .section-title p {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 16px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.video-container {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 177.78%; /* 9:16 aspect ratio */
+  border-radius: 20px;
+  overflow: hidden;
+  background: #111;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.video-container video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.platform-logos {
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  display: flex;
+  gap: 8px;
+  background: rgba(0,0,0,0.6);
+  padding: 8px 12px;
+  border-radius: 20px;
+}
+
+.platform-logos span {
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Swiper customization for content stream */
+.content-stream-swiper {
+  width: 100%;
+  height: auto;
+  padding: 20px 0 48px;
+}
+
+.content-stream-swiper .swiper-slide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: auto;
+  background: transparent;
+}
+
+/* Phone fits the section: limited by slide width and screen height, ratio of iphon18.png */
+.stream-device {
+  position: relative;
+  max-width: 100%;
+  /* screen height minus section padding, title and pagination */
+  height: clamp(280px, calc(100svh - var(--stream-chrome, 460px)), 640px);
+  aspect-ratio: 660 / 1254;
+}
+
+.stream-phone {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Platform logo in the middle of the phone screen */
+.stream-logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 62%;
+  height: auto;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.stream-device--instagram .stream-logo,
+.stream-device--threads .stream-logo {
+  width: 66%;
+}
+
+.content-stream-swiper .swiper-pagination {
+  bottom: 8px;
+}
+
+.content-stream-swiper .swiper-pagination-bullet {
+  width: 10px;
+  height: 10px;
+  background: rgba(255,255,255,0.3);
+  opacity: 1;
+  border: 0;
+  transition: all 0.3s;
+}
+
+.content-stream-swiper .swiper-pagination-bullet-active {
+  background: var(--accent);
+  width: 12px;
+  height: 12px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .content-stream {
+    padding: 40px 0;
+    --stream-chrome: 345px;
+  }
+
+  .content-stream .section-title h2 {
+    font-size: 28px;
+  }
+
+  .content-stream .section-title p {
+    font-size: 14px;
+  }
+
+  .video-container {
+    border-radius: 15px;
+  }
+
+  .platform-logos {
+    bottom: 10px;
+    left: 10px;
+    padding: 6px 10px;
+  }
+
+  .platform-logos span {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .content-stream {
+    padding: 30px 0;
+  }
+
+  .content-stream .section-title h2 {
+    font-size: 24px;
+  }
+
+  .content-stream .section-title p {
+    font-size: 13px;
+  }
+
+  .content-stream {
+    --stream-chrome: 330px;
+  }
+
+  .video-container {
+    border-radius: 12px;
+  }
+
+  .platform-logos {
+    bottom: 8px;
+    left: 8px;
+    padding: 5px 8px;
+  }
+
+  .platform-logos span {
+    font-size: 9px;
+  }
+}
+</style>
+  <!-- Lenis base styles + neon redesign layer (loaded last so it wins the cascade) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lenis@1.3.17/dist/lenis.css">
+  <link rel="stylesheet" href="assets/css/neon.css">
 </head>
 
 <body class="index-page">
 
-  <header id="header" class="header dark-background d-flex flex-column">
-    <i class="header-toggle d-xl-none bi bi-list"></i>
+  <header id="header" class="header dark-background d-flex flex-column" data-lenis-prevent>
+    <button type="button" class="header-toggle d-xl-none bi bi-list" aria-label="Open menu" aria-expanded="false" aria-controls="navmenu"></button>
 
     <div class="profile-img">
-      <video class="img-fluid rounded-circle ava_video" autoplay muted loop playsinline preload="metadata"
-        style="margin:15px auto;display:block;width:200px;height: 200px; border:8px solid color-mix(in srgb, var(--default-color), transparent 85%);object-fit:cover;">
-        <source src="assets/video/hiking-edit.mp4" type="video/mp4">
-      </video>
+      <img src="assets/img/hero_fullbody_PNG_SUIT.png" class="img-fluid rounded-circle" alt="Founder" style="margin:15px auto;display:block;width:200px;height:200px;border:8px solid color-mix(in srgb, var(--default-color), transparent 85%);object-fit:cover;object-position:top;">
     </div>
 
     <a href="/" class="logo d-flex align-items-center justify-content-center">
@@ -132,9 +849,7 @@
         <h1 class="sitename">Alexandr</h1>
         <!-- <h2>Alexandr</h2> -->
         <p>I'm <span class="typed"
-            data-typed-items="Motion Designer, Web Developer, Freelancer, Photographer">Designer</span><span
-            class="typed-cursor typed-cursor--blink" aria-hidden="true"></span><span
-            class="typed-cursor typed-cursor--blink" aria-hidden="true"></span></p>
+            data-typed-items="Motion Designer, Web Developer, Freelancer, Photographer">Designer</span></p>
       </div>
     </a>
 
@@ -143,7 +858,7 @@
       <!-- <a href="#" class="facebook"><i class="bi bi-facebook"></i></a> -->
       <!-- <a href="#" class="instagram"><i class="bi bi-instagram"></i></a> -->
       <!-- <a href="#" class="google-plus"><i class="bi bi-skype"></i></a> -->
-      <a href="https://www.linkedin.com/in/motion-std/" target="_blank" class="linkedin"><i
+      <a href="https://www.linkedin.com/in/motion-std/" target="_blank" rel="noopener" class="linkedin" aria-label="LinkedIn"><i
           class="bi bi-linkedin"></i></a>
       <!-- <a href="#" class="instagram"><i class="bi bi-instagram"></i></a> -->
     </div>
@@ -151,15 +866,17 @@
     <nav id="navmenu" class="navmenu">
       <ul>
 
-        <a href="#hero" class="active nav-link"><i class="bi bi-house navicon"></i>Home</a>
+        <li><a href="#hero" class="active nav-link"><i class="bi bi-house navicon"></i> Home</a></li>
         <!-- <a href="#hero" class="nav-link px-2 text-body-secondary">Home</a> -->
 
         <!-- <li></li> -->
         <li><a href="#about" class="nav-link"><i class="bi bi-person navicon"></i> About</a></li>
+        <li><a href="#content-stream" class="nav-link"><i class="bi bi-phone navicon"></i> Content Stream</a></li>
         <!-- <li><a href="#resume"><i class="bi bi-file-earmark-text navicon"></i> Resume</a></li> -->
-        <li><a href="#portfolio" claas="nav-link"><i class="bi bi-images navicon"></i> Our Works</a></li>
-        <li><a href="#services" claas="nav-link"><i class="bi bi-hdd-stack navicon"></i> Services</a></li>
-        <li><a href="#testimonials" claas="nav-link"><i class="bi bi-person-badge navicon"></i>Testimonials</a></li>
+        <li><a href="#portfolio" class="nav-link"><i class="bi bi-images navicon"></i> Our Works</a></li>
+        <li><a href="#what-we-offer" class="nav-link"><i class="bi bi-grid navicon"></i> What we offer</a></li>
+        <li><a href="#services" class="nav-link"><i class="bi bi-hdd-stack navicon"></i> Services</a></li>
+        <li><a href="#testimonials" class="nav-link"><i class="bi bi-person-badge navicon"></i> Testimonials</a></li>
         <!-- <li class="dropdown"><a href="#"><i class="bi bi-menu-button navicon"></i> <span>Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
           <ul>
             <li><a href="#">Dropdown 1</a></li>
@@ -187,16 +904,20 @@
     <!-- Hero Section -->
     <!-- <section id="hero" class=" hero section dark-background"> -->
     <!-- <div class="logo" style="background-image: url(assets/img/logo.svg);"></div> -->
-    <section id="hero" class="layers" data-bs-spy="scroll" data-bs-target="#hero" data-bs-smooth-scroll="true"
-      class="scrollspy-example" tabindex="0">
+    <section id="hero" class="layers">
       <div class="layers__container">
         <div class="layers__item layer-1" style="background-image: url(assets/img/layer-11-min.png);"></div>
         <div class="layers__item layer-2" style="background-image: url(assets/img/layer-22-min.webp);"></div>
         <div class="layers__item layer-3">
-          <div class="hero-content">
-            <h1>SNDR studio</h1>
+          <div class="hero-content hero-video-text">
+            <div class="hero-video-text__video" aria-hidden="true">
+              <video id="motionVideo" autoplay muted loop playsinline preload="metadata">
+                <source src="assets/video/Motion_Desig.mp4" type="video/mp4">
+              </video>
+            </div>
+            <h1 class="hero-video-text__title" data-video-text="SNDR STUDIO" aria-label="SNDR STUDIO">SNDR STUDIO</h1>
             <div class="hero-content__p">
-              <p>Design that moves. Code that connects</p>
+              <p>Motion that moves. Code that connects</p>
             </div>
             <!-- <button class="button-start" >
               <a href="#about" >ORDER NOW</a>
@@ -216,73 +937,162 @@
 
 
     </section><!-- /Hero Section -->
+    <div class="marquee-section" aria-hidden="true">
+      <div class="marquee-track" id="marqueeTrack"></div>
+    </div>
 
     <!-- About Section -->
     <section id="about" class="about section" data-bs-spy="scroll" data-bs-target="#list-example"
-      data-bs-smooth-scroll="true" class="scrollspy-example" tabindex="0">
-      <video class="about-bg-video" autoplay muted loop playsinline preload="metadata" aria-hidden="true">
-        <source src="assets/video/Cinematic_Smoke_and_Atmosphere_Loops.webm" type="video/webm">
+      data-bs-smooth-scroll="true">
+      <video class="about-video" autoplay muted loop playsinline preload="metadata" poster="assets/img/motin.png" aria-hidden="true">
+        <source src="assets/video/motion_timelaps.mp4" type="video/mp4">
       </video>
-
-      <div class="container section-title" data-aos="fade-up">
-        <h2>About</h2>
-        <p> Hi! We create digital stories through code and motion.
-          Our studio combines clean web design, responsive development, and captivating animation to help brands stand
-          out online.
-          Every pixel, frame, and movement is crafted with purpose.</p>
-      </div>
-
-      <div class="container" data-aos="fade-up" data-aos-delay="100">
-
-        <div class="row gy-4 justify-content-center">
-          <!-- <div class="col-lg-4">
-            <img loading="lazy" src="assets/img/my-profile-img-min.webp" class="img-fluid" alt="">
-          </div> -->
-          <div class="col-lg-12 content">
-            <h2>Motion design &amp; Web Development.</h2>
-            <p class=" py-3">
-              We believe that motion is more than just movement - it is emotion, rhythm, and storytelling.
-              Our team blends creativity with technical precision to design experiences that feel alive and memorable.
-              From sleek website interactions to bold social media animations, we turn ideas into visuals that connect
-              with people and inspire action.
-            </p>
-            <div class="row">
-              <div class="col-lg-6">
-                <ul>
-                  <li><i class="bi bi-chevron-right"></i> <strong>Client Request</strong></li>
-                  <li><i class="bi bi-chevron-right"></i> <strong>Concept & Planning</strong> </li>
-                  <li><i class="bi bi-chevron-right"></i> <strong>Design</strong></li>
-
-                </ul>
-              </div>
-              <div class="col-lg-6">
-                <ul>
-                  <li><i class="bi bi-chevron-right"></i> <strong>Animation & Realization</strong></li>
-                  <li><i class="bi bi-chevron-right"></i> <strong>Review & Delivery</strong></li>
-                </ul>
-              </div>
-            </div>
-            <p class="py-3">
-              Our animations do not just catch the eye - they strengthen brand recognition and drive measurable results.
-            </p>
-
-
-          </div>
+      <div class="about-backdrop" aria-hidden="true"></div>
+      <div class="about-noise" aria-hidden="true"></div>
+      <div class="container studio-about-inner">
+        <div class="about-kicker">
+          <span>01 — About the studio</span><span>SNDR / Independent creative practice</span>
         </div>
-
+        <!-- <h2 id="about-title" class="about-statement"><span style="--i:0">S</span><span style="--i:1">N</span><span style="--i:2">D</span><span style="--i:3">R</span><span style="--i:4"> </span><span style="--i:5">I</span><span style="--i:6">S</span><span style="--i:7"> </span><span style="--i:8">W</span><span style="--i:9">H</span><span style="--i:10">E</span><span style="--i:11">R</span><span style="--i:12">E</span><span style="--i:13"> </span><em><span style="--i:14">M</span><span style="--i:15">O</span><span style="--i:16">T</span><span style="--i:17">I</span><span style="--i:18">O</span><span style="--i:19">N</span><span style="--i:20">,</span><span style="--i:21"> </span><span style="--i:22">C</span><span style="--i:23">O</span><span style="--i:24">D</span><span style="--i:25">E</span></em><span style="--i:26"> </span><span style="--i:27">A</span><span style="--i:28">N</span><span style="--i:29">D</span><span style="--i:30"> </span><span style="--i:31">N</span><span style="--i:32">E</span><span style="--i:33">W</span><span style="--i:34"> </span><span style="--i:35">V</span><span style="--i:36">I</span><span style="--i:37">S</span><span style="--i:38">U</span><span style="--i:39">A</span><span style="--i:40">L</span><span style="--i:41"> </span><span style="--i:42">T</span><span style="--i:43">O</span><span style="--i:44">O</span><span style="--i:45">L</span><span style="--i:46">S</span><span style="--i:47"> </span><span style="--i:48">M</span><span style="--i:49">E</span><span style="--i:50">E</span><span style="--i:51">T</span><span style="--i:52">.</span></span></h2> -->
+        <div class="about-lower">
+          <div>
+            <div class="about-story">
+              <p class="about-lead">SNDR is an independent creative studio for motion, digital design, AI-generated content and interactive experiences.</p>
+              <p>Founded by Alex Savo, SNDR began as a freelance practice in web development and evolved into a multidisciplinary studio. We create visual content for YouTube, TikTok and social platforms, develop characters and visual identities, and build web experiences that feel alive.</p>
+              <p>Based in Europe. Working worldwide.</p>
+            </div>
+            <span class="about-location">Europe / Worldwide</span>
+          </div>
+          <article class="founder-card" aria-label="Alex Savo, founder of SNDR">
+            <img src="assets/img/hero_fullbody_PNG_SUIT.png" alt="Alex Savo, founder of SNDR" loading="lazy" style="object-position:top;">
+            <div class="founder-mark"><span>Founder / 01</span><span>SNDR</span></div>
+            <div class="founder-copy">
+              <h3>ALEX<br>SAVO</h3>
+              <p>Founder / Motion designer / Creative developer</p>
+            </div>
+            <div class="founder-capabilities" aria-label="Founder capabilities">
+              <span>Motion design</span><span>Web development</span><span>Generative AI</span><span>3D / Comfy UI</span><span>Visual content</span>
+            </div>
+          </article>
+        </div>
       </div>
-
     </section>
 
-    <!-- Stats Section -->
+
+
+
+<!-- Content Stream Section -->
+    <section id="content-stream" class="content-stream section" data-bs-spy="scroll" data-bs-target="#list-example"
+        data-bs-smooth-scroll="true">
+        <!-- Section Title -->
+        <div class="container section-title" data-aos="fade-up">
+            <p class="section-kicker">02 — Content stream</p>
+            <h2>Content Stream</h2>
+            <p>Seamless flow of vertical content across platforms</p>
+        </div><!-- End Section Title -->
+
+        <div class="container" data-aos="fade-up" data-aos-delay="100">
+            <div class="swiper init-swiper content-stream-swiper">
+                <script type="application/json" class="swiper-config">
+                    {
+                        "loop": true,
+                        "speed": 600,
+                        "slidesPerView": "auto",
+                        "pagination": {
+                            "el": ".swiper-pagination",
+                            "type": "bullets",
+                            "clickable": true
+                        },
+                        "breakpoints": {
+                            "0": {
+                                "slidesPerView": 1.25,
+                                "spaceBetween": 16,
+                                "centeredSlides": true
+                            },
+                            "576": {
+                                "centeredSlides": false,
+                                "slidesPerView": 2,
+                                "spaceBetween": 20
+                            },
+                            "992": {
+                                "slidesPerView": 3,
+                                "spaceBetween": 24
+                            },
+                            "1400": {
+                                "slidesPerView": 4,
+                                "spaceBetween": 28
+                            }
+                        }
+                    }
+                </script>
+                <div class="swiper-wrapper">
+                    <!-- Phones: platform logo centered on each screen (2 rounds for a seamless loop) -->
+                    <div class="swiper-slide">
+                        <div class="stream-device stream-device--shorts">
+                            <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
+                            <img src="assets/img/logo/shorts-light.png" alt="YouTube Shorts" class="stream-logo" loading="lazy">
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="stream-device stream-device--tiktok">
+                            <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
+                            <img src="assets/img/logo/tiktok-light.svg" alt="TikTok" class="stream-logo" loading="lazy">
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="stream-device stream-device--instagram">
+                            <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
+                            <img src="assets/img/logo/instagram-light.png" alt="Instagram" class="stream-logo" loading="lazy">
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="stream-device stream-device--threads">
+                            <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
+                            <img src="assets/img/logo/threads-light.png" alt="Threads" class="stream-logo" loading="lazy">
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="stream-device stream-device--shorts">
+                            <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
+                            <img src="assets/img/logo/shorts-light.png" alt="YouTube Shorts" class="stream-logo" loading="lazy">
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="stream-device stream-device--tiktok">
+                            <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
+                            <img src="assets/img/logo/tiktok-light.svg" alt="TikTok" class="stream-logo" loading="lazy">
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="stream-device stream-device--instagram">
+                            <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
+                            <img src="assets/img/logo/instagram-light.png" alt="Instagram" class="stream-logo" loading="lazy">
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="stream-device stream-device--threads">
+                            <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
+                            <img src="assets/img/logo/threads-light.png" alt="Threads" class="stream-logo" loading="lazy">
+                        </div>
+                    </div>
+                </div>
+                <!-- Add pagination -->
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+    </section><!-- End Content Stream Section -->
+
+
+<!-- Stats Section -->
     <section id="stats" class="stats section">
+      <div class="stats-three-bg" aria-hidden="true"></div>
 
       <div class="container" data-aos="fade-up" data-aos-delay="100">
 
         <div class="row gy-4">
 
           <div class="col-lg-3 col-md-6">
-            <div class="stats-item">
+            <div class="stats-item h-100">
               <i class="bi bi-emoji-smile"></i>
               <span data-purecounter-start="0" data-purecounter-end="50" data-purecounter-duration="1"
                 class="purecounter"></span>
@@ -291,7 +1101,7 @@
           </div><!-- End Stats Item -->
 
           <div class="col-lg-3 col-md-6">
-            <div class="stats-item">
+            <div class="stats-item h-100">
               <i class="bi bi-journal-richtext"></i>
               <span data-purecounter-start="0" data-purecounter-end="30" data-purecounter-duration="1"
                 class="purecounter"></span>
@@ -300,7 +1110,7 @@
           </div><!-- End Stats Item -->
 
           <div class="col-lg-3 col-md-6">
-            <div class="stats-item">
+            <div class="stats-item h-100">
               <i class="bi bi-headset"></i>
               <span data-purecounter-start="0" data-purecounter-end="500" data-purecounter-duration="1"
                 class="purecounter"></span>
@@ -309,7 +1119,7 @@
           </div><!-- End Stats Item -->
 
           <div class="col-lg-3 col-md-6">
-            <div class="stats-item">
+            <div class="stats-item h-100">
               <i class="bi bi-people"></i>
               <span data-purecounter-start="0" data-purecounter-end="11" data-purecounter-duration="1"
                 class="purecounter"></span>
@@ -329,8 +1139,9 @@
 
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
-        <h2>PORTFOLIO</h2>
-        <p>This section features some of the projects IвЂ™ve worked on over the past few years. It includes examples of
+        <p class="section-kicker">03 — Selected work</p>
+        <h2>Portfolio</h2>
+        <p>This section features some of the projects I've worked on over the past few years. It includes examples of
           websites, animations, and design work created for different clients and purposes. I always try to make each
           project clear, well-structured, and focused on helping clients achieve their real goals.
           My aim is to create results that look modern while staying functional and easy to use. In my work, I combine
@@ -342,9 +1153,9 @@
         <div class="isotope-layout" data-default-filter="*" data-layout="masonry" data-sort="original-order">
 
           <ul class="portfolio-filters isotope-filters" data-aos="fade-up" data-aos-delay="100">
-            <li data-filter="*" class="filter-active">All</li>
-            <li data-filter=".filter-product">Animations</li>
-            <li data-filter=".filter-app">Websites</li>
+            <li data-filter="*" class="filter-active" role="button" tabindex="0" aria-pressed="true">All</li>
+            <li data-filter=".filter-product" role="button" tabindex="0" aria-pressed="false">Animations</li>
+            <li data-filter=".filter-app" role="button" tabindex="0" aria-pressed="false">Websites</li>
 
             <!-- <li data-filter=".filter-branding">Branding</li>
             <li data-filter=".filter-books">Books</li> -->
@@ -352,52 +1163,7 @@
 
           <div class="row gy-4 isotope-container" data-aos="fade-up" data-aos-delay="200">
 
-
-
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-product">
-              <div class="portfolio-content h-100">
-
-                <video class="img-fluid bg-video lazy-video portrait-frame-video" preload="none" loop loop muted
-                  playsinline  loading="lazy">
-                  <source src="assets/video/ONE_MEDIA_HIRING.mp4" data-src="assets/video/ONE_MEDIA_HIRING.mp4"
-                    type="video/mp4">
-                  <source src="assets/video/ONE_MEDIA_HIRING.mp4" data-src="assets/video/ONE_MEDIA_HIRING.mp4"
-                    type="video/webm">
-                  don't support
-                </video>
-                <div class="portfolio-info">
-                  <h4>ONE MEDIA HIRING</h4>
-                  <p>Motion design</p>
-                  <a href="assets/video/ONE_MEDIA_HIRING.mp4" title="Motion design"
-                    data-gallery="portfolio-gallery-product" class="glightbox preview-link"><i
-                      class="bi bi-zoom-in"></i></a>
-
-                </div>
-              </div>
-            </div>
-
-
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-product">
-              <div class="portfolio-content h-100">
-                <!-- <img src="assets/img/portfolio/product-2-min.jpg" class="img-fluid" alt=""> -->
-                <video class="img-fluid bg-video lazy-video portrait-frame-video" preload="none" loop muted playsinline
-                   loading="lazy">
-                  <source src="assets/video/Geozilla.mp4" data-src="assets/video/Geozilla.mp4" type="video/mp4">
-                  <source src="assets/video/Geozilla.mp4" data-src="assets/video/Geozilla.mp4" type="video/webm">
-                  don't support
-                </video>
-                <div class="portfolio-info">
-                  <h4>Geozilla App</h4>
-                  <p>Motion design</p>
-                  <a href="assets/video/Geozilla.mp4" title="Geozilla App" data-gallery="portfolio-gallery-product"
-                    class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
-                  <!-- <a href="portfolio-details.html" title="More Details" class="details-link"><i
-                      class="bi bi-link-45deg"></i></a> -->
-                </div>
-              </div>
-            </div>
-
-
+        
             <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-product">
 
               <div class="portfolio-content h-100">
@@ -428,58 +1194,20 @@
 
 
 
-            <!-- <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-branding">
-              <div class="portfolio-content h-100">
-                <img src="assets/img/portfolio/branding-1-min.jpg" class="img-fluid" alt="">
-                <div class="portfolio-info">
-                  <h4>Branding 1</h4>
-                  <p>Website</p>
-                  <a href="assets/img/portfolio/branding-1-min.jpg" title="Branding 1"
-                    data-gallery="portfolio-gallery-branding" class="glightbox preview-link"><i
-                      class="bi bi-zoom-in"></i></a>
-                  <a href="portfolio-details.html" title="More Details" class="details-link"><i
-                      class="bi bi-link-45deg"></i></a>
-                </div>
-              </div>
-            </div> -->
-            <!-- End Portfolio Item -->
+            
 
 
             <!-- End Portfolio Item -->
+
+            
+
+
 
             <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-app">
-              <div class="portfolio-content h-100">
-
-
-                <!-- <img loading="lazy" src="assets/video/alloua-xiaomi.mp4" class="img-fluid" alt="" style="width: 100%;"> -->
-                <video class="img-fluid bg-video lazy-video " autoplay="off" preload="none" loop muted poster=""
-                  loading="lazy">
-
-                  <source src="assets/video/alloua-xiaomi.mp4" data-src="assets/video/alloua-xiaomi.mp4"
-                    type="video/mp4">
-                  <source src="assets/video/alloua-xiaomi.mp4" data-src="assets/video/alloua-xiaomi.mp4"
-                    type="video/webm">
-                  don't support
-                </video>
-
-                <div class="portfolio-info">
-                  <h4>allo.ua Xiaomi</h4>
-                  <p>Website</p>
-                  <a href="assets/video/alloua-xiaomi.mp4" title="allo.ua" data-gallery="portfolio-gallery-app"
-                    class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
-                  <!-- <a href="portfolio-details.html" title="More Details" class="details-link"><i
-                      class="bi bi-link-45deg"></i></a> -->
-                </div>
-              </div>
-            </div><!-- End Portfolio Item -->
-
-
-
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-product ">
 
               <div class="portfolio-content h-100">
                 <!-- <img src="assets/img/portfolio/product-2-min.jpg" class="img-fluid" alt=""> -->
-                <video class="img-fluid bg-video lazy-video" autoplay="false" preload="none" loop muted
+                <video class="img-fluid bg-video lazy-video" preload="none" loop muted
                   poster="assets/video/wyndham-min.png" loading="lazy">
                   <source src="assets/video/WYNDHAM-min.mp4" data-src="assets/video/WYNDHAM-min.mp4" type="video/mp4">
                   <source src="assets/video/WYNDHAM-min.mp4" data-src="assets/video/WYNDHAM-min.mp4" type="video/webm">
@@ -498,143 +1226,113 @@
 
 
 
-            </div><!-- End Portfolio Item -->
+            </div>
+
+
 
             <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-app">
 
               <div class="portfolio-content h-100">
-                <!-- <img src="assets/img/portfolio/app-1-min.jpg" class="img-fluid" alt=""> -->
-                <img loading="lazy" src="assets/img/clockineasy_750x480-min.webp" class="img-fluid" alt="">
-                <div class="portfolio-info">
-                  <h4>Clokcineasy</h4>
-                  <p>Website</p>
-                  <a href="assets/video/clokcineasy2.mp4" title="Clokcineasy" data-gallery="portfolio-gallery-app"
-                    class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
-                  <!-- <a href="portfolio-details.html" title="More Details" class="details-link"><i
-                      class="bi bi-link-45deg"></i></a> -->
-                </div>
-              </div>
-
-              <!-- <div class="portfolio-content h-100">
-                <img src="assets/img/portfolio/product-2-min.jpg" class="img-fluid" alt="">
-                <video class="img-fluid lazy-video" autoplay="false" preload="none" loop muted
-                  poster="assets/video/wyndham.webp" loading="lazy">
-                  <source src="assets/video/WYNDHAM.mp4" type="video/mp4">
-                  <source src="assets/video/WYNDHAM.mp4" type="video/webm">
+                <!-- <img src="assets/img/portfolio/product-2-min.jpg" class="img-fluid" alt=""> -->
+                <video class="img-fluid bg-video lazy-video" preload="none" loop muted
+                  poster="assets/video/wyndham-min.png" loading="lazy">
+                  <source src="assets/video/WYNDHAM-min.mp4" data-src="assets/video/WYNDHAM-min.mp4" type="video/mp4">
+                  <source src="assets/video/WYNDHAM-min.mp4" data-src="assets/video/WYNDHAM-min.mp4" type="video/webm">
                   don't support
                 </video>
                 <div class="portfolio-info">
                   <h4>WYNDHAM resort charvak</h4>
                   <p>Website</p>
-                  <a href="assets/video/WYNDHAM.mp4" title="WYNDHAM resort charvak"
+                  <a href="assets/video/WYNDHAM-min.mp4" title="WYNDHAM resort charvak"
                     data-gallery="portfolio-gallery-product" class="glightbox preview-link"><i
                       class="bi bi-zoom-in"></i></a>
-                  <a href="portfolio-details.html" title="More Details" class="details-link"><i
-                      class="bi bi-link-45deg"></i></a>
+                  <!-- <a href="portfolio-details.html" title="More Details" class="details-link"><i
+                      class="bi bi-link-45deg"></i></a> -->
                 </div>
-              </div> -->
+              </div>
+
+
+
             </div>
 
-            <!-- <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-product">
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-app">
+
               <div class="portfolio-content h-100">
-            
+                <!-- <img src="assets/img/portfolio/product-2-min.jpg" class="img-fluid" alt=""> -->
                 <video class="img-fluid bg-video lazy-video" preload="none" loop muted
-                  poster="assets/video/someworks-min.png" loading="lazy">
-                  <source src="assets/video/Main-min.mp4" data-src="assets/video/Main-min.mp4" type="video/mp4">
-                  <source src="assets/video/Main-min.mp4" data-src="assets/video/Main-min.mp4" type="video/webm">
+                  poster="assets/video/wyndham-min.png" loading="lazy">
+                  <source src="assets/video/WYNDHAM-min.mp4" data-src="assets/video/WYNDHAM-min.mp4" type="video/mp4">
+                  <source src="assets/video/WYNDHAM-min.mp4" data-src="assets/video/WYNDHAM-min.mp4" type="video/webm">
                   don't support
                 </video>
                 <div class="portfolio-info">
-                  <h4>Some works</h4>
+                  <h4>WYNDHAM resort charvak</h4>
                   <p>Website</p>
-                  <a href="assets/video/Main-min.mp4" title="Some works" data-gallery="portfolio-gallery-product"
-                    class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
-                 
+                  <a href="assets/video/WYNDHAM-min.mp4" title="WYNDHAM resort charvak"
+                    data-gallery="portfolio-gallery-product" class="glightbox preview-link"><i
+                      class="bi bi-zoom-in"></i></a>
+                  <!-- <a href="portfolio-details.html" title="More Details" class="details-link"><i
+                      class="bi bi-link-45deg"></i></a> -->
                 </div>
               </div>
+
+
+
             </div>
- -->
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-app">
+
+              <div class="portfolio-content h-100">
+                <!-- <img src="assets/img/portfolio/product-2-min.jpg" class="img-fluid" alt=""> -->
+                <video class="img-fluid bg-video lazy-video" preload="none" loop muted
+                  poster="assets/video/wyndham-min.png" loading="lazy">
+                  <source src="assets/video/WYNDHAM-min.mp4" data-src="assets/video/WYNDHAM-min.mp4" type="video/mp4">
+                  <source src="assets/video/WYNDHAM-min.mp4" data-src="assets/video/WYNDHAM-min.mp4" type="video/webm">
+                  don't support
+                </video>
+                <div class="portfolio-info">
+                  <h4>WYNDHAM resort charvak</h4>
+                  <p>Website</p>
+                  <a href="assets/video/WYNDHAM-min.mp4" title="WYNDHAM resort charvak"
+                    data-gallery="portfolio-gallery-product" class="glightbox preview-link"><i
+                      class="bi bi-zoom-in"></i></a>
+                  <!-- <a href="portfolio-details.html" title="More Details" class="details-link"><i
+                      class="bi bi-link-45deg"></i></a> -->
+                </div>
+              </div>
 
 
 
+            </div>
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-app">
 
+              <div class="portfolio-content h-100">
+                <!-- <img src="assets/img/portfolio/product-2-min.jpg" class="img-fluid" alt=""> -->
+                <video class="img-fluid bg-video lazy-video" preload="none" loop muted
+                  poster="assets/video/wyndham-min.png" loading="lazy">
+                  <source src="assets/video/WYNDHAM-min.mp4" data-src="assets/video/WYNDHAM-min.mp4" type="video/mp4">
+                  <source src="assets/video/WYNDHAM-min.mp4" data-src="assets/video/WYNDHAM-min.mp4" type="video/webm">
+                  don't support
+                </video>
+                <div class="portfolio-info">
+                  <h4>WYNDHAM resort charvak</h4>
+                  <p>Website</p>
+                  <a href="assets/video/WYNDHAM-min.mp4" title="WYNDHAM resort charvak"
+                    data-gallery="portfolio-gallery-product" class="glightbox preview-link"><i
+                      class="bi bi-zoom-in"></i></a>
+                  <!-- <a href="portfolio-details.html" title="More Details" class="details-link"><i
+                      class="bi bi-link-45deg"></i></a> -->
+                </div>
+              </div>
+
+
+
+            </div>
+            
+            <!-- End Portfolio Item -->
 
             <!-- End Portfolio Item -->
 
-
-
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-app">
-              <div class="portfolio-content h-100">
-                <!-- <img loading="lazy" src="assets/img/allo-apple.gif" class="img-fluid" alt=""> -->
-                <video class="img-fluid bg-video lazy-video" autoplay="false" preload="none" loop muted poster=""
-                  loading="lazy">
-                  <source src="assets/video/allo-apple.mp4" data-src="assets/video/allo-apple.mp4" type="video/mp4">
-                  <source src="assets/video/allo-apple.mp4" data-src="assets/video/allo-apple.mp4" type="video/webm">
-                  don't support
-                </video>
-                <div class="portfolio-info">
-                  <h4>Apple portal</h4>
-                  <p>Website</p>
-                  <a href="assets/video/allo-apple.mp4" autoplay="off" title="Apple"
-                    data-gallery="portfolio-gallery-app" class="glightbox preview-link"><i
-                      class="bi bi-zoom-in"></i></a>
-                  <!-- <a href="portfolio-details.html" title="More Details" class="details-link"><i
-                      class="bi bi-link-45deg"></i></a> -->
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-app">
-              <div class="portfolio-content h-100">
-                <img loading="lazy" src="assets/img/yuanpaygroup-min.webp" class="img-fluid" alt="">
-                <div class="portfolio-info">
-                  <h4>Yuanpaygroup</h4>
-                  <p>Website</p>
-                  <a href="assets/video/yuanpaygroup.mp4" title="Yuanpaygroup" data-gallery="portfolio-gallery-app"
-                    class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
-                  <!-- <a href="portfolio-details.html" title="More Details" class="details-link"><i
-                      class="bi bi-link-45deg"></i></a> -->
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-app">
-              <div class="portfolio-content h-100">
-                <!-- <img loading="lazy" src="assets/img/ekrona2.gif" class="img-fluid" alt=""> -->
-
-                <video class="img-fluid bg-video lazy-video" autoplay="false" preload="none" loop muted poster=""
-                  loading="lazy">
-                  <source src="assets/video/ekrona2.mp4" data-src="assets/video/ekrona2.mp4" type="video/mp4">
-                  <source src="assets/video/ekrona2.mp4" data-src="assets/video/ekrona2.mp4" type="video/webm">
-                  don't support
-                </video>
-                <div class="portfolio-info">
-                  <h4>Ekrona</h4>
-                  <p>Website</p>
-                  <a href="assets/video/ekrona2.mp4" title="Ekrona" data-gallery="portfolio-gallery-app"
-                    class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
-                  <!-- <a href="portfolio-details.html" title="More Details" class="details-link"><i
-                      class="bi bi-link-45deg"></i></a> -->
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-app">
-              <div class="portfolio-content h-100">
-                <!-- <img loading="lazy" src="assets/img/allo-iphone.gif" class="img-fluid" alt=""> -->
-                <video class="img-fluid bg-video lazy-video" autoplay="false" preload="none" loop muted poster=""
-                  loading="lazy">
-                  <source src="assets/video/allo-iphone.mp4" data-src="assets/video/allo-iphone.mp4" type="video/mp4">
-                  <source src="assets/video/allo-iphone.mp4" data-src="assets/video/allo-iphone.mp4" type="video/webm">
-                  don't support
-                </video>
-                <div class="portfolio-info">
-                  <h4>Iphone product page</h4>
-                  <p>Website</p>
-                  <a href="assets/video/allo-iphone.mp4" title="Iphone" data-gallery="portfolio-gallery-app"
-                    class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
-                  <!-- <a href="portfolio-details.html" title="More Details" class="details-link"><i
-                      class="bi bi-link-45deg"></i></a> -->
-                </div>
-              </div>
-            </div>
             <!-- End Portfolio Item -->
 
           </div><!-- End Portfolio Container -->
@@ -645,14 +1343,72 @@
 
     </section><!-- /Portfolio Section -->
 
+    <!-- 04–06 share one continuous background (.neon-flow in neon.css) -->
+    <div class="neon-flow">
+
+    <section id="what-we-offer" class="what-we-offer section" data-bs-spy="scroll" data-bs-target="#list-example" data-bs-smooth-scroll="true">
+      <div class="container">
+        <div class="section-title">
+          <p class="eyebrow section-kicker">04 — What we offer</p>
+          <h2>What we offer</h2>
+          <p>Motion, 3D, code and AI under one roof — open any direction to see what it covers.</p>
+        </div>
+        <div class="services-list">
+          <div class="service-row" data-cursor="view" role="button" tabindex="0" aria-expanded="false">
+            <span class="num">01</span>
+            <h3>Motion Design</h3>
+            <span class="arrow" aria-hidden="true">＋</span>
+            <div class="service-detail"><p>We bring ideas to life through dynamic visuals, fluid transitions, and expressive animation. Every frame is crafted to capture attention and communicate with impact.</p></div>
+          </div>
+          <div class="service-row" data-cursor="view" role="button" tabindex="0" aria-expanded="false">
+            <span class="num">02</span>
+            <h3>3D &amp; CGI</h3>
+            <span class="arrow" aria-hidden="true">＋</span>
+            <div class="service-detail"><p>We create immersive 3D visuals, photorealistic renders, and cinematic simulations. From product visualization to abstract worlds, we turn concepts into striking imagery.</p></div>
+          </div>
+          <div class="service-row" data-cursor="view" role="button" tabindex="0" aria-expanded="false">
+            <span class="num">03</span>
+            <h3>Web Development</h3>
+            <span class="arrow" aria-hidden="true">＋</span>
+            <div class="service-detail"><p>We build modern, responsive websites that combine clean code with bold visual design. Every detail is optimized for performance, usability, and a seamless user experience.</p></div>
+          </div>
+          <div class="service-row" data-cursor="view" role="button" tabindex="0" aria-expanded="false">
+            <span class="num">04</span>
+            <h3>UI / UX Motion</h3>
+            <span class="arrow" aria-hidden="true">＋</span>
+            <div class="service-detail"><p>We design purposeful animations that make digital interfaces feel intuitive and alive. Smooth transitions and micro-interactions guide users and enhance every interaction.</p></div>
+          </div>
+          <div class="service-row" data-cursor="view" role="button" tabindex="0" aria-expanded="false">
+            <span class="num">05</span>
+            <h3>Creative Coding</h3>
+            <span class="arrow" aria-hidden="true">＋</span>
+            <div class="service-detail"><p>We blend code, design, and experimentation to create interactive digital experiences. From generative visuals to custom web effects, we push creative boundaries through technology.</p></div>
+          </div>
+          <div class="service-row" data-cursor="view" role="button" tabindex="0" aria-expanded="false">
+            <span class="num">06</span>
+            <h3>Social Media</h3>
+            <span class="arrow" aria-hidden="true">＋</span>
+            <div class="service-detail"><p>We create scroll-stopping content designed for social platforms and digital campaigns. Bold visuals, engaging motion, and platform-ready formats help brands stand out.</p></div>
+          </div>
+          <div class="service-row" data-cursor="view" role="button" tabindex="0" aria-expanded="false">
+            <span class="num">07</span>
+            <h3>AI Visuals</h3>
+            <span class="arrow" aria-hidden="true">＋</span>
+            <div class="service-detail"><p>We combine AI tools with creative direction to produce unique visuals, cinematic scenes, and next-generation content. From concept to final frame, we transform ideas into compelling imagery.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Services Section -->
     <section id="services" class="services section">
 
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
+        <p class="section-kicker">05 — Services</p>
         <h2>Services</h2>
         <p>At our studio, we merge creativity, technology, and motion to deliver complete digital solutions.
-          From websites and branding to motion design and social media visuals вЂ” we help brands move, connect, and
+          From websites and branding to motion design and social media visuals — we help brands move, connect, and
           grow
           in the digital world.</p>
       </div><!-- End Section Title -->
@@ -667,9 +1423,9 @@
               <!-- <i class="bi bi-briefcase"></i> -->
             </div>
             <div>
-              <h4 class="title"><a href="#services" class="stretched-link">Web Development</a></h4>
+              <h4 class="title">Web Development</h4>
               <p class="description">Clean, responsive, and scalable websites built with performance and user experience
-                in mind. From landing pages to full-scale platforms вЂ” we turn design into functional digital spaces.
+                in mind. From landing pages to full-scale platforms — we turn design into functional digital spaces.
               </p>
             </div>
           </div>
@@ -681,7 +1437,7 @@
               <!-- <i class="bi bi-card-checklist"></i> -->
             </div>
             <div>
-              <h4 class="title"><a href="#services" class="stretched-link">Motion Design</a></h4>
+              <h4 class="title">Motion Design</h4>
               <p class="description">Dynamic motion graphics, logo reveals, and brand animations that tell stories
                 through movement. We make visuals come alive across websites, videos, and social media.</p>
             </div>
@@ -693,8 +1449,8 @@
               <!-- <i class="bi bi-bar-chart"></i> -->
             </div>
             <div>
-              <h4 class="title"><a href="#services" class="stretched-link">Brand Identity</a></h4>
-              <p class="description">We craft unique brand systems вЂ” from logo design to visual language вЂ” ensuring
+              <h4 class="title">Brand Identity</h4>
+              <p class="description">We craft unique brand systems — from logo design to visual language — ensuring
                 consistency and recognition across all platforms.</p>
             </div>
           </div><!-- End Service Item -->
@@ -705,7 +1461,7 @@
               <i class="bi bi-instagram"></i>
             </div>
             <div>
-              <h4 class="title"><a href="#services" class="stretched-link">Social Media Content</a></h4>
+              <h4 class="title">Social Media Content</h4>
               <p class="description">Eye-catching animations, posts, and short videos tailored for social media
                 engagement. Designed to make your brand stand out in every scroll.</p>
             </div>
@@ -717,7 +1473,7 @@
               <i class="bi bi-window"></i>
             </div>
             <div>
-              <h4 class="title"><a href="#services" class="stretched-link">UI / UX Design</a></h4>
+              <h4 class="title">UI / UX Design</h4>
               <p class="description">Modern, intuitive interfaces designed to feel smooth and responsive. Every detail
                 is tested to enhance usability and aesthetic harmony.</p>
             </div>
@@ -729,8 +1485,8 @@
               <i class="bi bi-camera-video"></i>
             </div>
             <div>
-              <h4 class="title"><a href="#services" class="stretched-link">Video Production</a></h4>
-              <p class="description">From idea to edit вЂ” we create engaging video content that connects emotionally
+              <h4 class="title">Video Production</h4>
+              <p class="description">From idea to edit — we create engaging video content that connects emotionally
                 with
                 your audience and strengthens your brand story.</p>
             </div>
@@ -747,8 +1503,9 @@
 
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
+        <p class="section-kicker">06 — Testimonials</p>
         <h2>Testimonials</h2>
-        <p>IвЂ™m thankful for the opportunity to work with different clients and teams. Their feedback inspires me to
+        <p>I’m thankful for the opportunity to work with different clients and teams. Their feedback inspires me to
           keep
           developing my skills and improving the quality of my work. Every project has been a valuable experience that
           helped me grow and better understand what makes great collaboration.</p>
@@ -789,13 +1546,13 @@
               <div class="testimonial-item">
                 <p>
                   <i class="bi bi-quote quote-icon-left"></i>
-                  <span>One of the most engaged members of the team вЂ” always ready to support others and genuinely
+                  <span>One of the most engaged members of the team — always ready to support others and genuinely
                     invested in the final outcome. It was a pleasure working with this person. They have a clear
                     understanding of deadlines and consistently demonstrate excellent communication within the
                     team.</span>
                   <i class="bi bi-quote quote-icon-right"></i>
                 </p>
-                <img loading="lazy" loading="lazy" src="assets/img/filiatix-min.webp" class="testimonial-img" alt="">
+                <img loading="lazy" src="assets/img/filiatix-min.webp" class="testimonial-img" alt="">
                 <h3>Andrey Yampolsky</h3>
                 <h4>CTO, FILIATIX</h4>
               </div>
@@ -806,7 +1563,7 @@
                 <p>
                   <i class="bi bi-quote quote-icon-left"></i>
                   <span>We received more than we expected from this person, which had a positive impact on the overall
-                    quality of the companyвЂ™s work. We were fully satisfied with their contribution.</span>
+                    quality of the company’s work. We were fully satisfied with their contribution.</span>
                   <i class="bi bi-quote quote-icon-right"></i>
                 </p>
                 <img loading="lazy" src="assets/img/allo-logo_small22-min.webp" class="testimonial-img" alt="">
@@ -819,7 +1576,7 @@
               <div class="testimonial-item">
 
                 <p>
-                  <span><a href="assets/img/up-work-recomend12-min.webp" title="Ze'ev Aviner </br> Store Owner"
+                  <span><a href="assets/img/up-work-recomend12-min.webp" title="Ze'ev Aviner — Store Owner" aria-label="Open recommendation from Ze'ev Aviner"
                       data-gallery="portfolio-gallery-app" class="glightbox preview-link"><i
                         class="bi bi-zoom-in test-zoom"></i></a></span>
 
@@ -839,7 +1596,7 @@
             <div class="swiper-slide">
               <div class="testimonial-item">
                 <p>
-                  <span><a href="assets/img/up-work-recomend3-min.webp" title="Einat Barak </br> Store Owner"
+                  <span><a href="assets/img/up-work-recomend3-min.webp" title="Einat Barak — Store Owner" aria-label="Open recommendation from Einat Barak"
                       data-gallery="portfolio-gallery-app" class="glightbox preview-link"><i
                         class="bi bi-zoom-in test-zoom"></i></a></span>
                   <span><img loading="lazy" src="assets/img/up-work-recomend3-min.webp" class="" width="100%"
@@ -860,7 +1617,7 @@
             <div class="swiper-slide">
               <div class="testimonial-item">
                 <p>
-                  <span><a href="assets/img/f-hunt-recomend1-min.webp" title="Ruslan Kovalenko </br> Entrepreneur "
+                  <span><a href="assets/img/f-hunt-recomend1-min.webp" title="Ruslan Kovalenko — Entrepreneur" aria-label="Open recommendation from Ruslan Kovalenko"
                       data-gallery="portfolio-gallery-app" class="glightbox preview-link"><i
                         class="bi bi-zoom-in test-zoom"></i></a></span>
                   <span><img loading="lazy" src="assets/img/f-hunt-recomend1-min.webp" class="" width="100%"
@@ -880,7 +1637,7 @@
             <div class="swiper-slide">
               <div class="testimonial-item">
                 <p>
-                  <span><a href="assets/img/f-hunt-recomend2-min.webp" title="Nina Tyurupa </br> Client"
+                  <span><a href="assets/img/f-hunt-recomend2-min.webp" title="Nina Tyurupa — Client" aria-label="Open recommendation from Nina Tyurupa"
                       data-gallery="portfolio-gallery-app" class="glightbox preview-link"><i
                         class="bi bi-zoom-in test-zoom"></i></a></span>
                   <span><img loading="lazy" src="assets/img/f-hunt-recomend2-min.webp" class="" width="100%"
@@ -900,7 +1657,7 @@
             <div class="swiper-slide">
               <div class="testimonial-item">
                 <p>
-                  <span><a href="assets/img/f-hunt-recomend3-min.webp" title="Igor Gorobets </br> Client"
+                  <span><a href="assets/img/f-hunt-recomend3-min.webp" title="Igor Gorobets — Client" aria-label="Open recommendation from Igor Gorobets"
                       data-gallery="portfolio-gallery-app" class="glightbox preview-link"><i
                         class="bi bi-zoom-in test-zoom"></i></a></span>
                   <span><img loading="lazy" src="assets/img/f-hunt-recomend3-min.webp" class="" width="100%"
@@ -926,6 +1683,8 @@
 
     </section><!-- /Testimonials Section -->
 
+    </div><!-- /.neon-flow -->
+
     <!-- /Contact Section -->
 
   </main>
@@ -942,7 +1701,13 @@
             <a href="#about" class="nav-link px-2 text-body-secondary">About</a>
           </li>
           <li class="nav-item">
+            <a href="#content-stream" class="nav-link px-2 text-body-secondary">Content Stream</a>
+          </li>
+          <li class="nav-item">
             <a href="#portfolio" class="nav-link px-2 text-body-secondary">Our Works</a>
+          </li>
+          <li class="nav-item">
+            <a href="#what-we-offer" class="nav-link px-2 text-body-secondary">What we offer</a>
           </li>
           <li class="nav-item">
             <a href="#services" class="nav-link px-2 text-body-secondary">Services</a>
@@ -951,7 +1716,7 @@
             <a href="#testimonials" class="nav-link px-2 text-body-secondary">Testimonials</a>
           </li>
         </ul>
-        <p>В© 2025 <span>Copyright</span> <strong class="px-1 sitename">SNDR studio</strong>
+        <p>© 2026 <span>Copyright</span> <strong class="px-1 sitename">SNDR studio</strong>
         </p>
       </div>
     </div>
@@ -959,7 +1724,7 @@
   </footer>
 
   <!-- Scroll Top -->
-  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
+  <a href="#" id="scroll-top" aria-label="Back to top" class="scroll-top d-flex align-items-center justify-content-center"><i
       class="bi bi-arrow-up-short"></i></a>
 
   <!-- Preloader -->
@@ -969,16 +1734,16 @@
   <!-- <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js" async ></script> -->
   <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" async ></script> -->
 
-  <!-- вњ… Bootstrap JS (РІРєР»СЋС‡Р°РµС‚ Popper) -->
+  <!-- ✅ Bootstrap JS (включает Popper) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
 
-  <!-- вњ… Swiper -->
+  <!-- ✅ Swiper -->
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
 
-  <!-- вњ… AOS -->
+  <!-- ✅ AOS -->
   <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js" defer></script>
 
-  <!-- вњ… GLightbox -->
+  <!-- ✅ GLightbox -->
   <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js" defer></script>
 
   <!-- <script src="assets/vendor/php-email-form/validate.js"></script> -->
@@ -989,12 +1754,17 @@
   <!-- <script src="assets/vendor/glightbox/js/glightbox.min.js" defer ></script> -->
   <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js" defer></script>
 
-  <script src="assets/vendor/swiper/swiper-bundle.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.min.js" defer></script>
 
   <!-- Main JS File -->
+  <!-- Smooth scroll + scroll animations -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.17/dist/lenis.min.js" defer></script>
+
   <script src="assets/js/main.js" defer></script>
   <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js" defer></script>
-  <!-- РљРѕР»Рё Р·РјС–РЅСЋС”С€ РєР°СЂС‚РёРЅРєРё/РІС–РґРµРѕ вЂ” РїСЂРѕСЃС‚Рѕ РјС–РЅСЏР№ CACHE_VERSION = "v2" С– РґРµРїР»РѕР№. -->
+  <!-- Коли змінюєш картинки/відео — просто міняй CACHE_VERSION у sw.js і деплой. -->
 
   <script>
     if ("serviceWorker" in navigator) {
@@ -1014,7 +1784,7 @@
       if (videos.length === 0) return;
 
       const loadVideoIfNeeded = (v) => {
-        // 1) СЏРєС‰Рѕ src РЅР° <video data-src="...">
+        // 1) якщо src на <video data-src="...">
         if (v.dataset && v.dataset.src && !v.src) {
           v.src = v.dataset.src;
           delete v.dataset.src;
@@ -1022,7 +1792,7 @@
           return;
         }
 
-        // 2) СЏРєС‰Рѕ src С‡РµСЂРµР· <source data-src="...">
+        // 2) якщо src через <source data-src="...">
         const source = v.querySelector("source[data-src]");
         if (source && !source.src) {
           source.src = source.dataset.src;
@@ -1057,19 +1827,6 @@
     })();
   </script>
 
-  <script>
-    const videos = document.querySelectorAll(".bg-video");
-
-    videos.forEach(video => {
-      video.addEventListener("mouseenter", () => {
-        video.muted = false;
-      });
-
-      video.addEventListener("mouseleave", () => {
-        video.muted = true;
-      });
-    });
-  </script>
 
   <!-- <script>
     AOS.init();
@@ -1085,6 +1842,74 @@
 
 
 
+  <script>
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isTouch = window.matchMedia('(hover:none), (pointer:coarse)').matches;
+    const isSmall = window.innerWidth < 760;
+    /* ================= MARQUEE ================= */
+    const marqueeItems = ['MOTION DESIGN','3D','WEB DEVELOPMENT','CREATIVE CODING','INTERACTIVE EXPERIENCES','UI / UX MOTION'];
+    const track = document.getElementById('marqueeTrack');
+    let marqueeHTML = '';
+    for(let r=0;r<2;r++){
+      marqueeItems.forEach(t=>{ marqueeHTML += `<span>${t}<i></i></span>`; });
+    }
+    track.innerHTML = marqueeHTML + marqueeHTML;
+    let marqueeX = 0, marqueeDir = -1, baseSpeed = 0.55;
+    let lastScrollY = window.scrollY, scrollVel = 0;
+    function marqueeLoop(){
+      const w = track.scrollWidth/2;
+      marqueeX += baseSpeed*marqueeDir;
+      if(marqueeX <= -w) marqueeX = 0;
+      if(marqueeX >= 0 && marqueeDir>0) marqueeX = -w;
+      track.style.transform = `translateX(${marqueeX}px)`;
+      requestAnimationFrame(marqueeLoop);
+  }
+  if(!reduceMotion) requestAnimationFrame(marqueeLoop); else track.style.transform='translateX(0)';
+  window.addEventListener('scroll', ()=>{
+    const dy = window.scrollY - lastScrollY;
+    lastScrollY = window.scrollY;
+    marqueeDir = dy < 0 ? 1 : -1;
+    scrollVel = Math.min(Math.abs(dy), 40);
+    baseSpeed = 0.5 + scrollVel*0.06;
+  }, {passive:true});
+  </script>
+
+  <!-- Hero text reveal animation -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add a slight delay to ensure content is ready
+      setTimeout(() => {
+        document.body.classList.add('loaded');
+        // Set --total property on headings for span animation
+        const headings = document.querySelectorAll('#about-title');
+        headings.forEach(heading => {
+          const total = heading.children.length;
+          heading.style.setProperty('--total', total);
+        });
+      }, 100);
+    });
+  </script>
+
+<script>
+  document.querySelectorAll('.service-row').forEach(row => {
+    const toggle = () => {
+      const open = row.classList.toggle('open');
+      row.setAttribute('aria-expanded', open);
+    };
+    row.addEventListener('click', toggle);
+    row.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggle();
+      }
+    });
+  });
+</script>
+
+
+
 </body>
 
 </html>
+
+
