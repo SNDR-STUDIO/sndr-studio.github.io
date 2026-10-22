@@ -8,11 +8,13 @@
   /* Palette */
   --neon-bg: #0A0F1C;
   --neon-bg-2: #0d1426;
-  --neon-cyan: #00E5FF;
+  /* soft glacier aqua: same cyan family, calmer than the old #00E5FF */
+  --neon-cyan: #5CCFE6;
+  --neon-cyan-rgb: 92 207 230; /* same color as channels, for rgb(var(--neon-cyan-rgb) / a) */
   --neon-violet: #8A2BE2;
   --neon-text: #EAF6FF;
   --neon-muted: rgb(234 246 255 / 0.62);
-  --neon-line: rgb(0 229 255 / 0.18);
+  --neon-line: rgb(var(--neon-cyan-rgb) / 0.18);
 
   /* Glass */
   --glass-bg: rgb(255 255 255 / 0.04);
@@ -26,7 +28,7 @@
   --panel-blur: blur(10px);
 
   /* Glow */
-  --glow-cyan: 0 0 18px rgb(0 229 255 / 0.35), 0 0 42px rgb(0 229 255 / 0.18);
+  --glow-cyan: 0 0 18px rgb(var(--neon-cyan-rgb) / 0.35), 0 0 42px rgb(var(--neon-cyan-rgb) / 0.18);
   --glow-violet: 0 0 18px rgb(138 43 226 / 0.40), 0 0 42px rgb(138 43 226 / 0.20);
 
   /* Typography — one display face, one text face, one mono for labels.
@@ -238,7 +240,7 @@
 
 #about .about-location::before {
   background: var(--neon-cyan);
-  box-shadow: 0 0 0 5px rgb(0 229 255 / 0.14);
+  box-shadow: 0 0 0 5px rgb(var(--neon-cyan-rgb) / 0.14);
 }
 
 /* Founder card */
@@ -303,7 +305,7 @@
 }
 
 #about .founder-capabilities span:hover {
-  border-color: rgb(0 229 255 / 0.5);
+  border-color: rgb(var(--neon-cyan-rgb) / 0.5);
   color: var(--neon-text);
 }
 
@@ -467,8 +469,8 @@
 
 /* Services cards */
 #services .service-item .icon {
-  background: rgb(0 229 255 / 0.08);
-  border-color: rgb(0 229 255 / 0.45);
+  background: rgb(var(--neon-cyan-rgb) / 0.08);
+  border-color: rgb(var(--neon-cyan-rgb) / 0.45);
 }
 #services .service-item .icon i {
   color: var(--neon-cyan);
@@ -515,14 +517,7 @@
 }
 #testimonials .testimonial-item .quote-icon-left,
 #testimonials .testimonial-item .quote-icon-right {
-  color: rgb(0 229 255 / 0.7);
-}
-#testimonials .swiper-pagination .swiper-pagination-bullet {
-  background-color: transparent;
-  border-color: rgb(0 229 255 / 0.6);
-}
-#testimonials .swiper-pagination .swiper-pagination-bullet-active {
-  background-color: var(--neon-cyan);
+  color: rgb(var(--neon-cyan-rgb) / 0.7);
 }
 
 /* =====================================================================
@@ -531,7 +526,7 @@
 
 #content-stream {
   background:
-    radial-gradient(45% 40% at 50% 62%, rgb(0 229 255 / 0.10), transparent 70%),
+    radial-gradient(45% 40% at 50% 62%, rgb(var(--neon-cyan-rgb) / 0.10), transparent 70%),
     radial-gradient(40% 40% at 8% 20%, rgb(138 43 226 / 0.12), transparent 70%),
     linear-gradient(180deg, #070a14 0%, var(--neon-bg) 50%, #03070d 100%);
 }
@@ -545,9 +540,9 @@
   position: relative;
   isolation: isolate;
   background:
-    radial-gradient(40% 18% at 90% 6%,  rgb(0 229 255 / 0.09), transparent 70%),
+    radial-gradient(40% 18% at 90% 6%,  rgb(var(--neon-cyan-rgb) / 0.09), transparent 70%),
     radial-gradient(45% 20% at 6% 32%,  rgb(138 43 226 / 0.12), transparent 70%),
-    radial-gradient(45% 18% at 88% 55%, rgb(0 229 255 / 0.08), transparent 70%),
+    radial-gradient(45% 18% at 88% 55%, rgb(var(--neon-cyan-rgb) / 0.08), transparent 70%),
     radial-gradient(50% 20% at 12% 80%, rgb(138 43 226 / 0.13), transparent 70%),
     linear-gradient(180deg, #070a14 0%, var(--neon-bg) 30%, var(--neon-bg-2) 65%, #070a14 100%);
 }
@@ -592,7 +587,7 @@
   --background-color: #070a14;
   --default-color: rgb(234 246 255 / 0.62);
   background:
-    radial-gradient(50% 120% at 50% 0%, rgb(0 229 255 / 0.06), transparent 70%),
+    radial-gradient(50% 120% at 50% 0%, rgb(var(--neon-cyan-rgb) / 0.06), transparent 70%),
     linear-gradient(180deg, var(--neon-bg) 0%, #05070e 100%);
   border-top: 1px solid var(--neon-line);
   color: var(--default-color);
@@ -764,7 +759,7 @@
   background: linear-gradient(
     115deg,
     transparent 40%,
-    rgb(0 229 255 / 0.06) 47%,
+    rgb(var(--neon-cyan-rgb) / 0.06) 47%,
     rgb(234 246 255 / 0.10) 50%,
     rgb(138 43 226 / 0.06) 53%,
     transparent 60%
@@ -883,7 +878,7 @@ body {
 }
 #portfolio .portfolio-filters li:hover {
   color: var(--neon-text);
-  box-shadow: inset 0 0 0 1px rgb(0 229 255 / 0.5);
+  box-shadow: inset 0 0 0 1px rgb(var(--neon-cyan-rgb) / 0.5);
 }
 #portfolio .portfolio-filters li.filter-active {
   color: var(--neon-bg);
@@ -925,18 +920,152 @@ body {
   transform: rotate(45deg);
 }
 
-/* Content Stream bullets match the Testimonials ones */
+/* =====================================================================
+   SLIDER DOTS — Content Stream + Testimonials share one style:
+   quiet light dots, the active one stretches into an aqua → violet pill
+   ===================================================================== */
+
 .content-stream-swiper .swiper-pagination-bullet,
-.content-stream-swiper .swiper-pagination-bullet-active {
-  width: 12px;
-  height: 12px;
+#testimonials .swiper-pagination .swiper-pagination-bullet {
+  width: 8px;
+  height: 8px;
+  margin: 0 5px !important;
+  border: 0;
+  border-radius: 999px;
+  background: rgb(234 246 255 / 0.28);
+  opacity: 1;
+  transition:
+    width var(--dur-ui) var(--ease-out),
+    background-color var(--dur-ui) var(--ease-out),
+    box-shadow var(--dur-ui) var(--ease-out);
 }
-.content-stream-swiper .swiper-pagination-bullet {
-  background: transparent;
-  border: 1px solid rgb(0 229 255 / 0.6);
+.content-stream-swiper .swiper-pagination-bullet:hover,
+#testimonials .swiper-pagination .swiper-pagination-bullet:hover {
+  background-color: rgb(234 246 255 / 0.55);
 }
-.content-stream-swiper .swiper-pagination-bullet-active {
-  background: var(--neon-cyan);
+.content-stream-swiper .swiper-pagination-bullet-active,
+#testimonials .swiper-pagination .swiper-pagination-bullet-active {
+  width: 28px;
+  height: 8px;
+  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-violet));
+  box-shadow: 0 0 12px rgb(var(--neon-cyan-rgb) / 0.35);
+}
+
+/* =====================================================================
+   MENU BUTTON — periodic light glint across the round toggle
+   ===================================================================== */
+
+.header .header-toggle {
+  overflow: hidden;
+  isolation: isolate;
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.18) inset, 0 6px 18px rgb(var(--neon-cyan-rgb) / 0.25);
+}
+.header .header-toggle::after {
+  content: '';
+  position: absolute;
+  inset: -30%;
+  pointer-events: none;
+  background: linear-gradient(115deg,
+    transparent 38%,
+    rgb(255 255 255 / 0.85) 50%,
+    transparent 62%);
+  transform: translateX(-110%);
+  animation: toggle-glint 5s var(--ease-in-out) infinite;
+}
+
+@keyframes toggle-glint {
+  0%, 70% { transform: translateX(-110%); }  /* rest, then one quick pass */
+  90%, 100% { transform: translateX(110%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header .header-toggle::after { animation: none; opacity: 0; }
+}
+
+/* =====================================================================
+   HERO SUBTITLE — words come into focus one by one (main.js →
+   initHeroSubtitleReveal), the key words keep a slow light sweep
+   ===================================================================== */
+
+.hero-content__p .hero-word {
+  display: inline-block;
+  opacity: 0;
+  filter: blur(8px);
+  transform: translate3d(0, 0.6em, 0);
+  transition:
+    opacity 0.8s var(--ease-out),
+    filter 0.9s var(--ease-out),
+    transform 0.9s var(--ease-out);
+  /* starts after the title letters (~1s) */
+  transition-delay: calc(var(--w, 0) * 0.12s + 0.9s);
+}
+
+.hero-content__p p.is-revealed .hero-word {
+  opacity: 1;
+  filter: blur(0);
+  transform: none;
+}
+
+/* key words: dark text with a deep-aqua highlight sweeping through */
+.hero-content__p .hero-word--key {
+  color: transparent;
+  background: linear-gradient(100deg,
+    #0b1220 0%, #0b1220 40%,
+    #0f8fa8 50%,
+    #0b1220 60%, #0b1220 100%);
+  background-size: 250% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  font-weight: 600;
+}
+
+.hero-content__p p.is-revealed .hero-word--key {
+  animation: hero-key-sweep 6s var(--ease-in-out) 2.2s infinite;
+}
+/* "connection" sweeps a beat after "intention" */
+.hero-content__p p.is-revealed .hero-word--key:last-child {
+  animation-delay: 2.8s;
+}
+
+@keyframes hero-key-sweep {
+  0% { background-position: 100% 0; }
+  35%, 100% { background-position: 0% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-content__p .hero-word {
+    opacity: 1;
+    filter: none;
+    transform: none;
+    transition: none;
+  }
+  .hero-content__p p.is-revealed .hero-word--key { animation: none; }
+}
+
+/* =====================================================================
+   SERVICES ICONS — crisp ring (a 1px translucent border broke up on
+   the circle edge); inset shadow anti-aliases cleanly
+   ===================================================================== */
+
+#services .service-item .icon {
+  border: 0;
+  box-shadow:
+    inset 0 0 0 2px rgb(var(--neon-cyan-rgb) / 0.55),
+    0 0 14px rgb(var(--neon-cyan-rgb) / 0.12);
+  transition: background-color var(--dur-ui) var(--ease-out), box-shadow var(--dur-ui) var(--ease-out);
+}
+#services .service-item:hover .icon {
+  box-shadow: inset 0 0 0 2px var(--neon-cyan), 0 0 18px rgb(var(--neon-cyan-rgb) / 0.3);
+}
+
+/* =====================================================================
+   TESTIMONIALS — Upwork logo has black "work" letters: flip lightness
+   so it reads on the dark page (green stays green)
+   ===================================================================== */
+
+#testimonials .testimonial-img--upwork {
+  filter: invert(1) hue-rotate(180deg) brightness(1.15) saturate(1.2);
 }
 .hero-video-text:not(.is-canvas-ready) .hero-video-text__title {
   color: var(--neon-bg) !important;

@@ -431,6 +431,17 @@
         filter: filter,
         sortBy: sort
       });
+
+      // Keep the grid as tall as the full "All" layout, so the section (and its
+      // background photo) doesn't shrink/stretch when a filter shows fewer items
+      const container = initIsotope.element;
+      const lockHeight = () => {
+        if (initIsotope.options.filter !== '*') return;
+        container.style.minHeight = '';
+        container.style.minHeight = `${container.offsetHeight}px`;
+      };
+      initIsotope.on('layoutComplete', lockHeight);
+      lockHeight();
     });
 
     isotopeItem.querySelectorAll('.isotope-filters li').forEach(function(filters) {
@@ -516,25 +527,48 @@
   document.addEventListener('scroll', navmenuScrollspy);
 
   /**
-   * Hero subtitle letter-by-letter reveal
+   * Hero subtitle \u2014 "Motion with intention. Code with connection."
+   * Words come into focus one by one (rise + blur \u2192 sharp) after the title,
+   * then the key words (intention / connection) get a looping light sweep.
+   * Styles: neon.css \u2192 HERO SUBTITLE.
    */
   function initHeroSubtitleReveal() {
     const subtitle = document.querySelector('.hero-content__p p');
-    if (!subtitle || subtitle.dataset.lettersInit === 'true') return;
+    if (!subtitle || subtitle.dataset.wordsInit === 'true') return;
 
-    const text = subtitle.textContent;
+    const keyWords = ['intention', 'connection'];
+    const words = subtitle.textContent.trim().split(/\s+/);
+    subtitle.setAttribute('aria-label', words.join(' '));
     subtitle.textContent = '';
 
-    Array.from(text).forEach((char, index) => {
-      const letter = document.createElement('span');
-      letter.className = 'hero-letter';
-      letter.textContent = char === ' ' ? '\u00A0' : char;
-      letter.style.animationDelay = `${index * 0.04}s`;
-      subtitle.appendChild(letter);
+    words.forEach((word, index) => {
+      const span = document.createElement('span');
+      span.className = 'hero-word';
+      span.setAttribute('aria-hidden', 'true');
+      span.style.setProperty('--w', index);
+      span.textContent = word;
+      if (keyWords.includes(word.replace(/[^a-z]/gi, '').toLowerCase())) {
+        span.classList.add('hero-word--key');
+      }
+      subtitle.appendChild(span);
+      if (index < words.length - 1) subtitle.appendChild(document.createTextNode(' '));
     });
 
-    subtitle.dataset.lettersInit = 'true';
+    subtitle.dataset.wordsInit = 'true';
+
+    // start together with the title reveal (after the preloader is gone)
+    let started = false;
+    const start = () => {
+      if (started) return;
+      started = true;
+      requestAnimationFrame(() => requestAnimationFrame(() => subtitle.classList.add('is-revealed')));
+    };
+    if (document.readyState === 'complete') start();
+    else window.addEventListener('load', start, { once: true });
+    setTimeout(start, 3500);
   }
+
+  initHeroSubtitleReveal();
 
   /**
    * HERO TITLE — "SNDR STUDIO"
