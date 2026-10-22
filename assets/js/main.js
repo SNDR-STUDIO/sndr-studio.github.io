@@ -393,82 +393,6 @@
   });
 
   /**
-   * Init isotope layout and filters
-   */
-
-
-  window.addEventListener("load", () => {
-  const grid = document.querySelector(".isotope-container");
-  if (!grid) return;
-
-  // 1) дождаться картинок
-  imagesLoaded(grid, () => {
-    // 2) дождаться того, что видео получили размеры (metadata/poster)
-    const videos = grid.querySelectorAll("video");
-    const waits = Array.from(videos).map(v => {
-      if (v.readyState >= 1) return Promise.resolve(); // metadata уже есть
-      return new Promise(res => v.addEventListener("loadedmetadata", res, { once:true }));
-    });
-
-    Promise.all(waits).then(() => {
-      // init isotope после того как размеры стабильны
-      const iso = new Isotope(grid, { itemSelector: ".isotope-item", layoutMode: "masonry" });
-      iso.layout();
-    });
-  });
-});
-
-  document.querySelectorAll('.isotope-layout').forEach(function(isotopeItem) {
-    let layout = isotopeItem.getAttribute('data-layout') ?? 'masonry';
-    let filter = isotopeItem.getAttribute('data-default-filter') ?? '*';
-    let sort = isotopeItem.getAttribute('data-sort') ?? 'original-order';
-
-    let initIsotope;
-    imagesLoaded(isotopeItem.querySelector('.isotope-container'), function() {
-      initIsotope = new Isotope(isotopeItem.querySelector('.isotope-container'), {
-        itemSelector: '.isotope-item',
-        layoutMode: layout,
-        filter: filter,
-        sortBy: sort
-      });
-
-      // Keep the grid as tall as the full "All" layout, so the section (and its
-      // background photo) doesn't shrink/stretch when a filter shows fewer items
-      const container = initIsotope.element;
-      const lockHeight = () => {
-        if (initIsotope.options.filter !== '*') return;
-        container.style.minHeight = '';
-        container.style.minHeight = `${container.offsetHeight}px`;
-      };
-      initIsotope.on('layoutComplete', lockHeight);
-      lockHeight();
-    });
-
-    isotopeItem.querySelectorAll('.isotope-filters li').forEach(function(filters) {
-      filters.addEventListener('click', function() {
-        const current = isotopeItem.querySelector('.isotope-filters .filter-active');
-        current.classList.remove('filter-active');
-        current.setAttribute('aria-pressed', 'false');
-        this.classList.add('filter-active');
-        this.setAttribute('aria-pressed', 'true');
-        initIsotope.arrange({
-          filter: this.getAttribute('data-filter')
-        });
-        if (typeof aosInit === 'function') {
-          aosInit();
-        }
-      }, false);
-      filters.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          this.click();
-        }
-      });
-    });
-
-  });
-
-  /**
    * Init swiper sliders
    */
   function initSwiper() {
@@ -486,6 +410,52 @@
   }
 
   window.addEventListener("load", initSwiper);
+
+  /**
+   * Portfolio slider filters: All / Animations / Websites swap the slides
+   * in the swiper (the original slides are kept and re-appended).
+   */
+  function initPortfolioSlider() {
+    const slider = document.querySelector('.portfolio-swiper');
+    const filters = document.querySelectorAll('#portfolio .portfolio-filters li');
+    if (!slider || !filters.length) return;
+    const all = Array.from(slider.querySelectorAll('.swiper-slide'));
+
+    const apply = (li) => {
+      const swiper = slider.swiper;
+      if (!swiper) return;
+      filters.forEach(f => {
+        f.classList.toggle('filter-active', f === li);
+        f.setAttribute('aria-pressed', String(f === li));
+      });
+      const sel = li.getAttribute('data-filter');
+      const keep = sel === '*' ? all : all.filter(sl => sl.matches(sel));
+      swiper.removeAllSlides();
+      swiper.appendSlide(keep);
+      swiper.update();
+      swiper.slideTo(0, 0);
+    };
+
+    // clicked card melts into a blur while the video window opens (neon.css → .is-opening)
+    slider.addEventListener('click', (e) => {
+      const card = e.target.closest('.portfolio-content');
+      if (!card) return;
+      card.classList.add('is-opening');
+      setTimeout(() => card.classList.remove('is-opening'), 900);
+    });
+
+    filters.forEach(li => {
+      li.addEventListener('click', () => apply(li));
+      li.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          apply(li);
+        }
+      });
+    });
+  }
+
+  window.addEventListener('load', initPortfolioSlider);
 
   /**
    * Correct scrolling position upon page load for URLs containing hash links.
@@ -792,16 +762,18 @@
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         drawMask();
 
-        // "cover" scale, zoomed out by VIDEO_ZOOM — but never smaller than
-        // the title itself, so the letters are always fully filled
+        // centred on the title itself and always covering it (+12% for the
+        // letters' scatter) on any screen size; otherwise "cover" zoomed out by VIDEO_ZOOM
         const titleRect = title.getBoundingClientRect();
         const coverScale = Math.max(rect.width / video.videoWidth, rect.height / video.videoHeight);
-        const titleScale = Math.max(titleRect.width / video.videoWidth, titleRect.height / video.videoHeight);
+        const titleScale = Math.max(titleRect.width / video.videoWidth, titleRect.height / video.videoHeight) * 1.12;
         const scale = Math.max(coverScale * VIDEO_ZOOM, titleScale);
         const drawWidth = video.videoWidth * scale;
         const drawHeight = video.videoHeight * scale;
-        const offsetX = (rect.width - drawWidth) / 2;
-        const offsetY = (rect.height - drawHeight) / 2;
+        const centerX = titleRect.width ? titleRect.left - rect.left + titleRect.width / 2 : rect.width / 2;
+        const centerY = titleRect.height ? titleRect.top - rect.top + titleRect.height / 2 : rect.height / 2;
+        const offsetX = centerX - drawWidth / 2;
+        const offsetY = centerY - drawHeight / 2;
 
         ctx.drawImage(
           video,
@@ -956,119 +928,39 @@
   initAbout();
 
   /**
-   * CONTENT STREAM — animated "screens" under each phone frame
-   *   lava    → gradient lava lamp (CSS blobs, see neon.css)
-   *   fractal → colorful recursive polygons that keep changing shape (canvas)
-   *   tunnel  → acid-colored warp jump through a star tunnel (canvas)
-   * Only screens on screen are animated (IntersectionObserver).
+   * CONTENT STREAM — every phone screen is a gradient lava lamp (CSS blobs,
+   * own color scheme per slide in neon.css) with a play button: the first
+   * click loads the slide's 5s spot (data-video) and plays it with sound.
+   * Only one spot plays at a time; it stops when the phone leaves the screen.
    */
   function initStreamScreens() {
-    const screens = document.querySelectorAll('.stream-screen');
-    if (!screens.length) return;
+    const devices = document.querySelectorAll('.stream-device');
+    if (!devices.length) return;
 
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const canvases = [];
+    let current = null; // device whose spot is playing
 
-    const drawFractal = (s) => {
-      const { ctx, w, h, t } = s;
-      const cx = w / 2;
-      const cy = h / 2;
-      // a new number of sides every 4s: triangle → square → pentagon → hexagon
-      const sides = 3 + Math.floor(t / 4) % 4;
-      const ratio = 0.46 + Math.sin(t * 0.7) * 0.08;
-      const twist = Math.sin(t * 0.35) * 1.4;
-
-      ctx.globalCompositeOperation = 'source-over';
-      ctx.fillStyle = 'rgb(6 4 18 / 0.22)'; // short trails
-      ctx.fillRect(0, 0, w, h);
-      ctx.globalCompositeOperation = 'lighter';
-
-      const poly = (x, y, r, depth, rot) => {
-        ctx.beginPath();
-        for (let i = 0; i <= sides; i++) {
-          const a = rot + (i / sides) * Math.PI * 2;
-          const px = x + Math.cos(a) * r;
-          const py = y + Math.sin(a) * r;
-          if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-        }
-        const hue = (t * 40 + depth * 70 + r * 0.6) % 360;
-        ctx.strokeStyle = `hsl(${hue} 95% 62% / ${0.35 + depth * 0.15})`;
-        ctx.lineWidth = 0.6 + depth * 0.5;
-        ctx.stroke();
-        if (depth === 0) return;
-        for (let i = 0; i < sides; i++) {
-          const a = rot + (i / sides) * Math.PI * 2;
-          poly(x + Math.cos(a) * r, y + Math.sin(a) * r, r * ratio, depth - 1, -rot * 1.3 + twist);
-        }
-      };
-
-      poly(cx, cy, Math.min(w, h) * 0.33, 3, t * 0.3);
+    const stop = (device) => {
+      const video = device.querySelector('.stream-video');
+      if (video) {
+        video.pause();
+        video.currentTime = 0;
+      }
+      device.classList.remove('is-playing');
+      device.querySelector('.stream-play')?.setAttribute('aria-pressed', 'false');
+      if (current === device) {
+        current = null;
+        // lofi.js brings the background music back up
+        window.dispatchEvent(new CustomEvent('sndr:spot', { detail: { playing: false } }));
+      }
     };
 
-    const drawTunnel = (s, dt) => {
-      const { ctx, w, h, t } = s;
-      const cx = w / 2 + Math.sin(t * 0.6) * w * 0.08; // the tunnel gently snakes
-      const cy = h / 2 + Math.cos(t * 0.45) * h * 0.05;
-      const focal = Math.min(w, h) * 0.9;
+    devices.forEach(device => {
+      const screen = device.querySelector('.stream-screen');
+      const button = device.querySelector('.stream-play');
 
-      if (!s.stars) {
-        s.stars = Array.from({ length: 260 }, () => ({
-          x: (Math.random() - 0.5) * 2,
-          y: (Math.random() - 0.5) * 2,
-          z: Math.random() * 3 + 0.1,
-          hue: Math.random() * 360
-        }));
-      }
-
-      ctx.globalCompositeOperation = 'source-over';
-      ctx.fillStyle = 'rgb(4 2 14 / 0.3)';
-      ctx.fillRect(0, 0, w, h);
-      ctx.globalCompositeOperation = 'lighter';
-
-      // tunnel rings rushing towards the viewer
-      for (let i = 0; i < 7; i++) {
-        const z = 3 - ((t * 0.9 + i * 0.43) % 3);
-        const r = focal * 0.55 / Math.max(z, 0.05);
-        const hue = (t * 60 + i * 50) % 360;
-        ctx.beginPath();
-        ctx.ellipse(cx, cy, r, r * 1.15, 0, 0, Math.PI * 2);
-        ctx.strokeStyle = `hsl(${hue} 100% 60% / ${Math.min(0.35, 0.6 / (z + 0.5))})`;
-        ctx.lineWidth = Math.max(1, 6 / (z + 0.4));
-        ctx.stroke();
-      }
-
-      // star streaks
-      const speed = 1.6 * dt;
-      s.stars.forEach(star => {
-        const prevZ = star.z;
-        star.z -= speed;
-        if (star.z <= 0.05) {
-          star.x = (Math.random() - 0.5) * 2;
-          star.y = (Math.random() - 0.5) * 2;
-          star.z = 3;
-          star.hue = Math.random() * 360;
-          return;
-        }
-        const x1 = cx + (star.x / prevZ) * focal * 0.3;
-        const y1 = cy + (star.y / prevZ) * focal * 0.3;
-        const x2 = cx + (star.x / star.z) * focal * 0.3;
-        const y2 = cy + (star.y / star.z) * focal * 0.3;
-        const hue = (star.hue + t * 90) % 360;
-        ctx.strokeStyle = `hsl(${hue} 100% 65% / ${Math.min(1, 1.4 / star.z)})`;
-        ctx.lineWidth = Math.max(0.6, 2.2 / star.z);
-        ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
-        ctx.stroke();
-      });
-    };
-
-    const painters = { fractal: drawFractal, tunnel: drawTunnel };
-
-    screens.forEach(screen => {
-      const kind = screen.dataset.screen;
-      if (kind === 'lava') {
-        // blobs: own column, size, speed and phase
+      // lava blobs: own column, size, speed and phase
+      if (screen) {
         for (let i = 0; i < 6; i++) {
           const blob = document.createElement('i');
           blob.className = 'lava-blob';
@@ -1078,64 +970,45 @@
           blob.style.setProperty('--delay', `${-i * 2.3}s`);
           screen.appendChild(blob);
         }
-        return;
+        if (reduceMotion) screen.classList.add('is-paused');
       }
-      if (!painters[kind]) return;
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return;
-      screen.appendChild(canvas);
-      canvases.push({ screen, canvas, ctx, kind, w: 0, h: 0, t: Math.random() * 16, visible: false });
+
+      if (!button || !screen || !device.dataset.video) return;
+      button.setAttribute('aria-pressed', 'false');
+      button.addEventListener('click', () => {
+        if (device.classList.contains('is-playing')) {
+          stop(device);
+          return;
+        }
+        if (current) stop(current);
+
+        let video = device.querySelector('.stream-video');
+        if (!video) {
+          video = document.createElement('video');
+          video.className = 'stream-video';
+          video.src = device.dataset.video;
+          video.playsInline = true;
+          video.preload = 'auto';
+          video.addEventListener('ended', () => stop(device));
+          screen.appendChild(video);
+        }
+        current = device;
+        window.dispatchEvent(new CustomEvent('sndr:spot', { detail: { playing: true } }));
+        device.classList.add('is-playing');
+        button.setAttribute('aria-pressed', 'true');
+        video.play().catch(() => stop(device));
+      });
     });
 
-    const resize = (s) => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-      s.w = s.screen.clientWidth;
-      s.h = s.screen.clientHeight;
-      s.canvas.width = Math.max(1, Math.round(s.w * dpr));
-      s.canvas.height = Math.max(1, Math.round(s.h * dpr));
-      s.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      painters[s.kind](s, 0.016);
-    };
-    canvases.forEach(resize);
-    if ('ResizeObserver' in window) {
-      const ro = new ResizeObserver(entries => entries.forEach(e => {
-        const s = canvases.find(c => c.screen === e.target);
-        if (s) resize(s);
-      }));
-      canvases.forEach(s => ro.observe(s.screen));
-    }
-
-    if (reduceMotion) {
-      screens.forEach(screen => screen.classList.add('is-paused'));
-      return;
-    }
-
+    // pause lava off screen, stop a spot when its phone scrolls/slides away
     if ('IntersectionObserver' in window) {
       const io = new IntersectionObserver(entries => entries.forEach(e => {
-        e.target.classList.toggle('is-paused', !e.isIntersecting);
-        const s = canvases.find(c => c.screen === e.target);
-        if (s) s.visible = e.isIntersecting;
+        const screen = e.target.querySelector('.stream-screen');
+        if (screen && !reduceMotion) screen.classList.toggle('is-paused', !e.isIntersecting);
+        if (!e.isIntersecting && e.target.classList.contains('is-playing')) stop(e.target);
       }), { threshold: 0.05 });
-      screens.forEach(screen => io.observe(screen));
-    } else {
-      canvases.forEach(s => { s.visible = true; });
+      devices.forEach(device => io.observe(device));
     }
-
-    let last = performance.now();
-    const loop = (now) => {
-      const dt = Math.min((now - last) / 1000, 0.05);
-      last = now;
-      if (!document.hidden) {
-        canvases.forEach(s => {
-          if (!s.visible || !s.w) return;
-          s.t += dt;
-          painters[s.kind](s, dt);
-        });
-      }
-      requestAnimationFrame(loop);
-    };
-    requestAnimationFrame(loop);
   }
 
   initStreamScreens();
@@ -1161,6 +1034,234 @@
   }
 
   initContactForm();
+
+  /**
+   * FOUNDER CARD — on hover the frame takes an oily rainbow film and a
+   * soap-bubble lens sticks to the cursor: inside it the card is magnified
+   * with a fish-eye distortion (SVG displacement map built at runtime).
+   * The card's clip-path keeps the lens inside the card.
+   * Styles: neon.css → FOUNDER CARD LENS.
+   */
+  function initFounderLens() {
+    const card = document.querySelector('#about .founder-card');
+    if (!card) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
+    const LENS = 150; // px
+    const ZOOM = 1.6;
+
+    // fish-eye displacement map: R/G = where each lens pixel samples from
+    // (pulled towards the centre, so the middle bulges like a drop of water)
+    const mapCanvas = document.createElement('canvas');
+    mapCanvas.width = mapCanvas.height = 128;
+    const mctx = mapCanvas.getContext('2d');
+    const img = mctx.createImageData(128, 128);
+    for (let y = 0; y < 128; y++) {
+      for (let x = 0; x < 128; x++) {
+        const u = (x / 127) * 2 - 1;
+        const v = (y / 127) * 2 - 1;
+        const r = Math.hypot(u, v);
+        const k = r < 1 && r > 0 ? Math.pow(r, 1.55) / r : 1; // sample radius r^1.55
+        const i = (y * 128 + x) * 4;
+        img.data[i] = Math.round((0.5 + (u * k - u) / 4) * 255);
+        img.data[i + 1] = Math.round((0.5 + (v * k - v) / 4) * 255);
+        img.data[i + 2] = 128;
+        img.data[i + 3] = 255;
+      }
+    }
+    mctx.putImageData(img, 0, 0);
+    const svgNS = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(svgNS, 'svg');
+    svg.setAttribute('width', '0');
+    svg.setAttribute('height', '0');
+    svg.setAttribute('aria-hidden', 'true');
+    svg.style.position = 'absolute';
+    svg.innerHTML = `
+      <filter id="founder-fisheye" x="0" y="0" width="${LENS}" height="${LENS}"
+              filterUnits="userSpaceOnUse" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+        <feImage href="${mapCanvas.toDataURL()}" x="0" y="0" width="${LENS}" height="${LENS}" preserveAspectRatio="none" result="map"/>
+        <feDisplacementMap in="SourceGraphic" in2="map" scale="${LENS}" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>`;
+    document.body.appendChild(svg);
+
+    const film = document.createElement('div');
+    film.className = 'founder-film';
+    film.setAttribute('aria-hidden', 'true');
+
+    // the lens shows a magnified copy of the card's own layers
+    const lens = document.createElement('div');
+    lens.className = 'founder-lens';
+    lens.setAttribute('aria-hidden', 'true');
+    lens.style.setProperty('--lens', `${LENS}px`);
+    const view = document.createElement('div');
+    view.className = 'founder-lens__view';
+    const content = document.createElement('div');
+    content.className = 'founder-lens__content';
+    // only the photo is magnified; the card's text stays on top, readable through the lens
+    card.querySelectorAll(':scope > img').forEach(el => content.appendChild(el.cloneNode(true)));
+    content.querySelectorAll('img').forEach(i => { i.alt = ''; i.loading = 'eager'; });
+    const shade = document.createElement('div');
+    shade.className = 'founder-lens__shade';
+    content.appendChild(shade);
+    view.appendChild(content);
+    lens.appendChild(view);
+    card.append(film, lens);
+
+    let target = null;
+    let pos = null;
+    let rafId = 0;
+
+    const loop = () => {
+      if (target) {
+        if (!pos) pos = { ...target };
+        // sticks to the cursor with a little jelly lag
+        const vx = (target.x - pos.x) * 0.35;
+        const vy = (target.y - pos.y) * 0.35;
+        pos.x += vx;
+        pos.y += vy;
+        const speed = Math.min(Math.hypot(vx, vy) / 40, 0.18);
+        const angle = Math.atan2(vy, vx);
+        content.style.width = `${card.clientWidth}px`;
+        content.style.height = `${card.clientHeight}px`;
+        content.style.transform =
+          `translate(${LENS / 2 - pos.x * ZOOM}px, ${LENS / 2 - pos.y * ZOOM}px) scale(${ZOOM})`;
+        lens.style.transform =
+          `translate(${pos.x - LENS / 2}px, ${pos.y - LENS / 2}px) rotate(${angle}rad) scale(${1 + speed}, ${1 - speed * 0.6}) rotate(${-angle}rad)`;
+      }
+      rafId = requestAnimationFrame(loop);
+    };
+
+    card.addEventListener('pointerenter', () => {
+      card.classList.add('has-lens');
+      if (!rafId) rafId = requestAnimationFrame(loop);
+    });
+    card.addEventListener('pointerleave', () => {
+      card.classList.remove('has-lens');
+      cancelAnimationFrame(rafId);
+      rafId = 0;
+      target = null;
+      pos = null;
+    });
+    card.addEventListener('pointermove', (e) => {
+      const rect = card.getBoundingClientRect();
+      target = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    });
+  }
+
+  initFounderLens();
+
+  /**
+   * STATS — a liquid gradient blob follows the cursor inside each card
+   * (same palette and wobble as the 3D blobs). Styles: neon.css → STATS BLOB.
+   */
+  function initStatsBlobs() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!window.matchMedia('(hover: hover)').matches) return;
+    document.querySelectorAll('.stats .stats-item').forEach((item, i) => {
+      const blob = document.createElement('span');
+      blob.className = 'stat-blob';
+      blob.setAttribute('aria-hidden', 'true');
+      blob.style.setProperty('--hue', `${i * 70}deg`);
+      item.prepend(blob);
+      let target = null;
+      let pos = null;
+      let raf = 0;
+      const loop = () => {
+        if (target) {
+          if (!pos) pos = { ...target };
+          pos.x += (target.x - pos.x) * 0.12;
+          pos.y += (target.y - pos.y) * 0.12;
+          blob.style.transform = `translate(${pos.x}px, ${pos.y}px) translate(-50%, -50%)`;
+        }
+        raf = requestAnimationFrame(loop);
+      };
+      item.addEventListener('pointerenter', (e) => {
+        const r = item.getBoundingClientRect();
+        target = { x: e.clientX - r.left, y: e.clientY - r.top };
+        if (!raf) raf = requestAnimationFrame(loop);
+      });
+      item.addEventListener('pointermove', (e) => {
+        const r = item.getBoundingClientRect();
+        target = { x: e.clientX - r.left, y: e.clientY - r.top };
+      });
+      item.addEventListener('pointerleave', () => {
+        cancelAnimationFrame(raf);
+        raf = 0;
+        // keep the last position: the blob fades out where it was
+        target = null;
+        pos = null;
+      });
+    });
+  }
+
+  initStatsBlobs();
+
+  /**
+   * CURSOR — a bright wobbling blot with a pulsing colored core and ripples
+   * spreading out of it; grows over links/buttons, bursts on click.
+   * Desktop mouse only; the system cursor is hidden while it is active.
+   * Styles: neon.css → SITE CURSOR.
+   */
+  function initBlobCursor() {
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const cursor = document.createElement('div');
+    cursor.className = 'blob-cursor';
+    cursor.setAttribute('aria-hidden', 'true');
+    cursor.innerHTML = '<span class="blob-cursor__blot"></span><span class="blob-cursor__core"></span>';
+    document.body.appendChild(cursor);
+    document.documentElement.classList.add('has-blob-cursor');
+
+    let x = -100;
+    let y = -100;
+    let cx = -100;
+    let cy = -100;
+    let shown = false;
+    let lastRipple = 0;
+
+    const ripple = (big) => {
+      const ring = document.createElement('span');
+      ring.className = big ? 'blob-cursor__ring is-burst' : 'blob-cursor__ring';
+      ring.style.left = `${cx}px`;
+      ring.style.top = `${cy}px`;
+      ring.addEventListener('animationend', () => ring.remove());
+      document.body.appendChild(ring);
+    };
+
+    window.addEventListener('pointermove', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      x = e.clientX;
+      y = e.clientY;
+      if (!shown) {
+        shown = true;
+        cx = x;
+        cy = y;
+        cursor.classList.add('is-visible');
+      }
+      const hot = e.target.closest && e.target.closest('a, button, [role="button"], .service-row, .stream-play, label, select');
+      cursor.classList.toggle('is-hot', !!hot);
+    }, { passive: true });
+    document.addEventListener('pointerleave', () => { shown = false; cursor.classList.remove('is-visible'); });
+    window.addEventListener('pointerdown', () => { cursor.classList.add('is-down'); if (!reduce) ripple(true); });
+    window.addEventListener('pointerup', () => cursor.classList.remove('is-down'));
+
+    const loop = (now) => {
+      cx += (x - cx) * 0.28;
+      cy += (y - cy) * 0.28;
+      cursor.style.transform = `translate(${cx}px, ${cy}px)`;
+      // a ripple spreads out every ~2s
+      if (shown && !reduce && now - lastRipple > 2000) {
+        lastRipple = now;
+        ripple(false);
+      }
+      requestAnimationFrame(loop);
+    };
+    requestAnimationFrame(loop);
+  }
+
+  initBlobCursor();
 
 
 })();

@@ -1158,11 +1158,54 @@ body {
   filter: drop-shadow(0 4px 14px rgb(0 0 0 / 0.55));
 }
 
-/* 1 — gradient lava lamp */
+/* Gradient lava lamp — colors come from the scheme variables below
+   (--lava-top / -mid / -low / -base = background, --blob-1..4 = wax) */
 .stream-screen--lava {
+  --lava-top: #1a0633;
+  --lava-mid: #4b0b52;
+  --lava-low: #a1164f;
+  --lava-base: #ff5a36;
+  --blob-1: #ffe27a;
+  --blob-2: #ff6a6a;
+  --blob-3: #d61f9b;
+  --blob-4: #7a1fff;
   background:
-    radial-gradient(120% 60% at 50% 110%, #ff7a3d 0%, transparent 60%),
-    linear-gradient(180deg, #1a0633 0%, #4b0b52 45%, #a1164f 80%, #ff5a36 100%);
+    radial-gradient(120% 60% at 50% 110%, var(--lava-base) 0%, transparent 60%),
+    linear-gradient(180deg, var(--lava-top) 0%, var(--lava-mid) 45%, var(--lava-low) 80%, var(--lava-base) 100%);
+}
+
+/* one scheme per slide, matched to the spot that plays on it */
+.stream-screen--s1 { /* mobile app: violet → aqua */
+  --lava-top: #0d0830; --lava-mid: #2b1d7a; --lava-low: #3f5bd6; --lava-base: #5ccfe6;
+  --blob-1: #c9f6ff; --blob-2: #5ccfe6; --blob-3: #8a6bff; --blob-4: #4a1fd1;
+}
+.stream-screen--s2 { /* casino: ruby → gold */
+  --lava-top: #1a0205; --lava-mid: #5c0716; --lava-low: #b3122a; --lava-base: #ffb02e;
+  --blob-1: #fff1a8; --blob-2: #ffd34d; --blob-3: #ff5a36; --blob-4: #c2102e;
+}
+.stream-screen--s3 { /* delivery: green → orange */
+  --lava-top: #031a10; --lava-mid: #0c4a2f; --lava-low: #2f8a3c; --lava-base: #ff9a3d;
+  --blob-1: #fff0b3; --blob-2: #ffd36b; --blob-3: #ff9a3d; --blob-4: #1fa86a;
+}
+.stream-screen--s4 { /* cosmetics: plum → peach */
+  --lava-top: #2a0e1f; --lava-mid: #6e2148; --lava-low: #c25b86; --lava-base: #ffd9b8;
+  --blob-1: #fff3ea; --blob-2: #ffd9b8; --blob-3: #ffb3c7; --blob-4: #c25b86;
+}
+.stream-screen--s5 { /* geo search: deep sea → mint */
+  --lava-top: #021220; --lava-mid: #0b3a5c; --lava-low: #11778a; --lava-base: #4de0c8;
+  --blob-1: #d6fff6; --blob-2: #4de0c8; --blob-3: #2fa3d6; --blob-4: #1b4fd1;
+}
+.stream-screen--s6 { /* youtube: ink → red (the original "shorts" look) */
+  --lava-top: #1a0633; --lava-mid: #4b0b52; --lava-low: #a1164f; --lava-base: #ff3b3b;
+  --blob-1: #ffe27a; --blob-2: #ff6a6a; --blob-3: #ff2a55; --blob-4: #7a1fff;
+}
+.stream-screen--s7 { /* AI news: night → acid green */
+  --lava-top: #020a14; --lava-mid: #0a2a5c; --lava-low: #0f6d6a; --lava-base: #39ff9c;
+  --blob-1: #e4ffd6; --blob-2: #39ff9c; --blob-3: #5ccfe6; --blob-4: #2b4dff;
+}
+.stream-screen--s8 { /* sunset: indigo → amber */
+  --lava-top: #120b2e; --lava-mid: #3d1f6e; --lava-low: #c2477a; --lava-base: #ffb347;
+  --blob-1: #fff0c2; --blob-2: #ffb347; --blob-3: #ff6f91; --blob-4: #845ec2;
 }
 
 .stream-screen--lava .lava-blob {
@@ -1172,7 +1215,7 @@ body {
   width: var(--s);
   aspect-ratio: 1;
   border-radius: 46% 54% 58% 42% / 52% 44% 56% 48%;
-  background: radial-gradient(circle at 35% 30%, #ffe27a 0%, #ff6a6a 40%, #d61f9b 72%, #7a1fff 100%);
+  background: radial-gradient(circle at 35% 30%, var(--blob-1) 0%, var(--blob-2) 40%, var(--blob-3) 72%, var(--blob-4) 100%);
   filter: blur(4px);
   mix-blend-mode: screen;
   opacity: 0.9;
@@ -1194,6 +1237,91 @@ body {
 
 .stream-screen.is-paused .lava-blob {
   animation-play-state: paused;
+}
+
+/* the spot plays on top of the lava, under the phone frame */
+.stream-screen .stream-video {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.4s var(--ease-out);
+}
+.stream-device.is-playing .stream-video {
+  opacity: 1;
+}
+.stream-device.is-playing .stream-logo {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.85);
+}
+.stream-device .stream-logo {
+  transition: opacity 0.4s var(--ease-out), transform 0.4s var(--ease-out);
+}
+
+/* play / stop button under the logo */
+.stream-device .stream-play {
+  position: absolute;
+  left: 50%;
+  top: 74%;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: clamp(52px, 18%, 68px);
+  aspect-ratio: 1;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  font-size: clamp(26px, 9%, 34px);
+  color: #fff;
+  background: rgb(255 255 255 / 0.16);
+  box-shadow: inset 0 0 0 1.5px rgb(255 255 255 / 0.55), 0 8px 24px rgb(0 0 0 / 0.35);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  transition: transform var(--dur-ui) var(--ease-out), background-color var(--dur-ui) var(--ease-out), opacity var(--dur-ui) var(--ease-out);
+}
+.stream-device .stream-play i {
+  margin-left: 0.1em; /* optical centre of the triangle */
+  line-height: 1;
+}
+.stream-device .stream-play:hover {
+  background: rgb(255 255 255 / 0.28);
+  transform: translate(-50%, -50%) scale(1.08);
+}
+/* soft pulse ring inviting a click */
+.stream-device .stream-play::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: 0 0 0 0 rgb(255 255 255 / 0.45);
+  animation: stream-play-pulse 2.4s var(--ease-out) infinite;
+}
+@keyframes stream-play-pulse {
+  0% { box-shadow: 0 0 0 0 rgb(255 255 255 / 0.45); }
+  70%, 100% { box-shadow: 0 0 0 16px rgb(255 255 255 / 0); }
+}
+/* while playing: small stop button low on the screen, fades unless hovered */
+.stream-device.is-playing .stream-play {
+  top: 88%;
+  opacity: 0.35;
+}
+.stream-device.is-playing .stream-play::after {
+  animation: none;
+}
+.stream-device.is-playing:hover .stream-play {
+  opacity: 1;
+}
+.stream-device.is-playing .stream-play i::before {
+  content: "\f592"; /* bi-stop-fill */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stream-device .stream-play::after { animation: none; }
 }
 
 /* =====================================================================
@@ -1405,4 +1533,1212 @@ body {
 }
 #footer .footer-contacts a:hover {
   color: var(--neon-cyan);
+}
+
+/* =====================================================================
+   FOUNDER CARD FILM — oily rainbow film on the frame while hovered
+   (main.js → initFounderLens)
+   ===================================================================== */
+
+#about .founder-mark,
+#about .founder-copy,
+#about .founder-capabilities {
+  z-index: 6; /* above the lens: text always reads through it */
+}
+
+/* frame: edges blur and pick up a thin-film (petrol on a puddle) sheen */
+#about .founder-film {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: 0;
+  background:
+    conic-gradient(from var(--film-angle, 0deg) at 50% 50%,
+      rgb(92 207 230 / 0.55), rgb(157 140 255 / 0.5), rgb(255 120 200 / 0.45),
+      rgb(255 214 120 / 0.45), rgb(120 255 190 / 0.45), rgb(92 207 230 / 0.55));
+  /* only a soft band along the edges, clear in the middle */
+  -webkit-mask: radial-gradient(120% 110% at 50% 50%, transparent 58%, #000 86%);
+  mask: radial-gradient(120% 110% at 50% 50%, transparent 58%, #000 86%);
+  -webkit-backdrop-filter: blur(10px) saturate(1.5);
+  backdrop-filter: blur(10px) saturate(1.5);
+  mix-blend-mode: screen;
+  transition: opacity 0.6s var(--ease-out);
+}
+
+#about .founder-card:hover .founder-film {
+  opacity: 1;
+  animation: founder-film-swirl 9s linear infinite;
+}
+
+@property --film-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes founder-film-swirl {
+  to { --film-angle: 360deg; }
+}
+
+#about .founder-card {
+  transition: border-color 0.6s var(--ease-out), box-shadow 0.6s var(--ease-out);
+}
+#about .founder-card:hover {
+  border-color: rgb(255 255 255 / 0.28);
+  box-shadow: 0 0 28px rgb(var(--neon-cyan-rgb) / 0.18), 0 0 60px rgb(157 140 255 / 0.12);
+}
+
+
+/* =====================================================================
+   3D LAYERS (assets/js/scene3d.js)
+   ===================================================================== */
+
+/* What we offer: planet scene behind the rows, darkened under the text */
+#what-we-offer {
+  position: relative;
+}
+#what-we-offer .offer-3d {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+#what-we-offer .offer-3d canvas {
+  position: sticky; /* stays in view while the rows scroll past */
+  top: 0;
+  display: block;
+  width: 100%;
+  height: 100vh;
+}
+
+/* clip (not hidden): "hidden" makes the section a scroll box and breaks sticky */
+#what-we-offer {
+  overflow: clip;
+}
+#what-we-offer .offer-3d::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgb(10 15 28 / 0.82) 0%, rgb(10 15 28 / 0.55) 55%, rgb(10 15 28 / 0.25) 100%),
+    linear-gradient(180deg, var(--neon-bg) 0%, transparent 14%, transparent 86%, var(--neon-bg) 100%);
+}
+
+/* Floating blobs: one fixed WebGL layer over the page, never catches clicks;
+   below the menu toggle / header, above the sections */
+.blob-layer {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* =====================================================================
+   SMOOTH HOVERS — every hover eases in and out (no hard jumps)
+   ===================================================================== */
+
+:root {
+  --dur-hover: 0.45s;
+}
+
+/* Services: the icon glyph changed color instantly while its circle faded */
+#services .service-item .icon i {
+  transition: color var(--dur-hover) var(--ease-out), transform var(--dur-hover) var(--ease-out);
+}
+#services .service-item:hover .icon i {
+  transform: scale(1.06);
+}
+#services .service-item .icon {
+  transition:
+    background-color var(--dur-hover) var(--ease-out),
+    box-shadow var(--dur-hover) var(--ease-out),
+    transform var(--dur-hover) var(--ease-out);
+}
+
+/* side menu links + their icons */
+.navmenu a,
+.navmenu a .navicon {
+  transition: color var(--dur-hover) var(--ease-out), background-color var(--dur-hover) var(--ease-out);
+}
+
+/* round fixed buttons */
+.header .header-toggle,
+.scroll-top {
+  transition:
+    background-color var(--dur-hover) var(--ease-out),
+    color var(--dur-hover) var(--ease-out),
+    box-shadow var(--dur-hover) var(--ease-out),
+    opacity 0.4s var(--ease-out),
+    bottom 0.4s var(--ease-out),
+    visibility 0.4s;
+}
+
+/* portfolio: videos zoom as smoothly as images */
+.portfolio .portfolio-content img,
+.portfolio .portfolio-content video {
+  transition: transform 0.7s var(--ease-out);
+}
+.portfolio .portfolio-content:hover video {
+  transform: scale(1.06);
+}
+.portfolio .portfolio-content .portfolio-info {
+  transition: opacity var(--dur-hover) var(--ease-out);
+}
+
+/* What we offer: rows, titles and the + sign ease together */
+.what-we-offer .service-row {
+  transition: padding var(--dur-hover) var(--ease-out), background-color var(--dur-hover) var(--ease-out);
+}
+
+/* testimonials zoom glyph */
+#testimonials .testimonial-item .test-zoom {
+  transition: transform var(--dur-hover) var(--ease-out), opacity var(--dur-hover) var(--ease-out);
+}
+#testimonials .testimonial-item .preview-link:hover .test-zoom {
+  transform: scale(1.12);
+}
+
+/* Services: lead text across the whole block */
+#services .section-title p:not(.section-kicker) {
+  max-width: none;
+}
+
+
+/* =====================================================================
+   WAVY GRADIENT GLOWS — soft flowing light bands over the gradient
+   backgrounds (sections 04–07, footer). One SVG wave tile
+   is 1200px wide, the layer slides exactly one tile -> seamless loop.
+   ===================================================================== */
+
+.neon-flow,
+#content-stream,
+#footer {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+}
+
+.neon-flow::after,
+#portfolio::after,
+#footer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: calc(100% + 1200px);
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='520' viewBox='0 0 1200 520'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' x2='1'%3E%3Cstop offset='0' stop-color='%235ccfe6'/%3E%3Cstop offset='.5' stop-color='%239d8cff'/%3E%3Cstop offset='1' stop-color='%235ccfe6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M0 260 C150 150 450 150 600 260 S1050 370 1200 260' fill='none' stroke='url%28%23g%29' stroke-width='70' stroke-linecap='round' opacity='0.55'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='380' viewBox='0 0 1200 380'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' x2='1'%3E%3Cstop offset='0' stop-color='%239d8cff'/%3E%3Cstop offset='.5' stop-color='%23ff8ac6'/%3E%3Cstop offset='1' stop-color='%239d8cff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M0 190 C150 110 450 110 600 190 S1050 270 1200 190' fill='none' stroke='url%28%23g%29' stroke-width='46' stroke-linecap='round' opacity='0.45'/%3E%3C/svg%3E");
+  background-size: 1200px 520px, 1200px 380px;
+  background-position: 0 40px, 0 300px;
+  background-repeat: repeat;
+  filter: blur(26px);
+  opacity: 0.5;
+  will-change: transform;
+  animation: wave-glow-flow 70s linear infinite;
+}
+
+
+#portfolio::after {
+  z-index: 0; /* above the darkening veil, below the slider */
+  opacity: 0.4;
+}
+
+#footer::after {
+  opacity: 0.35;
+  background-position: 0 -120px, 0 20px;
+}
+
+@keyframes wave-glow-flow {
+  to { transform: translateX(-1200px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .neon-flow::after,
+  #footer::after { animation: none; }
+}
+
+/* =====================================================================
+   MUSIC DIAL (assets/js/lofi.js) — round button under the menu toggle,
+   split in three: top = play/pause, bottom-left = volume −, bottom-right = +.
+   The thin outer ring shows the volume.
+   ===================================================================== */
+
+.music-dial {
+  --size: 44px;
+  position: fixed;
+  top: 63px;
+  right: 13px; /* centred under the 40px menu toggle */
+  z-index: 9999;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  background: var(--neon-cyan);
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.18) inset, 0 6px 18px rgb(var(--neon-cyan-rgb) / 0.25);
+  isolation: isolate;
+}
+
+/* "Y" dividers between the sectors */
+.music-dial::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: 50%;
+  pointer-events: none;
+  background: conic-gradient(from 59deg,
+    rgb(10 15 28 / 0.35) 0 2deg, transparent 2deg 120deg,
+    rgb(10 15 28 / 0.35) 120deg 122deg, transparent 122deg 240deg,
+    rgb(10 15 28 / 0.35) 240deg 242deg, transparent 242deg);
+}
+
+/* glint, same rhythm as the menu toggle but offset */
+.music-dial::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: 50%;
+  pointer-events: none;
+  background: linear-gradient(115deg, transparent 38%, rgb(255 255 255 / 0.8) 50%, transparent 62%);
+  background-size: 300% 100%;
+  background-position: 120% 0;
+  animation: music-glint 5s var(--ease-in-out) 2.5s infinite;
+}
+@keyframes music-glint {
+  0%, 70% { background-position: 120% 0; }
+  90%, 100% { background-position: -20% 0; }
+}
+
+.music-dial__sector {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: var(--neon-bg);
+  background: transparent;
+  cursor: pointer;
+  transition: background-color var(--dur-hover, 0.45s) var(--ease-out), opacity var(--dur-hover, 0.45s) var(--ease-out);
+}
+.music-dial__sector:hover,
+.music-dial__sector:focus-visible {
+  background-color: rgb(255 255 255 / 0.3);
+}
+.music-dial__sector:disabled {
+  cursor: default;
+  opacity: 0.45;
+  background: transparent;
+}
+.music-dial__sector i {
+  position: absolute;
+  line-height: 1;
+  transform: translate(-50%, -50%);
+}
+
+/* sectors: 120° wedges (points far outside the circle; border-radius trims them) */
+.music-dial__play {
+  clip-path: polygon(50% 50%, -36.6% 0%, 50% -50%, 136.6% 0%);
+}
+.music-dial__play i {
+  left: 50%;
+  top: 26%;
+  font-size: 15px;
+}
+.music-dial__up {
+  clip-path: polygon(50% 50%, 136.6% 0%, 136.6% 100%, 50% 150%);
+}
+.music-dial__up i {
+  left: 71%;
+  top: 64%;
+  font-size: 14px;
+}
+.music-dial__down {
+  clip-path: polygon(50% 50%, 50% 150%, -36.6% 100%, -36.6% 0%);
+}
+.music-dial__down i {
+  left: 29%;
+  top: 64%;
+  font-size: 14px;
+}
+
+/* volume ring */
+.music-dial__level {
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  pointer-events: none;
+  background: conic-gradient(var(--neon-cyan) calc(var(--vol, 0.5) * 360deg), rgb(255 255 255 / 0.16) 0);
+  -webkit-mask: radial-gradient(circle, transparent calc(50% - 2.5px), #000 calc(50% - 2px));
+  mask: radial-gradient(circle, transparent calc(50% - 2.5px), #000 calc(50% - 2px));
+  opacity: 0.55;
+  transition: opacity var(--dur-hover, 0.45s) var(--ease-out);
+}
+.music-dial.is-playing .music-dial__level {
+  opacity: 1;
+}
+
+/* while playing: a slow breathing glow */
+.music-dial.is-playing {
+  animation: music-breathe 2.5s ease-in-out infinite;
+}
+@keyframes music-breathe {
+  0%, 100% { box-shadow: 0 0 0 1px rgb(255 255 255 / 0.18) inset, 0 6px 18px rgb(var(--neon-cyan-rgb) / 0.25); }
+  50% { box-shadow: 0 0 0 1px rgb(255 255 255 / 0.18) inset, 0 6px 28px rgb(var(--neon-cyan-rgb) / 0.55); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .music-dial::after,
+  .music-dial.is-playing { animation: none; }
+}
+
+/* =====================================================================
+   CONTENT STREAM RIPPLES — water from above: drops fall at three points,
+   wide soft rings spread evenly and fade out (radius ~220 of 1200)
+   before they could meet.
+   Animated SVG (SMIL) as the background image.
+   ===================================================================== */
+
+#content-stream::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 800' preserveAspectRatio='xMidYMid slice'%3E%3Cdefs%3E%3Cfilter id='b' x='-20%25' y='-20%25' width='140%25' height='140%25'%3E%3CfeGaussianBlur stdDeviation='7'/%3E%3C/filter%3E%3C/defs%3E%3Cg filter='url%28%23b%29'%3E%3Ccircle cx=%22230%22 cy=%22300%22 r=%2210%22 fill=%22none%22 stroke=%22%235ccfe6%22 stroke-width=%2226%22 stroke-opacity=%220%22%3E%3Canimate attributeName=%22r%22 values=%2210%3B220%22 dur=%226.6s%22 begin=%220.0s%22 repeatCount=%22indefinite%22/%3E%3Canimate attributeName=%22stroke-opacity%22 values=%220%3B0.28%3B0%22 keyTimes=%220%3B0.2%3B1%22 dur=%226.6s%22 begin=%220.0s%22 repeatCount=%22indefinite%22/%3E%3Canimate attributeName=%22stroke-width%22 values=%2230%3B16%22 dur=%226.6s%22 begin=%220.0s%22 repeatCount=%22indefinite%22/%3E%3C/circle%3E%3Ccircle cx=%22230%22 cy=%22300%22 r=%2210%22 fill=%22none%22 stroke=%22%235ccfe6%22 stroke-width=%2226%22 stroke-opacity=%220%22%3E%3Canimate attributeName=%22r%22 values=%2210%3B220%22 dur=%226.6s%22 begin=%222.2s%22 repeatCount=%22indefinite%22/%3E%3Canimate attributeName=%22stroke-opacity%22 values=%220%3B0.28%3B0%22 keyTimes=%220%3B0.2%3B1%22 dur=%226.6s%22 begin=%222.2s%22 repeatCount=%22indefinite%22/%3E%3Canimate attributeName=%22stroke-width%22 values=%2230%3B16%22 dur=%226.6s%22 begin=%222.2s%22 repeatCount=%22indefinite%22/%3E%3C/circle%3E%3Ccircle cx=%22230%22 cy=%22300%22 r=%2210%22 fill=%22none%22 stroke=%22%235ccfe6%22 stroke-width=%2226%22 stroke-opacity=%220%22%3E%3Canimate attributeName=%22r%22 values=%2210%3B220%22 dur=%226.6s%22 begin=%224.4s%22 repeatCount=%22indefinite%22/%3E%3Canimate attributeName=%22stroke-opacity%22 values=%220%3B0.28%3B0%22 keyTimes=%220%3B0.2%3B1%22 dur=%226.6s%22 begin=%224.4s%22 repeatCount=%22indefinite%22/%3E%3Canimate attributeName=%22stroke-width%22 values=%2230%3B16%22 dur=%226.6s%22 begin=%224.4s%22 repeatCount=%22indefinite%22/%3E%3C/circle%3E%3Ccircle cx=%22960%22 cy=%22250%22 r=%2210%22 fill=%22none%22 stroke=%22%239d8cff%22 stroke-width=%2226%22 stroke-opacity=%220%22%3E%3Canimate attributeName=%22r%22 values=%2210%3B220%22 dur=%226.6s%22 begin=%222.2s%22 repeatCount=%22indefinite%22/%3E%3Canimate attributeName=%22stroke-opacity%22 values=%220%3B0.28%3B0%22 keyTimes=%220%3B0.2%3B1%22 dur=%226.6s%22 begin=%222.2s%22 repeatCount=%22indefinite%22/%3E%3Canimate attributeName=%22stroke-width%22 values=%2230%3B16%22 dur=%226.6s%22 begin=%222.2s%22 repeatCount=%22indefinite%22/%3E%3C/circle%3E%3Ccircle cx=%22960%22 cy=%22250%22 r=%2210%22 fill=%22none%22 stroke=%22%239d8cff%22 stroke-width=%2226%22 stroke-opacity=%220%22%3E%3Canimate attributeName=%22r%22 values=%2210%3B220%22 dur=%226.6s%22 begin=%224.4s%22 repeatCount=%22indefinite%22/%3E%3Canimate attributeName=%22stroke-opacity%22 values=%220%3B0.28%3B0%22 keyTimes=%220%3B0.2%3B1%22 dur=%226.6s%22 begin=%224.4s%22 repeatCount=%22indefinite%22/%3E%3Canimate attributeName=%22stroke-width%22 values=%2230%3B16%22 dur=%226.6s%22 begin=%224.4s%22 repeatCount=%22indefinite%22/%3E%3C/circle%3E%3Ccircle cx=%22960%22 cy=%22250%22 r=%2210%22 fill=%22none%22 stroke=%22%239d8cff%22 stroke-width=%2226%22 stroke-opacity=%220%22%3E%3Canimate attributeName=%22r%22 values=%2210%3B220%22 dur=%226.6s%22 begin=%226.6s%22 repeatCount=%22indefinite%22/%3E%3Canimate attributeName=%22stroke-opacity%22 values=%220%3B0.28%3B0%22 keyTimes=%220%3B0.2%3B1%22 dur=%226.6s%22 begin=%226.6s%22 repeatCount=%22indefinite%22/%3E%3Canimate attributeName=%22stroke-width%22 values=%2230%3B16%22 dur=%226.6s%22 begin=%226.6s%22 repeatCount=%22indefinite%22/%3E%3C/circle%3E%3Ccircle cx=%22600%22 cy=%22650%22 r=%2210%22 fill=%22none%22 stroke=%22%23ff8ac6%22 stroke-width=%2226%22 stroke-opacity=%220%22%3E%3Canimate attributeName=%22r%22 values=%2210%3B220%22 dur=%226.6s%22 begin=%224.4s%22 repeatCount=%22indefinite%22/%3E%3Canimate attributeName=%22stroke-opacity%22 values=%220%3B0.28%3B0%22 keyTimes=%220%3B0.2%3B1%22 dur=%226.6s%22 begin=%224.4s%22 repeatCount=%22indefinite%22/%3E%3Canimate attributeName=%22stroke-width%22 values=%2230%3B16%22 dur=%226.6s%22 begin=%224.4s%22 repeatCount=%22indefinite%22/%3E%3C/circle%3E%3Ccircle cx=%22600%22 cy=%22650%22 r=%2210%22 fill=%22none%22 stroke=%22%23ff8ac6%22 stroke-width=%2226%22 stroke-opacity=%220%22%3E%3Canimate attributeName=%22r%22 values=%2210%3B220%22 dur=%226.6s%22 begin=%226.6s%22 repeatCount=%22indefinite%22/%3E%3Canimate attributeName=%22stroke-opacity%22 values=%220%3B0.28%3B0%22 keyTimes=%220%3B0.2%3B1%22 dur=%226.6s%22 begin=%226.6s%22 repeatCount=%22indefinite%22/%3E%3Canimate attributeName=%22stroke-width%22 values=%2230%3B16%22 dur=%226.6s%22 begin=%226.6s%22 repeatCount=%22indefinite%22/%3E%3C/circle%3E%3Ccircle cx=%22600%22 cy=%22650%22 r=%2210%22 fill=%22none%22 stroke=%22%23ff8ac6%22 stroke-width=%2226%22 stroke-opacity=%220%22%3E%3Canimate attributeName=%22r%22 values=%2210%3B220%22 dur=%226.6s%22 begin=%228.8s%22 repeatCount=%22indefinite%22/%3E%3Canimate attributeName=%22stroke-opacity%22 values=%220%3B0.28%3B0%22 keyTimes=%220%3B0.2%3B1%22 dur=%226.6s%22 begin=%228.8s%22 repeatCount=%22indefinite%22/%3E%3Canimate attributeName=%22stroke-width%22 values=%2230%3B16%22 dur=%226.6s%22 begin=%228.8s%22 repeatCount=%22indefinite%22/%3E%3C/circle%3E%3C/g%3E%3C/svg%3E") center / cover no-repeat;
+  opacity: 0.9;
+}
+
+/* =====================================================================
+   FOUNDER CARD LENS — soap-bubble magnifier stuck to the cursor; the card
+   inside it is zoomed and bulged by the #founder-fisheye SVG filter.
+   The card's own clip-path keeps the lens inside the card.
+   ===================================================================== */
+
+#about .founder-lens {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 5;
+  width: var(--lens);
+  height: var(--lens);
+  overflow: hidden;
+  pointer-events: none;
+  border-radius: 50%;
+  opacity: 0;
+  transform-origin: 50% 50%;
+  /* soft, feathered edge like the 3D blobs' hover smear: no outline */
+  -webkit-mask: radial-gradient(closest-side, #000 62%, rgb(0 0 0 / 0.5) 82%, transparent 100%);
+  mask: radial-gradient(closest-side, #000 62%, rgb(0 0 0 / 0.5) 82%, transparent 100%);
+  transition: opacity 0.5s var(--ease-out);
+  animation: lens-wobble 3.2s ease-in-out infinite alternate;
+}
+#about .founder-card.has-lens .founder-lens {
+  opacity: 1;
+}
+
+#about .founder-lens__view {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  filter: url(#founder-fisheye);
+}
+
+#about .founder-lens__content {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: 0 0;
+  background: var(--neon-bg-2);
+  /* same layout as the card itself, so the copies land in the same places */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: clamp(21px, 3vw, 38px);
+}
+#about .founder-lens__shade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg, rgb(8 8 10 / 0.04) 28%, rgb(8 8 10 / 0.94) 100%);
+}
+
+/* colors run together inside it, milky and iridescent (no rim) */
+#about .founder-lens::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 40% 35%, rgb(255 255 255 / 0.16), transparent 60%),
+    conic-gradient(from 0deg, rgb(92 207 230 / 0.16), rgb(157 140 255 / 0.16), rgb(255 138 198 / 0.14), rgb(255 211 107 / 0.12), rgb(92 207 230 / 0.16));
+  mix-blend-mode: screen;
+  animation: lens-hue 6s linear infinite;
+}
+
+@keyframes lens-wobble {
+  0%   { border-radius: 50% 47% 52% 49% / 48% 52% 47% 51%; }
+  50%  { border-radius: 47% 53% 49% 52% / 52% 47% 53% 48%; }
+  100% { border-radius: 52% 48% 47% 53% / 49% 51% 48% 52%; }
+}
+@keyframes lens-hue {
+  to { filter: hue-rotate(360deg); }
+}
+
+/* =====================================================================
+   STATS BLOB — liquid gradient blob following the cursor in each card
+   ===================================================================== */
+
+.stats .stats-item .stat-blob {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: -1;
+  width: 150px;
+  height: 150px;
+  pointer-events: none;
+  border-radius: 46% 54% 58% 42% / 52% 44% 56% 48%;
+  background:
+    radial-gradient(circle at 35% 30%, rgb(255 255 255 / 0.55) 0 8%, transparent 26%),
+    conic-gradient(from var(--hue, 0deg), #5ccfe6, #9d8cff, #ff8ac6, #ffd36b, #39ff9c, #5ccfe6);
+  filter: blur(14px) saturate(1.2);
+  opacity: 0;
+  transform: translate(-200px, -200px);
+  transition: opacity 0.6s var(--ease-out);
+  animation:
+    stat-blob-morph 4s ease-in-out infinite alternate,
+    stat-blob-hue 8s linear infinite;
+}
+/* blur lives inside the keyframes, so the blob stays soft the whole time */
+@keyframes stat-blob-hue {
+  from { filter: blur(16px) saturate(1.2) hue-rotate(0deg); }
+  to { filter: blur(16px) saturate(1.2) hue-rotate(360deg); }
+}
+.stats .stats-item:hover .stat-blob {
+  opacity: 0.55;
+}
+@keyframes stat-blob-morph {
+  0%   { border-radius: 46% 54% 58% 42% / 52% 44% 56% 48%; }
+  50%  { border-radius: 60% 40% 45% 55% / 40% 60% 42% 58%; }
+  100% { border-radius: 40% 60% 38% 62% / 58% 42% 60% 40%; }
+}
+.stats .stats-item {
+  transition: border-color var(--dur-hover, 0.45s) var(--ease-out), transform var(--dur-hover, 0.45s) var(--ease-out);
+}
+.stats .stats-item:hover {
+  border-color: rgb(var(--neon-cyan-rgb) / 0.35);
+}
+
+/* =====================================================================
+   SITE CURSOR — bright wobbling blot, pulsing colored core, spreading
+   ripples (main.js → initBlobCursor). Mouse only.
+   ===================================================================== */
+
+html.has-blob-cursor,
+html.has-blob-cursor body,
+html.has-blob-cursor a,
+html.has-blob-cursor button,
+html.has-blob-cursor [role="button"],
+html.has-blob-cursor .service-row,
+html.has-blob-cursor label,
+html.has-blob-cursor select {
+  cursor: none;
+}
+/* text fields keep the I-beam: you need to see where you type */
+html.has-blob-cursor input,
+html.has-blob-cursor textarea {
+  cursor: text;
+}
+
+.blob-cursor {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 100000;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s var(--ease-out);
+}
+.blob-cursor.is-visible {
+  opacity: 1;
+}
+
+.blob-cursor__blot {
+  position: absolute;
+  left: -22px;
+  top: -22px;
+  width: 44px;
+  height: 44px;
+  border-radius: 46% 54% 58% 42% / 52% 44% 56% 48%;
+  /* translucent, like a jellyfish bell */
+  background:
+    radial-gradient(circle at 50% 45%, rgb(255 255 255 / 0.35), transparent 55%),
+    conic-gradient(from 0deg, rgb(92 207 230 / 0.55), rgb(157 140 255 / 0.5), rgb(255 111 181 / 0.45), rgb(255 211 107 / 0.4), rgb(57 255 156 / 0.45), rgb(92 207 230 / 0.55));
+  box-shadow: 0 0 22px rgb(var(--neon-cyan-rgb) / 0.45), 0 0 44px rgb(157 140 255 / 0.25);
+  filter: blur(3px); /* soft gaussian edge */
+  opacity: 0.75;
+  transition: transform 0.45s var(--ease-out), opacity 0.45s var(--ease-out);
+  animation:
+    stat-blob-morph 4s ease-in-out infinite alternate,
+    blot-spin 12s linear infinite,
+    blot-breathe 4.8s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+@keyframes blot-breathe {
+  0%, 100% { opacity: 0.55; scale: 1; }
+  50% { opacity: 0.85; scale: 1.14; }
+}
+@keyframes blot-spin {
+  to { rotate: 360deg; }
+}
+
+.blob-cursor__core {
+  position: absolute;
+  left: -6px;
+  top: -6px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 10px #fff;
+  filter: blur(0.6px);
+  animation: core-pulse 4.8s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+@keyframes core-pulse {
+  0%, 100% { transform: scale(0.8); background: #ffffff; box-shadow: 0 0 10px #ffffff; }
+  33% { transform: scale(1.25); background: #7ff3ff; box-shadow: 0 0 16px #5ccfe6; }
+  66% { transform: scale(1); background: #ff9ad5; box-shadow: 0 0 16px #ff6fb5; }
+}
+
+.blob-cursor.is-hot .blob-cursor__blot {
+  transform: scale(1.6);
+}
+.blob-cursor.is-down .blob-cursor__blot {
+  transform: scale(0.75);
+}
+
+.blob-cursor__ring {
+  position: fixed;
+  z-index: 99999;
+  width: 44px;
+  height: 44px;
+  margin: -22px 0 0 -22px;
+  border-radius: 50%;
+  pointer-events: none;
+  border: 2px solid rgb(var(--neon-cyan-rgb) / 0.55);
+  filter: blur(1.2px);
+  animation: cursor-ripple 3.8s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+.blob-cursor__ring.is-burst {
+  border-color: rgb(255 154 213 / 0.85);
+  border-width: 2px;
+  animation-duration: 0.9s;
+}
+/* 44px ring -> 144px: it ends 50px beyond the blot's edge */
+@keyframes cursor-ripple {
+  0%   { transform: scale(1); opacity: 0; }
+  15%  { opacity: 0.55; }
+  100% { transform: scale(3.27); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blob-cursor__blot,
+  .blob-cursor__core,
+  #about .founder-lens,
+  .stats .stats-item .stat-blob { animation: none; }
+}
+
+/* =====================================================================
+   STATS CONTOUR — card outlines breathe slowly like the blobs
+   ===================================================================== */
+
+.stats .stats-item {
+  animation: stats-contour 11s ease-in-out infinite alternate;
+}
+.stats .col-lg-3:nth-child(2) .stats-item { animation-delay: -3s; }
+.stats .col-lg-3:nth-child(3) .stats-item { animation-delay: -6s; }
+.stats .col-lg-3:nth-child(4) .stats-item { animation-delay: -9s; }
+
+@keyframes stats-contour {
+  0%   { border-radius: 18px 30px 22px 34px / 30px 20px 34px 22px; }
+  33%  { border-radius: 34px 18px 30px 22px / 22px 34px 20px 30px; }
+  66%  { border-radius: 22px 34px 18px 30px / 34px 22px 30px 18px; }
+  100% { border-radius: 30px 22px 34px 18px / 20px 30px 22px 34px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stats .stats-item { animation: none; }
+}
+
+/* =====================================================================
+   GRADIENT HOVERS — hover states fade into a moving aqua -> violet -> pink
+   gradient instead of switching to one flat color
+   ===================================================================== */
+
+:root {
+  --grad-hover: linear-gradient(100deg, #5ccfe6 0%, #9d8cff 30%, #ff8ac6 55%, #ffd36b 75%, #5ccfe6 100%);
+}
+
+@keyframes grad-slide {
+  to { background-position: 200% 0; } /* = one 200% tile: seamless loop */
+}
+
+/* text: the letters are filled with the gradient; the solid fill fades away */
+.what-we-offer .service-row h3,
+#services .service-item .title,
+.navmenu a,
+#footer .nav-link.text-body-secondary,
+#footer .footer-contacts a,
+#contact .contact-info a {
+  background-image: var(--grad-hover);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: currentColor;
+  transition:
+    -webkit-text-fill-color var(--dur-hover, 0.45s) var(--ease-out),
+    color var(--dur-hover, 0.45s) var(--ease-out),
+    transform var(--dur-hover, 0.45s) var(--ease-out);
+}
+.what-we-offer .service-row:hover h3,
+.what-we-offer .service-row.open h3,
+#services .service-item:hover .title,
+.navmenu a:hover,
+.navmenu a.active,
+#footer .nav-link.text-body-secondary:hover,
+#footer .footer-contacts a:hover,
+#contact .contact-info a:hover {
+  -webkit-text-fill-color: transparent;
+  animation: grad-slide 3.5s linear infinite;
+}
+
+/* circles and pills: a gradient layer cross-fades in underneath */
+#services .service-item .icon,
+#contact .contact-info__social a,
+#portfolio .portfolio-filters li {
+  position: relative;
+  isolation: isolate;
+}
+#services .service-item .icon::before,
+#contact .contact-info__social a::before,
+#portfolio .portfolio-filters li::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--grad-hover);
+  background-size: 200% 100%;
+  opacity: 0;
+  transition: opacity var(--dur-hover, 0.45s) var(--ease-out);
+  animation: grad-slide 4s linear infinite;
+}
+#services .service-item:hover .icon::before,
+#contact .contact-info__social a:hover::before,
+#portfolio .portfolio-filters li.filter-active::before {
+  opacity: 1;
+}
+/* the flat cyan fills these replaced */
+#services .service-item:hover .icon,
+#contact .contact-info__social a:hover,
+#portfolio .portfolio-filters li.filter-active {
+  background: transparent;
+}
+/* filter pills: gradient outline on hover */
+#portfolio .portfolio-filters li:not(.filter-active)::before {
+  padding: 1px;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+#portfolio .portfolio-filters li:not(.filter-active):hover::before {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .what-we-offer .service-row h3,
+  #services .service-item .title,
+  .navmenu a,
+  #services .service-item .icon::before,
+  #contact .contact-info__social a::before,
+  #portfolio .portfolio-filters li::before { animation: none !important; }
+}
+
+
+/* =====================================================================
+   UNDER THE PHONES — small WebGL scene deep behind the Content Stream slider
+   ===================================================================== */
+
+#content-stream .stream-depth {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* =====================================================================
+   PORTFOLIO SLIDER — 16:9 template spots, 3 per view on desktop
+   ===================================================================== */
+
+.portfolio-swiper {
+  padding: 8px 4px 52px;
+}
+.portfolio-swiper .portfolio-content {
+  height: auto;
+}
+.portfolio-swiper .portfolio-content video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  background: var(--neon-bg-2);
+}
+.portfolio-swiper .portfolio-content {
+  box-shadow: 0 18px 40px rgb(0 0 0 / 0.45), 0 0 0 1px var(--glass-border);
+}
+.portfolio-swiper .swiper-pagination {
+  bottom: 12px;
+}
+.portfolio-swiper .swiper-pagination-bullet {
+  width: 8px;
+  height: 8px;
+  margin: 0 5px !important;
+  border-radius: 999px;
+  background: rgb(234 246 255 / 0.28);
+  opacity: 1;
+  transition: width var(--dur-ui) var(--ease-out), background-color var(--dur-ui) var(--ease-out);
+}
+.portfolio-swiper .swiper-pagination-bullet-active {
+  width: 28px;
+  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-violet));
+  box-shadow: 0 0 12px rgb(var(--neon-cyan-rgb) / 0.35);
+}
+#portfolio .portfolio-filters {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 28px;
+}
+
+/* =====================================================================
+   SECTION TITLES — slow light sheen through the letters
+   ===================================================================== */
+
+.section .section-title h2 {
+  background: linear-gradient(100deg,
+    #eaf6ff 0%, #eaf6ff 22%, #7fe3f0 34%, #b69cff 44%, #ff9ad5 52%, #eaf6ff 64%, #eaf6ff 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: grad-slide 9s linear infinite;
+}
+
+/* =====================================================================
+   PORTFOLIO CARDS — glassy shimmering veil on hover, gradient line running
+   clockwise around the card, captions slide in diagonally, the card blurs
+   away when clicked while the video window opens
+   ===================================================================== */
+
+@property --pf-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+#portfolio .portfolio-content {
+  transition:
+    transform 0.6s var(--ease-out),
+    filter 0.6s var(--ease-out),
+    box-shadow 0.6s var(--ease-out);
+}
+#portfolio .portfolio-content:hover {
+  transform: translateY(-4px);
+}
+
+/* veil: light, translucent, with a sweeping glint (no dark overlay) */
+#portfolio .portfolio-content .portfolio-info {
+  overflow: hidden;
+  padding: 18px 20px;
+  /* light veil only: no backdrop blur, the video underneath stays sharp */
+  background: linear-gradient(135deg, rgb(255 255 255 / 0.02), rgb(255 255 255 / 0.08) 50%, rgb(255 255 255 / 0.02));
+  transition: opacity 0.6s var(--ease-out);
+}
+#portfolio .portfolio-content .portfolio-info::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(115deg, transparent 30%, rgb(255 255 255 / 0.28) 48%, rgb(191 246 255 / 0.18) 52%, transparent 70%);
+  background-size: 250% 100%;
+  background-position: 120% 0;
+}
+#portfolio .portfolio-content:hover .portfolio-info::before {
+  animation: pf-glint 2.8s var(--ease-in-out) infinite;
+}
+@keyframes pf-glint {
+  0% { background-position: 120% 0; }
+  60%, 100% { background-position: -20% 0; }
+}
+
+/* gradient line running clockwise around the card */
+#portfolio .portfolio-content::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  border-radius: inherit;
+  padding: 2px;
+  background: conic-gradient(from var(--pf-angle),
+    transparent 0deg, transparent 200deg,
+    #5ccfe6 260deg, #9d8cff 300deg, #ff8ac6 340deg, transparent 360deg);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  opacity: 0;
+  transition: opacity 0.6s var(--ease-out);
+}
+#portfolio .portfolio-content:hover::after {
+  opacity: 1;
+  animation: pf-orbit 3s linear infinite;
+}
+@keyframes pf-orbit {
+  to { --pf-angle: 360deg; }
+}
+
+/* captions: gradient title + mono label, sliding in diagonally */
+#portfolio .portfolio-content .portfolio-info h4,
+#portfolio .portfolio-content .portfolio-info p {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  opacity: 0;
+  transform: translate(-22px, 18px);
+  transition: opacity 0.6s var(--ease-out), transform 0.7s var(--ease-out);
+}
+#portfolio .portfolio-content .portfolio-info h4 {
+  bottom: 40px;
+  font-family: var(--font-display);
+  font-size: clamp(18px, 1.6vw, 24px);
+  font-weight: 700;
+  background: var(--grad-hover);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: grad-slide 4s linear infinite;
+  filter: drop-shadow(0 2px 8px rgb(0 0 0 / 0.5));
+}
+#portfolio .portfolio-content .portfolio-info p {
+  bottom: 18px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: rgb(234 246 255 / 0.85);
+  text-shadow: 0 1px 6px rgb(0 0 0 / 0.6);
+  transition-delay: 0.08s;
+}
+#portfolio .portfolio-content:hover .portfolio-info h4,
+#portfolio .portfolio-content:hover .portfolio-info p,
+#portfolio .portfolio-content:focus-within .portfolio-info h4,
+#portfolio .portfolio-content:focus-within .portfolio-info p {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+/* the whole card opens the video window; the zoom glyph floats top-right */
+#portfolio .portfolio-content .portfolio-info .preview-link {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 16px 18px;
+  font-size: 22px;
+  color: #fff;
+  transition: transform 0.6s var(--ease-out), opacity 0.6s var(--ease-out);
+}
+#portfolio .portfolio-content .portfolio-info .preview-link:hover {
+  color: #fff;
+}
+
+/* clicked: the card melts away while the lightbox opens */
+#portfolio .portfolio-content.is-opening {
+  filter: blur(10px) saturate(1.3);
+  transform: scale(0.96);
+}
+
+/* photo behind the slider: softened, with slow waves of light over it */
+#portfolio {
+  overflow: clip;
+  isolation: isolate;
+}
+#portfolio::before {
+  background: linear-gradient(180deg, rgb(10 15 28 / 0.78), rgb(10 15 28 / 0.55) 45%, rgb(10 15 28 / 0.82));
+  -webkit-backdrop-filter: blur(6px) saturate(1.1);
+  backdrop-filter: blur(6px) saturate(1.1);
+}
+
+/* filter pills: every state change eases */
+#portfolio .portfolio-filters li {
+  transition:
+    color var(--dur-hover, 0.45s) var(--ease-out),
+    background-color var(--dur-hover, 0.45s) var(--ease-out),
+    box-shadow var(--dur-hover, 0.45s) var(--ease-out),
+    transform var(--dur-hover, 0.45s) var(--ease-out);
+}
+#portfolio .portfolio-filters li:hover {
+  transform: translateY(-2px);
+}
+
+/* =====================================================================
+   VIDEO WINDOW (GLightbox) — site styling: drifting deep gradient,
+   rounded glowing player, gradient title, glass buttons
+   ===================================================================== */
+
+.glightbox-container .goverlay {
+  background: linear-gradient(130deg, #070a14, #1a0f3a, #0b2a40, #2a0e2f, #070a14);
+  background-size: 400% 400%;
+  animation: lb-drift 22s ease-in-out infinite alternate;
+}
+@keyframes lb-drift {
+  from { background-position: 0% 50%; }
+  to { background-position: 100% 50%; }
+}
+.glightbox-container .gslide-video,
+.glightbox-container .gvideo-wrapper,
+.glightbox-container .plyr {
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.glightbox-container .gslide-video {
+  box-shadow:
+    0 30px 80px rgb(0 0 0 / 0.6),
+    0 0 0 1px rgb(255 255 255 / 0.1),
+    0 0 50px rgb(var(--neon-cyan-rgb) / 0.22);
+}
+.glightbox-container .plyr__control--overlaid,
+.glightbox-container .plyr--video .plyr__control:hover {
+  background: linear-gradient(135deg, #5ccfe6, #9d8cff);
+}
+.glightbox-container .plyr--full-ui input[type=range] {
+  color: #5ccfe6;
+}
+.glightbox-clean .gslide-description {
+  background: transparent;
+}
+.glightbox-clean .gdesc-inner {
+  padding: 18px 6px 0;
+  text-align: center;
+}
+.glightbox-clean .gslide-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(18px, 2vw, 26px);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  background: var(--grad-hover);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: grad-slide 5s linear infinite;
+}
+.glightbox-clean .gclose,
+.glightbox-clean .gnext,
+.glightbox-clean .gprev {
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.08);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.18);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  transition: background-color 0.45s var(--ease-out), transform 0.45s var(--ease-out), opacity 0.45s var(--ease-out);
+}
+.glightbox-clean .gclose:hover,
+.glightbox-clean .gnext:hover,
+.glightbox-clean .gprev:hover {
+  background: rgb(var(--neon-cyan-rgb) / 0.28);
+  transform: scale(1.08);
+}
+
+/* =====================================================================
+   SECTION BACKDROPS — Testimonials: slow searchlight rays;
+   Contact: dotted grid under a drifting aurora
+   ===================================================================== */
+
+#testimonials::before {
+  content: '';
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  top: -20%;
+  height: 120%;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    conic-gradient(from 160deg at 50% 0%,
+      transparent 0deg, rgb(var(--neon-cyan-rgb) / 0.07) 8deg, transparent 18deg,
+      transparent 26deg, rgb(157 140 255 / 0.08) 34deg, transparent 44deg,
+      transparent 52deg, rgb(255 138 198 / 0.05) 58deg, transparent 66deg);
+  filter: blur(10px);
+  transform-origin: 50% 0;
+  animation: rays-sway 14s ease-in-out infinite alternate;
+}
+@keyframes rays-sway {
+  from { transform: rotate(-6deg); }
+  to { transform: rotate(6deg); }
+}
+
+#contact {
+  position: relative;
+  isolation: isolate;
+}
+#contact::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(rgb(234 246 255 / 0.12) 1px, transparent 1.6px) 0 0 / 26px 26px;
+  -webkit-mask: radial-gradient(70% 70% at 60% 55%, #000, transparent);
+  mask: radial-gradient(70% 70% at 60% 55%, #000, transparent);
+}
+#contact::after {
+  content: '';
+  position: absolute;
+  inset: 10% -10%;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(40% 50% at 25% 40%, rgb(var(--neon-cyan-rgb) / 0.12), transparent 70%),
+    radial-gradient(35% 45% at 75% 60%, rgb(255 138 198 / 0.1), transparent 70%),
+    radial-gradient(30% 40% at 55% 30%, rgb(157 140 255 / 0.12), transparent 70%);
+  filter: blur(20px);
+  animation: aurora-drift 20s ease-in-out infinite alternate;
+}
+@keyframes aurora-drift {
+  from { transform: translate3d(-4%, 0, 0) scale(1); }
+  to { transform: translate3d(4%, -3%, 0) scale(1.08); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section .section-title h2,
+  #testimonials::before,
+  #contact::after,
+  .glightbox-container .goverlay { animation: none; }
+}
+
+/* =====================================================================
+   PORTFOLIO — videos rest softly blurred and come into focus on hover
+   ===================================================================== */
+
+.portfolio-swiper .portfolio-content video {
+  filter: blur(5px) saturate(1.1);
+  transform: scale(1.04); /* hides the blurred edge */
+  transition: filter 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+}
+.portfolio-swiper .portfolio-content:hover video,
+.portfolio-swiper .portfolio-content:focus-within video {
+  filter: blur(0) saturate(1);
+  transform: scale(1.06);
+}
+
+/* =====================================================================
+   CONTENT STREAM — phones in front of the 3D layer, much bigger, each
+   floating over its own soft shadow.
+   The section is no longer a stacking context: its backdrop, ripples and
+   under-phone scene sit at z 1 (below the blob canvas, z 5), the slider
+   at z 6 (above it).
+   ===================================================================== */
+
+#content-stream {
+  isolation: auto;
+  background: transparent;
+}
+#content-stream::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(45% 40% at 50% 62%, rgb(var(--neon-cyan-rgb) / 0.10), transparent 70%),
+    radial-gradient(40% 40% at 8% 20%, rgb(138 43 226 / 0.12), transparent 70%),
+    linear-gradient(180deg, #070a14 0%, var(--neon-bg) 50%, #03070d 100%);
+}
+#content-stream::after,
+#content-stream .stream-depth {
+  z-index: 1;
+}
+#content-stream .stream-depth {
+  filter: brightness(0.7); /* behind the phones: 30% darker */
+}
+#content-stream > .container.section-title {
+  position: relative;
+  z-index: 2;
+}
+/* the slider's container is transformed by AOS (own stacking context),
+   so the z-index has to sit on the container itself */
+#content-stream > .container:not(.section-title) {
+  position: relative;
+  z-index: 6;
+}
+
+.content-stream-swiper {
+  padding-bottom: 72px;
+}
+.stream-device {
+  height: clamp(420px, calc(100svh - 200px), 860px);
+  animation: phone-float 6s ease-in-out infinite;
+}
+.swiper-slide:nth-child(2n) .stream-device { animation-delay: -2s; }
+.swiper-slide:nth-child(3n) .stream-device { animation-delay: -4s; }
+@keyframes phone-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+/* floating shadow: shrinks and fades as the phone rises */
+.stream-device::after {
+  content: '';
+  position: absolute;
+  left: 14%;
+  right: 14%;
+  bottom: -40px;
+  height: 26px;
+  z-index: -1;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(closest-side, rgb(0 0 0 / 0.65), rgb(0 0 0 / 0.25) 60%, transparent);
+  filter: blur(6px);
+  animation: phone-shadow 6s ease-in-out infinite;
+  animation-delay: inherit;
+}
+@keyframes phone-shadow {
+  0%, 100% { transform: translateY(0) scale(1); opacity: 0.9; }
+  50% { transform: translateY(14px) scale(0.82); opacity: 0.55; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .stream-device,
+  .stream-device::after { animation: none; }
 }

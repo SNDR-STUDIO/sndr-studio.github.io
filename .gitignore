@@ -8,3 +8,6 @@ _backup_before_s1/
 assets/cloude_version/
 semafoor.txt
 *fix_verification.txt
+
+# Playwright MCP screenshots/logs from local checks
+.playwright-mcp/

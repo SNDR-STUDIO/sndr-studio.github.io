@@ -284,82 +284,87 @@
                         },
                         "breakpoints": {
                             "0": {
-                                "slidesPerView": 1.25,
+                                "slidesPerView": 1.15,
                                 "spaceBetween": 16,
                                 "centeredSlides": true
                             },
-                            "576": {
+                            "700": {
                                 "centeredSlides": false,
                                 "slidesPerView": 2,
-                                "spaceBetween": 20
-                            },
-                            "992": {
-                                "slidesPerView": 3,
                                 "spaceBetween": 24
                             },
-                            "1400": {
-                                "slidesPerView": 4,
-                                "spaceBetween": 28
+                            "1200": {
+                                "slidesPerView": 3,
+                                "spaceBetween": 32
                             }
                         }
                     }
                 </script>
                 <div class="swiper-wrapper">
-                    <!-- Phones: platform logo centered on each screen (2 rounds for a seamless loop) -->
+                    <!-- Phones: lava-lamp screen (own color scheme per slide), platform logo,
+                         play button -> 5s template spot from assets/video/stream (sources in video-src/) -->
                     <div class="swiper-slide">
-                        <div class="stream-device stream-device--shorts">
-                            <div class="stream-screen stream-screen--lava" data-screen="lava" aria-hidden="true"></div>
+                        <div class="stream-device stream-device--shorts" data-video="assets/video/stream/ad-01-mobile-app.mp4">
+                            <div class="stream-screen stream-screen--lava stream-screen--s1" data-screen="lava" aria-hidden="true"></div>
                             <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
                             <img src="assets/img/logo/shorts-light.png" alt="YouTube Shorts" class="stream-logo" loading="lazy">
+                            <button type="button" class="stream-play" aria-label="Play: Mobile app ad"><i class="bi bi-play-fill" aria-hidden="true"></i></button>
                         </div>
                     </div>
                     <div class="swiper-slide">
-                        <div class="stream-device stream-device--tiktok">
-                            <div class="stream-screen stream-screen--fractal" data-screen="fractal" aria-hidden="true"></div>
+                        <div class="stream-device stream-device--tiktok" data-video="assets/video/stream/ad-02-gambling.mp4">
+                            <div class="stream-screen stream-screen--lava stream-screen--s2" data-screen="lava" aria-hidden="true"></div>
                             <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
                             <img src="assets/img/logo/tiktok-light.svg" alt="TikTok" class="stream-logo" loading="lazy">
+                            <button type="button" class="stream-play" aria-label="Play: Casino bonus ad"><i class="bi bi-play-fill" aria-hidden="true"></i></button>
                         </div>
                     </div>
                     <div class="swiper-slide">
-                        <div class="stream-device stream-device--instagram">
-                            <div class="stream-screen stream-screen--tunnel" data-screen="tunnel" aria-hidden="true"></div>
+                        <div class="stream-device stream-device--instagram" data-video="assets/video/stream/ad-03-delivery.mp4">
+                            <div class="stream-screen stream-screen--lava stream-screen--s3" data-screen="lava" aria-hidden="true"></div>
                             <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
                             <img src="assets/img/logo/instagram-light.png" alt="Instagram" class="stream-logo" loading="lazy">
+                            <button type="button" class="stream-play" aria-label="Play: Food delivery ad"><i class="bi bi-play-fill" aria-hidden="true"></i></button>
                         </div>
                     </div>
                     <div class="swiper-slide">
-                        <div class="stream-device stream-device--threads">
-                            <div class="stream-screen stream-screen--lava" data-screen="lava" aria-hidden="true"></div>
+                        <div class="stream-device stream-device--threads" data-video="assets/video/stream/ad-04-cosmetics.mp4">
+                            <div class="stream-screen stream-screen--lava stream-screen--s4" data-screen="lava" aria-hidden="true"></div>
                             <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
                             <img src="assets/img/logo/threads-light.png" alt="Threads" class="stream-logo" loading="lazy">
+                            <button type="button" class="stream-play" aria-label="Play: Cosmetics ad"><i class="bi bi-play-fill" aria-hidden="true"></i></button>
                         </div>
                     </div>
                     <div class="swiper-slide">
-                        <div class="stream-device stream-device--shorts">
-                            <div class="stream-screen stream-screen--fractal" data-screen="fractal" aria-hidden="true"></div>
+                        <div class="stream-device stream-device--shorts" data-video="assets/video/stream/ad-05-geo-search.mp4">
+                            <div class="stream-screen stream-screen--lava stream-screen--s5" data-screen="lava" aria-hidden="true"></div>
                             <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
                             <img src="assets/img/logo/shorts-light.png" alt="YouTube Shorts" class="stream-logo" loading="lazy">
+                            <button type="button" class="stream-play" aria-label="Play: Family locator ad"><i class="bi bi-play-fill" aria-hidden="true"></i></button>
                         </div>
                     </div>
                     <div class="swiper-slide">
-                        <div class="stream-device stream-device--tiktok">
-                            <div class="stream-screen stream-screen--tunnel" data-screen="tunnel" aria-hidden="true"></div>
+                        <div class="stream-device stream-device--tiktok" data-video="assets/video/stream/ad-06-youtube.mp4">
+                            <div class="stream-screen stream-screen--lava stream-screen--s6" data-screen="lava" aria-hidden="true"></div>
                             <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
                             <img src="assets/img/logo/tiktok-light.svg" alt="TikTok" class="stream-logo" loading="lazy">
+                            <button type="button" class="stream-play" aria-label="Play: YouTube channel promo"><i class="bi bi-play-fill" aria-hidden="true"></i></button>
                         </div>
                     </div>
                     <div class="swiper-slide">
-                        <div class="stream-device stream-device--instagram">
-                            <div class="stream-screen stream-screen--lava" data-screen="lava" aria-hidden="true"></div>
+                        <div class="stream-device stream-device--instagram" data-video="assets/video/stream/ad-07-ai-news.mp4">
+                            <div class="stream-screen stream-screen--lava stream-screen--s7" data-screen="lava" aria-hidden="true"></div>
                             <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
                             <img src="assets/img/logo/instagram-light.png" alt="Instagram" class="stream-logo" loading="lazy">
+                            <button type="button" class="stream-play" aria-label="Play: AI news promo"><i class="bi bi-play-fill" aria-hidden="true"></i></button>
                         </div>
                     </div>
                     <div class="swiper-slide">
-                        <div class="stream-device stream-device--threads">
-                            <div class="stream-screen stream-screen--fractal" data-screen="fractal" aria-hidden="true"></div>
+                        <div class="stream-device stream-device--threads" data-video="assets/video/stream/ad-01-mobile-app.mp4">
+                            <div class="stream-screen stream-screen--lava stream-screen--s8" data-screen="lava" aria-hidden="true"></div>
                             <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
                             <img src="assets/img/logo/threads-light.png" alt="Threads" class="stream-logo" loading="lazy">
+                            <button type="button" class="stream-play" aria-label="Play: Mobile app ad"><i class="bi bi-play-fill" aria-hidden="true"></i></button>
                         </div>
                     </div>
                 </div>
@@ -437,193 +442,115 @@
 
       <div class="container">
 
-        <div class="isotope-layout" data-default-filter="*" data-layout="masonry" data-sort="original-order">
+        <!-- Portfolio slider: 3 cards on desktop, filters swap the slides (main.js → initPortfolioSlider).
+             Spots are 16:9 cuts of the Content Stream templates (sources in video-src/) -->
+        <ul class="portfolio-filters" data-aos="fade-up" data-aos-delay="100">
+          <li data-filter="*" class="filter-active" role="button" tabindex="0" aria-pressed="true">All</li>
+          <li data-filter=".filter-product" role="button" tabindex="0" aria-pressed="false">Animations</li>
+          <li data-filter=".filter-app" role="button" tabindex="0" aria-pressed="false">Websites</li>
+        </ul>
 
-          <ul class="portfolio-filters isotope-filters" data-aos="fade-up" data-aos-delay="100">
-            <li data-filter="*" class="filter-active" role="button" tabindex="0" aria-pressed="true">All</li>
-            <li data-filter=".filter-product" role="button" tabindex="0" aria-pressed="false">Animations</li>
-            <li data-filter=".filter-app" role="button" tabindex="0" aria-pressed="false">Websites</li>
-
-            <!-- <li data-filter=".filter-branding">Branding</li>
-            <li data-filter=".filter-books">Books</li> -->
-          </ul><!-- End Portfolio Filters -->
-
-          <div class="row gy-4 isotope-container" data-aos="fade-up" data-aos-delay="200">
-
-        
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-product">
-
-              <div class="portfolio-content h-100">
-                <!-- <video src="assets/video/sahoo.mp4" class="img-fluid"></video> -->
-                <!-- <video controls class="img-fluid">
-                  <source src="assets/video/sahoo.mp4" type="video/mp4">
-                  Your browser does not support the video tag.
-                </video> -->
-                <video class="img-fluid bg-video lazy-video" loading="lazy" autoplay muted playsinline loop
-                  poster="assets/video/sahoo-min.png">
-                  <source src="assets/video/sahoo-min.mp4" data-src="assets/video/sahoo-min.mp4" type="video/mp4">
-
-
-                </video>
-                <!-- <img src="assets/video/sahoo.mp4" class="img-fluid" alt=""> -->
-                <div class="portfolio-info">
-                  <h4>Sahoo</h4>
-                  <p>Logo animation</p>
-                  <a href="assets/video/sahoo-min.mp4" title="Sahoo Logo animation"
-                    data-gallery="portfolio-gallery-product" class="glightbox preview-link"><i
-                      class="bi bi-zoom-in"></i></a>
-                  <!-- <a href="portfolio-details.html" title="More Details" class="details-link"><i
-                      class="bi bi-link-45deg"></i></a> -->
-                </div>
+        <div class="swiper init-swiper portfolio-swiper" data-aos="fade-up" data-aos-delay="200">
+          <script type="application/json" class="swiper-config">
+            {
+              "speed": 700,
+              "slidesPerView": 1,
+              "spaceBetween": 20,
+              "grabCursor": true,
+              "pagination": { "el": ".swiper-pagination", "type": "bullets", "clickable": true },
+              "breakpoints": {
+                "768": { "slidesPerView": 2, "spaceBetween": 22 },
+                "1200": { "slidesPerView": 3, "spaceBetween": 24 }
+              }
+            }
+          </script>
+          <div class="swiper-wrapper">
+          <div class="swiper-slide portfolio-item filter-app">
+            <div class="portfolio-content">
+              <video class="bg-video lazy-video" muted loop playsinline preload="none" poster="assets/video/stream/ad-01-mobile-app-wide.jpg">
+                <source data-src="assets/video/stream/ad-01-mobile-app-wide.mp4" type="video/mp4">
+              </video>
+              <div class="portfolio-info">
+                <h4>Tap. Swipe. Grow.</h4>
+                <p>Mobile app launch spot</p>
+                <a href="assets/video/stream/ad-01-mobile-app-wide.mp4" title="Tap. Swipe. Grow. — Mobile app launch spot" data-gallery="portfolio-gallery-product" class="glightbox preview-link" aria-label="Open Mobile app launch spot"><i class="bi bi-zoom-in"></i></a>
               </div>
-
-            </div><!-- End Portfolio Item -->
-
-
-
-            
-
-
-            <!-- End Portfolio Item -->
-
-            
-
-
-
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-app">
-
-              <div class="portfolio-content h-100">
-                <!-- <img src="assets/img/portfolio/product-2-min.jpg" class="img-fluid" alt=""> -->
-                <video class="img-fluid bg-video lazy-video" preload="none" loop muted
-                  poster="assets/video/wyndham-min.png" loading="lazy">
-                  <source src="assets/video/WYNDHAM-min.mp4" data-src="assets/video/WYNDHAM-min.mp4" type="video/mp4">
-                  <source src="assets/video/WYNDHAM-min.mp4" data-src="assets/video/WYNDHAM-min.mp4" type="video/webm">
-                  don't support
-                </video>
-                <div class="portfolio-info">
-                  <h4>WYNDHAM resort charvak</h4>
-                  <p>Website</p>
-                  <a href="assets/video/WYNDHAM-min.mp4" title="WYNDHAM resort charvak"
-                    data-gallery="portfolio-gallery-product" class="glightbox preview-link"><i
-                      class="bi bi-zoom-in"></i></a>
-                  <!-- <a href="portfolio-details.html" title="More Details" class="details-link"><i
-                      class="bi bi-link-45deg"></i></a> -->
-                </div>
-              </div>
-
-
-
             </div>
-
-
-
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-app">
-
-              <div class="portfolio-content h-100">
-                <!-- <img src="assets/img/portfolio/product-2-min.jpg" class="img-fluid" alt=""> -->
-                <video class="img-fluid bg-video lazy-video" preload="none" loop muted
-                  poster="assets/video/wyndham-min.png" loading="lazy">
-                  <source src="assets/video/WYNDHAM-min.mp4" data-src="assets/video/WYNDHAM-min.mp4" type="video/mp4">
-                  <source src="assets/video/WYNDHAM-min.mp4" data-src="assets/video/WYNDHAM-min.mp4" type="video/webm">
-                  don't support
-                </video>
-                <div class="portfolio-info">
-                  <h4>WYNDHAM resort charvak</h4>
-                  <p>Website</p>
-                  <a href="assets/video/WYNDHAM-min.mp4" title="WYNDHAM resort charvak"
-                    data-gallery="portfolio-gallery-product" class="glightbox preview-link"><i
-                      class="bi bi-zoom-in"></i></a>
-                  <!-- <a href="portfolio-details.html" title="More Details" class="details-link"><i
-                      class="bi bi-link-45deg"></i></a> -->
-                </div>
+          </div>
+          <div class="swiper-slide portfolio-item filter-product">
+            <div class="portfolio-content">
+              <video class="bg-video lazy-video" muted loop playsinline preload="none" poster="assets/video/stream/ad-02-gambling-wide.jpg">
+                <source data-src="assets/video/stream/ad-02-gambling-wide.mp4" type="video/mp4">
+              </video>
+              <div class="portfolio-info">
+                <h4>Mega Jackpot</h4>
+                <p>Casino bonus promo</p>
+                <a href="assets/video/stream/ad-02-gambling-wide.mp4" title="Mega Jackpot — Casino bonus promo" data-gallery="portfolio-gallery-product" class="glightbox preview-link" aria-label="Open Casino bonus promo"><i class="bi bi-zoom-in"></i></a>
               </div>
-
-
-
             </div>
-
-
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-app">
-
-              <div class="portfolio-content h-100">
-                <!-- <img src="assets/img/portfolio/product-2-min.jpg" class="img-fluid" alt=""> -->
-                <video class="img-fluid bg-video lazy-video" preload="none" loop muted
-                  poster="assets/video/wyndham-min.png" loading="lazy">
-                  <source src="assets/video/WYNDHAM-min.mp4" data-src="assets/video/WYNDHAM-min.mp4" type="video/mp4">
-                  <source src="assets/video/WYNDHAM-min.mp4" data-src="assets/video/WYNDHAM-min.mp4" type="video/webm">
-                  don't support
-                </video>
-                <div class="portfolio-info">
-                  <h4>WYNDHAM resort charvak</h4>
-                  <p>Website</p>
-                  <a href="assets/video/WYNDHAM-min.mp4" title="WYNDHAM resort charvak"
-                    data-gallery="portfolio-gallery-product" class="glightbox preview-link"><i
-                      class="bi bi-zoom-in"></i></a>
-                  <!-- <a href="portfolio-details.html" title="More Details" class="details-link"><i
-                      class="bi bi-link-45deg"></i></a> -->
-                </div>
+          </div>
+          <div class="swiper-slide portfolio-item filter-product">
+            <div class="portfolio-content">
+              <video class="bg-video lazy-video" muted loop playsinline preload="none" poster="assets/video/stream/ad-03-delivery-wide.jpg">
+                <source data-src="assets/video/stream/ad-03-delivery-wide.mp4" type="video/mp4">
+              </video>
+              <div class="portfolio-info">
+                <h4>Order. Track. Enjoy.</h4>
+                <p>Food delivery ad</p>
+                <a href="assets/video/stream/ad-03-delivery-wide.mp4" title="Order. Track. Enjoy. — Food delivery ad" data-gallery="portfolio-gallery-product" class="glightbox preview-link" aria-label="Open Food delivery ad"><i class="bi bi-zoom-in"></i></a>
               </div>
-
-
-
             </div>
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-app">
-
-              <div class="portfolio-content h-100">
-                <!-- <img src="assets/img/portfolio/product-2-min.jpg" class="img-fluid" alt=""> -->
-                <video class="img-fluid bg-video lazy-video" preload="none" loop muted
-                  poster="assets/video/wyndham-min.png" loading="lazy">
-                  <source src="assets/video/WYNDHAM-min.mp4" data-src="assets/video/WYNDHAM-min.mp4" type="video/mp4">
-                  <source src="assets/video/WYNDHAM-min.mp4" data-src="assets/video/WYNDHAM-min.mp4" type="video/webm">
-                  don't support
-                </video>
-                <div class="portfolio-info">
-                  <h4>WYNDHAM resort charvak</h4>
-                  <p>Website</p>
-                  <a href="assets/video/WYNDHAM-min.mp4" title="WYNDHAM resort charvak"
-                    data-gallery="portfolio-gallery-product" class="glightbox preview-link"><i
-                      class="bi bi-zoom-in"></i></a>
-                  <!-- <a href="portfolio-details.html" title="More Details" class="details-link"><i
-                      class="bi bi-link-45deg"></i></a> -->
-                </div>
+          </div>
+          <div class="swiper-slide portfolio-item filter-product">
+            <div class="portfolio-content">
+              <video class="bg-video lazy-video" muted loop playsinline preload="none" poster="assets/video/stream/ad-04-cosmetics-wide.jpg">
+                <source data-src="assets/video/stream/ad-04-cosmetics-wide.mp4" type="video/mp4">
+              </video>
+              <div class="portfolio-info">
+                <h4>Glow Serum</h4>
+                <p>Cosmetics product ad</p>
+                <a href="assets/video/stream/ad-04-cosmetics-wide.mp4" title="Glow Serum — Cosmetics product ad" data-gallery="portfolio-gallery-product" class="glightbox preview-link" aria-label="Open Cosmetics product ad"><i class="bi bi-zoom-in"></i></a>
               </div>
-
-
-
             </div>
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-app">
-
-              <div class="portfolio-content h-100">
-                <!-- <img src="assets/img/portfolio/product-2-min.jpg" class="img-fluid" alt=""> -->
-                <video class="img-fluid bg-video lazy-video" preload="none" loop muted
-                  poster="assets/video/wyndham-min.png" loading="lazy">
-                  <source src="assets/video/WYNDHAM-min.mp4" data-src="assets/video/WYNDHAM-min.mp4" type="video/mp4">
-                  <source src="assets/video/WYNDHAM-min.mp4" data-src="assets/video/WYNDHAM-min.mp4" type="video/webm">
-                  don't support
-                </video>
-                <div class="portfolio-info">
-                  <h4>WYNDHAM resort charvak</h4>
-                  <p>Website</p>
-                  <a href="assets/video/WYNDHAM-min.mp4" title="WYNDHAM resort charvak"
-                    data-gallery="portfolio-gallery-product" class="glightbox preview-link"><i
-                      class="bi bi-zoom-in"></i></a>
-                  <!-- <a href="portfolio-details.html" title="More Details" class="details-link"><i
-                      class="bi bi-link-45deg"></i></a> -->
-                </div>
+          </div>
+          <div class="swiper-slide portfolio-item filter-app">
+            <div class="portfolio-content">
+              <video class="bg-video lazy-video" muted loop playsinline preload="none" poster="assets/video/stream/ad-05-geo-search-wide.jpg">
+                <source data-src="assets/video/stream/ad-05-geo-search-wide.mp4" type="video/mp4">
+              </video>
+              <div class="portfolio-info">
+                <h4>Family Locator</h4>
+                <p>Geo search service promo</p>
+                <a href="assets/video/stream/ad-05-geo-search-wide.mp4" title="Family Locator — Geo search service promo" data-gallery="portfolio-gallery-product" class="glightbox preview-link" aria-label="Open Geo search service promo"><i class="bi bi-zoom-in"></i></a>
               </div>
-
-
-
             </div>
-            
-            <!-- End Portfolio Item -->
-
-            <!-- End Portfolio Item -->
-
-            <!-- End Portfolio Item -->
-
-          </div><!-- End Portfolio Container -->
-
+          </div>
+          <div class="swiper-slide portfolio-item filter-product">
+            <div class="portfolio-content">
+              <video class="bg-video lazy-video" muted loop playsinline preload="none" poster="assets/video/stream/ad-06-youtube-wide.jpg">
+                <source data-src="assets/video/stream/ad-06-youtube-wide.mp4" type="video/mp4">
+              </video>
+              <div class="portfolio-info">
+                <h4>New Episode</h4>
+                <p>YouTube channel promo</p>
+                <a href="assets/video/stream/ad-06-youtube-wide.mp4" title="New Episode — YouTube channel promo" data-gallery="portfolio-gallery-product" class="glightbox preview-link" aria-label="Open YouTube channel promo"><i class="bi bi-zoom-in"></i></a>
+              </div>
+            </div>
+          </div>
+          <div class="swiper-slide portfolio-item filter-app">
+            <div class="portfolio-content">
+              <video class="bg-video lazy-video" muted loop playsinline preload="none" poster="assets/video/stream/ad-07-ai-news-wide.jpg">
+                <source data-src="assets/video/stream/ad-07-ai-news-wide.mp4" type="video/mp4">
+              </video>
+              <div class="portfolio-info">
+                <h4>AI World News</h4>
+                <p>News digest promo</p>
+                <a href="assets/video/stream/ad-07-ai-news-wide.mp4" title="AI World News — News digest promo" data-gallery="portfolio-gallery-product" class="glightbox preview-link" aria-label="Open News digest promo"><i class="bi bi-zoom-in"></i></a>
+              </div>
+            </div>
+          </div>
+          </div>
+          <div class="swiper-pagination"></div>
         </div>
 
       </div>
@@ -1120,6 +1047,10 @@
   <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js" defer></script>
 
   <script src="https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.min.js" defer></script>
+  <!-- 3D: What we offer backdrop + floating blobs over the landing -->
+  <script src="assets/js/scene3d.js" defer></script>
+  <!-- Generative lo-fi lounge music + its round 3-way control under the menu button -->
+  <script src="assets/js/lofi.js" defer></script>
 
   <!-- Main JS File -->
   <!-- Smooth scroll + scroll animations -->
@@ -1128,7 +1059,6 @@
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.17/dist/lenis.min.js" defer></script>
 
   <script src="assets/js/main.js" defer></script>
-  <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js" defer></script>
   <!-- Коли змінюєш картинки/відео — просто міняй CACHE_VERSION у sw.js і деплой. -->
 
   <script>
