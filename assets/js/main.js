@@ -682,6 +682,7 @@
 
     let dpr = 1;
     let frameId = 0;
+    const VIDEO_ZOOM = 0.8; // video inside the letters: 20% smaller than "cover"
 
     const getRect = () => videoLayer.getBoundingClientRect();
     const titleText = (title.dataset.videoText || title.textContent || 'SNDR studio').trim();
@@ -791,24 +792,16 @@
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         drawMask();
 
-        const videoRatio = video.videoWidth / video.videoHeight;
-        const canvasRatio = rect.width / rect.height;
-        let drawWidth;
-        let drawHeight;
-        let offsetX;
-        let offsetY;
-
-        if (videoRatio > canvasRatio) {
-          drawHeight = rect.height;
-          drawWidth = drawHeight * videoRatio;
-          offsetX = (rect.width - drawWidth) / 2;
-          offsetY = 0;
-        } else {
-          drawWidth = rect.width;
-          drawHeight = drawWidth / videoRatio;
-          offsetX = 0;
-          offsetY = (rect.height - drawHeight) / 2;
-        }
+        // "cover" scale, zoomed out by VIDEO_ZOOM — but never smaller than
+        // the title itself, so the letters are always fully filled
+        const titleRect = title.getBoundingClientRect();
+        const coverScale = Math.max(rect.width / video.videoWidth, rect.height / video.videoHeight);
+        const titleScale = Math.max(titleRect.width / video.videoWidth, titleRect.height / video.videoHeight);
+        const scale = Math.max(coverScale * VIDEO_ZOOM, titleScale);
+        const drawWidth = video.videoWidth * scale;
+        const drawHeight = video.videoHeight * scale;
+        const offsetX = (rect.width - drawWidth) / 2;
+        const offsetY = (rect.height - drawHeight) / 2;
 
         ctx.drawImage(
           video,
@@ -961,6 +954,213 @@
   }
 
   initAbout();
+
+  /**
+   * CONTENT STREAM — animated "screens" under each phone frame
+   *   lava    → gradient lava lamp (CSS blobs, see neon.css)
+   *   fractal → colorful recursive polygons that keep changing shape (canvas)
+   *   tunnel  → acid-colored warp jump through a star tunnel (canvas)
+   * Only screens on screen are animated (IntersectionObserver).
+   */
+  function initStreamScreens() {
+    const screens = document.querySelectorAll('.stream-screen');
+    if (!screens.length) return;
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const canvases = [];
+
+    const drawFractal = (s) => {
+      const { ctx, w, h, t } = s;
+      const cx = w / 2;
+      const cy = h / 2;
+      // a new number of sides every 4s: triangle → square → pentagon → hexagon
+      const sides = 3 + Math.floor(t / 4) % 4;
+      const ratio = 0.46 + Math.sin(t * 0.7) * 0.08;
+      const twist = Math.sin(t * 0.35) * 1.4;
+
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.fillStyle = 'rgb(6 4 18 / 0.22)'; // short trails
+      ctx.fillRect(0, 0, w, h);
+      ctx.globalCompositeOperation = 'lighter';
+
+      const poly = (x, y, r, depth, rot) => {
+        ctx.beginPath();
+        for (let i = 0; i <= sides; i++) {
+          const a = rot + (i / sides) * Math.PI * 2;
+          const px = x + Math.cos(a) * r;
+          const py = y + Math.sin(a) * r;
+          if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+        }
+        const hue = (t * 40 + depth * 70 + r * 0.6) % 360;
+        ctx.strokeStyle = `hsl(${hue} 95% 62% / ${0.35 + depth * 0.15})`;
+        ctx.lineWidth = 0.6 + depth * 0.5;
+        ctx.stroke();
+        if (depth === 0) return;
+        for (let i = 0; i < sides; i++) {
+          const a = rot + (i / sides) * Math.PI * 2;
+          poly(x + Math.cos(a) * r, y + Math.sin(a) * r, r * ratio, depth - 1, -rot * 1.3 + twist);
+        }
+      };
+
+      poly(cx, cy, Math.min(w, h) * 0.33, 3, t * 0.3);
+    };
+
+    const drawTunnel = (s, dt) => {
+      const { ctx, w, h, t } = s;
+      const cx = w / 2 + Math.sin(t * 0.6) * w * 0.08; // the tunnel gently snakes
+      const cy = h / 2 + Math.cos(t * 0.45) * h * 0.05;
+      const focal = Math.min(w, h) * 0.9;
+
+      if (!s.stars) {
+        s.stars = Array.from({ length: 260 }, () => ({
+          x: (Math.random() - 0.5) * 2,
+          y: (Math.random() - 0.5) * 2,
+          z: Math.random() * 3 + 0.1,
+          hue: Math.random() * 360
+        }));
+      }
+
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.fillStyle = 'rgb(4 2 14 / 0.3)';
+      ctx.fillRect(0, 0, w, h);
+      ctx.globalCompositeOperation = 'lighter';
+
+      // tunnel rings rushing towards the viewer
+      for (let i = 0; i < 7; i++) {
+        const z = 3 - ((t * 0.9 + i * 0.43) % 3);
+        const r = focal * 0.55 / Math.max(z, 0.05);
+        const hue = (t * 60 + i * 50) % 360;
+        ctx.beginPath();
+        ctx.ellipse(cx, cy, r, r * 1.15, 0, 0, Math.PI * 2);
+        ctx.strokeStyle = `hsl(${hue} 100% 60% / ${Math.min(0.35, 0.6 / (z + 0.5))})`;
+        ctx.lineWidth = Math.max(1, 6 / (z + 0.4));
+        ctx.stroke();
+      }
+
+      // star streaks
+      const speed = 1.6 * dt;
+      s.stars.forEach(star => {
+        const prevZ = star.z;
+        star.z -= speed;
+        if (star.z <= 0.05) {
+          star.x = (Math.random() - 0.5) * 2;
+          star.y = (Math.random() - 0.5) * 2;
+          star.z = 3;
+          star.hue = Math.random() * 360;
+          return;
+        }
+        const x1 = cx + (star.x / prevZ) * focal * 0.3;
+        const y1 = cy + (star.y / prevZ) * focal * 0.3;
+        const x2 = cx + (star.x / star.z) * focal * 0.3;
+        const y2 = cy + (star.y / star.z) * focal * 0.3;
+        const hue = (star.hue + t * 90) % 360;
+        ctx.strokeStyle = `hsl(${hue} 100% 65% / ${Math.min(1, 1.4 / star.z)})`;
+        ctx.lineWidth = Math.max(0.6, 2.2 / star.z);
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+      });
+    };
+
+    const painters = { fractal: drawFractal, tunnel: drawTunnel };
+
+    screens.forEach(screen => {
+      const kind = screen.dataset.screen;
+      if (kind === 'lava') {
+        // blobs: own column, size, speed and phase
+        for (let i = 0; i < 6; i++) {
+          const blob = document.createElement('i');
+          blob.className = 'lava-blob';
+          blob.style.setProperty('--x', `${8 + ((i * 37) % 70)}%`);
+          blob.style.setProperty('--s', `${34 + ((i * 23) % 28)}%`);
+          blob.style.setProperty('--d', `${9 + (i % 3) * 3.5}s`);
+          blob.style.setProperty('--delay', `${-i * 2.3}s`);
+          screen.appendChild(blob);
+        }
+        return;
+      }
+      if (!painters[kind]) return;
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      screen.appendChild(canvas);
+      canvases.push({ screen, canvas, ctx, kind, w: 0, h: 0, t: Math.random() * 16, visible: false });
+    });
+
+    const resize = (s) => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      s.w = s.screen.clientWidth;
+      s.h = s.screen.clientHeight;
+      s.canvas.width = Math.max(1, Math.round(s.w * dpr));
+      s.canvas.height = Math.max(1, Math.round(s.h * dpr));
+      s.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      painters[s.kind](s, 0.016);
+    };
+    canvases.forEach(resize);
+    if ('ResizeObserver' in window) {
+      const ro = new ResizeObserver(entries => entries.forEach(e => {
+        const s = canvases.find(c => c.screen === e.target);
+        if (s) resize(s);
+      }));
+      canvases.forEach(s => ro.observe(s.screen));
+    }
+
+    if (reduceMotion) {
+      screens.forEach(screen => screen.classList.add('is-paused'));
+      return;
+    }
+
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(entries => entries.forEach(e => {
+        e.target.classList.toggle('is-paused', !e.isIntersecting);
+        const s = canvases.find(c => c.screen === e.target);
+        if (s) s.visible = e.isIntersecting;
+      }), { threshold: 0.05 });
+      screens.forEach(screen => io.observe(screen));
+    } else {
+      canvases.forEach(s => { s.visible = true; });
+    }
+
+    let last = performance.now();
+    const loop = (now) => {
+      const dt = Math.min((now - last) / 1000, 0.05);
+      last = now;
+      if (!document.hidden) {
+        canvases.forEach(s => {
+          if (!s.visible || !s.w) return;
+          s.t += dt;
+          painters[s.kind](s, dt);
+        });
+      }
+      requestAnimationFrame(loop);
+    };
+    requestAnimationFrame(loop);
+  }
+
+  initStreamScreens();
+
+  /**
+   * Contact form — placeholder: validates and thanks, sends nothing yet
+   */
+  function initContactForm() {
+    const form = document.querySelector('#contactForm');
+    if (!form) return;
+    const status = form.querySelector('.contact-form__status');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!form.checkValidity()) {
+        form.classList.add('was-validated');
+        status.textContent = 'Please fill in your name, a valid email and a message.';
+        return;
+      }
+      status.textContent = 'Thanks! The form is a demo for now — please email us directly.';
+      form.reset();
+      form.classList.remove('was-validated');
+    });
+  }
+
+  initContactForm();
 
 
 })();

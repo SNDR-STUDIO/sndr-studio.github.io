@@ -173,7 +173,7 @@
             <li><a href="#">Dropdown 4</a></li>
           </ul>
         </li> -->
-        <!-- <li><a href="#contact"><i class="bi bi-envelope navicon"></i> Contact</a></li> -->
+        <li><a href="#contact" class="nav-link"><i class="bi bi-envelope navicon"></i> Contact</a></li>
       </ul>
     </nav>
 
@@ -308,48 +308,56 @@
                     <!-- Phones: platform logo centered on each screen (2 rounds for a seamless loop) -->
                     <div class="swiper-slide">
                         <div class="stream-device stream-device--shorts">
+                            <div class="stream-screen stream-screen--lava" data-screen="lava" aria-hidden="true"></div>
                             <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
                             <img src="assets/img/logo/shorts-light.png" alt="YouTube Shorts" class="stream-logo" loading="lazy">
                         </div>
                     </div>
                     <div class="swiper-slide">
                         <div class="stream-device stream-device--tiktok">
+                            <div class="stream-screen stream-screen--fractal" data-screen="fractal" aria-hidden="true"></div>
                             <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
                             <img src="assets/img/logo/tiktok-light.svg" alt="TikTok" class="stream-logo" loading="lazy">
                         </div>
                     </div>
                     <div class="swiper-slide">
                         <div class="stream-device stream-device--instagram">
+                            <div class="stream-screen stream-screen--tunnel" data-screen="tunnel" aria-hidden="true"></div>
                             <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
                             <img src="assets/img/logo/instagram-light.png" alt="Instagram" class="stream-logo" loading="lazy">
                         </div>
                     </div>
                     <div class="swiper-slide">
                         <div class="stream-device stream-device--threads">
+                            <div class="stream-screen stream-screen--lava" data-screen="lava" aria-hidden="true"></div>
                             <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
                             <img src="assets/img/logo/threads-light.png" alt="Threads" class="stream-logo" loading="lazy">
                         </div>
                     </div>
                     <div class="swiper-slide">
                         <div class="stream-device stream-device--shorts">
+                            <div class="stream-screen stream-screen--fractal" data-screen="fractal" aria-hidden="true"></div>
                             <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
                             <img src="assets/img/logo/shorts-light.png" alt="YouTube Shorts" class="stream-logo" loading="lazy">
                         </div>
                     </div>
                     <div class="swiper-slide">
                         <div class="stream-device stream-device--tiktok">
+                            <div class="stream-screen stream-screen--tunnel" data-screen="tunnel" aria-hidden="true"></div>
                             <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
                             <img src="assets/img/logo/tiktok-light.svg" alt="TikTok" class="stream-logo" loading="lazy">
                         </div>
                     </div>
                     <div class="swiper-slide">
                         <div class="stream-device stream-device--instagram">
+                            <div class="stream-screen stream-screen--lava" data-screen="lava" aria-hidden="true"></div>
                             <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
                             <img src="assets/img/logo/instagram-light.png" alt="Instagram" class="stream-logo" loading="lazy">
                         </div>
                     </div>
                     <div class="swiper-slide">
                         <div class="stream-device stream-device--threads">
+                            <div class="stream-screen stream-screen--fractal" data-screen="fractal" aria-hidden="true"></div>
                             <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
                             <img src="assets/img/logo/threads-light.png" alt="Threads" class="stream-logo" loading="lazy">
                         </div>
@@ -622,7 +630,7 @@
 
     </section><!-- /Portfolio Section -->
 
-    <!-- 04–06 share one continuous background (.neon-flow in neon.css) -->
+    <!-- 04–07 share one continuous background (.neon-flow in neon.css) -->
     <div class="neon-flow">
 
     <section id="what-we-offer" class="what-we-offer section" data-bs-spy="scroll" data-bs-target="#list-example" data-bs-smooth-scroll="true">
@@ -962,9 +970,78 @@
 
     </section><!-- /Testimonials Section -->
 
-    </div><!-- /.neon-flow -->
+    <!-- Contact Section (placeholder details + form; no backend yet) -->
+    <section id="contact" class="contact-block section">
 
-    <!-- /Contact Section -->
+      <div class="container section-title" data-aos="fade-up">
+        <p class="section-kicker">07 — Contact</p>
+        <h2>Let’s build something that moves</h2>
+        <p>Tell us about your project — motion, web or content. We usually reply within one business day.</p>
+      </div>
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+        <div class="contact-grid">
+
+          <ul class="contact-info">
+            <li>
+              <span class="contact-info__label">Email</span>
+              <a href="mailto:hello@example.com">hello@example.com</a>
+            </li>
+            <li>
+              <span class="contact-info__label">Phone</span>
+              <a href="tel:+000000000000">+00 000 000 00 00</a>
+            </li>
+            <li>
+              <span class="contact-info__label">Location</span>
+              <span>Europe / Worldwide</span>
+            </li>
+            <li>
+              <span class="contact-info__label">Social</span>
+              <span class="contact-info__social">
+                <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                <a href="#" aria-label="Behance"><i class="bi bi-behance"></i></a>
+                <a href="#" aria-label="Telegram"><i class="bi bi-telegram"></i></a>
+              </span>
+            </li>
+          </ul>
+
+          <form class="contact-form" id="contactForm" novalidate>
+            <div class="contact-form__row">
+              <label class="contact-field">
+                <span>Name</span>
+                <input type="text" name="name" autocomplete="name" placeholder="Your name" required>
+              </label>
+              <label class="contact-field">
+                <span>Email</span>
+                <input type="email" name="email" autocomplete="email" placeholder="you@company.com" required>
+              </label>
+            </div>
+            <label class="contact-field">
+              <span>Service</span>
+              <select name="service">
+                <option>Motion design</option>
+                <option>Web development</option>
+                <option>3D / CGI</option>
+                <option>Social media content</option>
+                <option>Other</option>
+              </select>
+            </label>
+            <label class="contact-field">
+              <span>Message</span>
+              <textarea name="message" rows="5" placeholder="A few words about the project, timing and budget" required></textarea>
+            </label>
+            <div class="contact-form__footer">
+              <button type="submit" class="contact-submit">Send message <i class="bi bi-arrow-up-right"></i></button>
+              <p class="contact-form__status" role="status" aria-live="polite"></p>
+            </div>
+          </form>
+
+        </div>
+      </div>
+
+    </section><!-- /Contact Section -->
+
+    </div><!-- /.neon-flow -->
 
   </main>
 
@@ -994,6 +1071,15 @@
           <li class="nav-item">
             <a href="#testimonials" class="nav-link px-2 text-body-secondary">Testimonials</a>
           </li>
+          <li class="nav-item">
+            <a href="#contact" class="nav-link px-2 text-body-secondary">Contact</a>
+          </li>
+        </ul>
+        <!-- placeholder contacts: replace with real ones -->
+        <ul class="footer-contacts">
+          <li><i class="bi bi-envelope"></i><a href="mailto:hello@example.com">hello@example.com</a></li>
+          <li><i class="bi bi-telephone"></i><a href="tel:+000000000000">+00 000 000 00 00</a></li>
+          <li><i class="bi bi-geo-alt"></i><span>Europe / Worldwide</span></li>
         </ul>
         <p>© 2026 <span>Copyright</span> <strong class="px-1 sitename">SNDR studio</strong>
         </p>
@@ -1129,8 +1215,10 @@
     const marqueeItems = ['MOTION DESIGN','3D','WEB DEVELOPMENT','CREATIVE CODING','INTERACTIVE EXPERIENCES','UI / UX MOTION'];
     const track = document.getElementById('marqueeTrack');
     let marqueeHTML = '';
+    // every letter gets its own <b> so the hover lens can magnify it (neon.css → MARQUEE)
+    const marqueeWord = t => `<em class="mq-word">${Array.from(t).map(ch => `<b class="mq-ch">${ch === ' ' ? '&nbsp;' : ch}</b>`).join('')}</em>`;
     for(let r=0;r<2;r++){
-      marqueeItems.forEach(t=>{ marqueeHTML += `<span>${t}<i></i></span>`; });
+      marqueeItems.forEach(t=>{ marqueeHTML += `<span>${marqueeWord(t)}<i></i></span>`; });
     }
     track.innerHTML = marqueeHTML + marqueeHTML;
     let marqueeX = 0, marqueeDir = -1, baseSpeed = 0.55;

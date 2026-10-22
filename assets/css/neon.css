@@ -1071,3 +1071,338 @@ body {
   color: var(--neon-bg) !important;
   text-shadow: none;
 }
+
+/* =====================================================================
+   MARQUEE — embossed letters + light fisheye lens on hover
+   (letters are <b class="mq-ch"> built by the marquee script in index.html)
+   ===================================================================== */
+
+.marquee-track .mq-word {
+  display: inline-flex;
+  font-style: normal;
+}
+
+.marquee-track .mq-ch {
+  display: inline-block;
+  font-weight: inherit;
+  color: #f4f8ff;
+  /* stacked 1px layers = extruded, convex letter; then a soft drop shadow */
+  text-shadow:
+    0 -1px 0 rgb(255 255 255 / 0.9),
+    0 1px 0 #c9d3e3,
+    0 2px 0 #aab6ca,
+    0 3px 0 #8c99b0,
+    0 4px 0 #6f7c95,
+    0 5px 0 #56627a,
+    0 6px 2px rgb(0 0 0 / 0.45),
+    0 0 14px rgb(var(--neon-cyan-rgb) / 0.18),
+    0 10px 20px rgb(0 0 0 / 0.6);
+  transform-origin: 50% 60%;
+  transition: transform 0.35s var(--ease-out), color 0.35s var(--ease-out);
+}
+
+/* fisheye: the hovered letter swells, its neighbours a little less */
+@media (hover: hover) {
+  .marquee-track .mq-ch:hover {
+    transform: scale(1.32) translateY(-4%);
+    color: #fff;
+    position: relative;
+    z-index: 2;
+  }
+  .marquee-track .mq-ch:hover + .mq-ch,
+  .marquee-track .mq-ch:has(+ .mq-ch:hover) {
+    transform: scale(1.16);
+    position: relative;
+    z-index: 1;
+  }
+  .marquee-track .mq-ch:hover + .mq-ch + .mq-ch,
+  .marquee-track .mq-ch:has(+ .mq-ch + .mq-ch:hover) {
+    transform: scale(1.06);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track .mq-ch { transition: none; }
+}
+
+/* =====================================================================
+   CONTENT STREAM — animated screen under each phone frame
+   (screen opening of iphon18.png measured from its alpha channel)
+   ===================================================================== */
+
+.stream-screen {
+  position: absolute;
+  left: 7.4%;
+  right: 7.2%;
+  top: 2.2%;
+  bottom: 2.2%;
+  z-index: 0;
+  overflow: hidden;
+  border-radius: 13% / 6.6%;
+  background: #05040f;
+}
+
+.stream-screen canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.stream-device .stream-phone {
+  position: relative;
+  z-index: 1;
+}
+
+.stream-device .stream-logo {
+  z-index: 2;
+  filter: drop-shadow(0 4px 14px rgb(0 0 0 / 0.55));
+}
+
+/* 1 — gradient lava lamp */
+.stream-screen--lava {
+  background:
+    radial-gradient(120% 60% at 50% 110%, #ff7a3d 0%, transparent 60%),
+    linear-gradient(180deg, #1a0633 0%, #4b0b52 45%, #a1164f 80%, #ff5a36 100%);
+}
+
+.stream-screen--lava .lava-blob {
+  position: absolute;
+  left: var(--x);
+  bottom: -30%;
+  width: var(--s);
+  aspect-ratio: 1;
+  border-radius: 46% 54% 58% 42% / 52% 44% 56% 48%;
+  background: radial-gradient(circle at 35% 30%, #ffe27a 0%, #ff6a6a 40%, #d61f9b 72%, #7a1fff 100%);
+  filter: blur(4px);
+  mix-blend-mode: screen;
+  opacity: 0.9;
+  animation:
+    lava-rise var(--d) var(--ease-in-out) var(--delay) infinite alternate,
+    lava-morph calc(var(--d) * 0.6) ease-in-out var(--delay) infinite alternate;
+}
+
+@keyframes lava-rise {
+  0%   { transform: translate3d(-10%, 0, 0) scale(0.85); }
+  50%  { transform: translate3d(12%, -140%, 0) scale(1.1); }
+  100% { transform: translate3d(-6%, -290%, 0) scale(0.9); }
+}
+
+@keyframes lava-morph {
+  0%   { border-radius: 46% 54% 58% 42% / 52% 44% 56% 48%; }
+  100% { border-radius: 60% 40% 38% 62% / 40% 62% 38% 60%; }
+}
+
+.stream-screen.is-paused .lava-blob {
+  animation-play-state: paused;
+}
+
+/* =====================================================================
+   TESTIMONIALS — lead text across the whole block
+   ===================================================================== */
+
+#testimonials .section-title p:not(.section-kicker) {
+  max-width: none;
+}
+
+/* =====================================================================
+   CONTACT — placeholder details + form on the shared .neon-flow bg
+   ===================================================================== */
+
+#contact {
+  padding-bottom: clamp(72px, 9vw, 140px);
+  color: var(--neon-text);
+}
+
+#contact .contact-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(28px, 5vw, 80px);
+  align-items: start;
+}
+
+#contact .contact-info {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--glass-border);
+}
+
+#contact .contact-info li {
+  display: grid;
+  gap: 6px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--glass-border);
+  font-size: var(--fs-body);
+}
+
+#contact .contact-info__label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--neon-muted);
+}
+
+#contact .contact-info a {
+  color: var(--neon-text);
+  transition: color var(--dur-ui) var(--ease-out);
+}
+#contact .contact-info a:hover {
+  color: var(--neon-cyan);
+}
+
+#contact .contact-info__social {
+  display: flex;
+  gap: 10px;
+}
+#contact .contact-info__social a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1.5px rgb(var(--neon-cyan-rgb) / 0.5);
+  color: var(--neon-cyan);
+  transition: background-color var(--dur-ui) var(--ease-out), color var(--dur-ui) var(--ease-out);
+}
+#contact .contact-info__social a:hover {
+  background: var(--neon-cyan);
+  color: var(--neon-bg);
+}
+
+#contact .contact-form {
+  display: grid;
+  gap: 18px;
+  padding: clamp(20px, 3vw, 40px);
+  background: var(--panel-bg);
+  border: var(--panel-border);
+  border-radius: var(--radius);
+  backdrop-filter: var(--panel-blur);
+  -webkit-backdrop-filter: var(--panel-blur);
+}
+
+#contact .contact-form__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+#contact .contact-field {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+
+#contact .contact-field > span {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--neon-muted);
+}
+
+#contact .contact-field input,
+#contact .contact-field select,
+#contact .contact-field textarea {
+  width: 100%;
+  padding: 12px 14px;
+  font: inherit;
+  font-size: var(--fs-body);
+  color: var(--neon-text);
+  background: rgb(5 8 18 / 0.6);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  outline: none;
+  transition: border-color var(--dur-ui) var(--ease-out), box-shadow var(--dur-ui) var(--ease-out);
+}
+#contact .contact-field textarea {
+  resize: vertical;
+  min-height: 130px;
+}
+#contact .contact-field select option {
+  background: var(--neon-bg-2);
+}
+#contact .contact-field input::placeholder,
+#contact .contact-field textarea::placeholder {
+  color: rgb(234 246 255 / 0.35);
+}
+#contact .contact-field input:focus,
+#contact .contact-field select:focus,
+#contact .contact-field textarea:focus {
+  border-color: rgb(var(--neon-cyan-rgb) / 0.7);
+  box-shadow: 0 0 0 3px rgb(var(--neon-cyan-rgb) / 0.15);
+}
+#contact .contact-form.was-validated :invalid {
+  border-color: rgb(255 110 130 / 0.8);
+}
+
+#contact .contact-form__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+}
+
+#contact .contact-submit {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 26px;
+  border: 0;
+  border-radius: 999px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--neon-bg);
+  background: linear-gradient(90deg, var(--neon-cyan), #9d8cff);
+  box-shadow: 0 8px 24px rgb(var(--neon-cyan-rgb) / 0.25);
+  cursor: pointer;
+  transition: transform var(--dur-ui) var(--ease-out), box-shadow var(--dur-ui) var(--ease-out);
+}
+#contact .contact-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgb(var(--neon-cyan-rgb) / 0.35);
+}
+
+#contact .contact-form__status {
+  margin: 0;
+  font-size: var(--fs-small);
+  color: var(--neon-muted);
+}
+
+@media (max-width: 900px) {
+  #contact .contact-grid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 575px) {
+  #contact .contact-form__row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Footer contacts (placeholders) */
+#footer .footer-contacts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 28px;
+  list-style: none;
+  margin: 0 0 16px;
+  padding: 0;
+  font-size: var(--fs-small);
+}
+#footer .footer-contacts li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+#footer .footer-contacts i {
+  color: var(--neon-cyan);
+}
+#footer .footer-contacts a {
+  color: rgb(234 246 255 / 0.8);
+}
+#footer .footer-contacts a:hover {
+  color: var(--neon-cyan);
+}
