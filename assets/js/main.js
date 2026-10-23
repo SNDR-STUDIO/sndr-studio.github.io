@@ -388,8 +388,15 @@
    */
   const glightbox = GLightbox({
     selector: '.glightbox',
-    onOpen: () => lenis && lenis.stop(),
-    onClose: () => lenis && lenis.start()
+    // music and sound effects drop 4x while the video window is open (lofi.js, sfx.js)
+    onOpen: () => {
+      if (lenis) lenis.stop();
+      window.dispatchEvent(new CustomEvent('sndr:video', { detail: { open: true } }));
+    },
+    onClose: () => {
+      if (lenis) lenis.start();
+      window.dispatchEvent(new CustomEvent('sndr:video', { detail: { open: false } }));
+    }
   });
 
   /**
@@ -404,9 +411,18 @@
       if (swiperElement.classList.contains("swiper-tab")) {
         initSwiperWithCustomPagination(swiperElement, config);
       } else {
-        new Swiper(swiperElement, config);
+        initSliderDots(new Swiper(swiperElement, config));
       }
     });
+  }
+
+  /**
+   * Slider dots — every slider gets the same big dots; the active one
+   * stretches into a gradient pill. Styles: neon.css → SLIDER DOTS.
+   */
+  function initSliderDots(swiper) {
+    const pg = swiper.pagination && swiper.pagination.el;
+    if (pg && pg.classList) pg.classList.add('big-dots');
   }
 
   window.addEventListener("load", initSwiper);
@@ -430,10 +446,13 @@
       });
       const sel = li.getAttribute('data-filter');
       const keep = sel === '*' ? all : all.filter(sl => sl.matches(sel));
+      // the slider loops: rebuild the loop clones around the new set of slides
+      swiper.loopDestroy();
       swiper.removeAllSlides();
       swiper.appendSlide(keep);
+      swiper.loopCreate();
       swiper.update();
-      swiper.slideTo(0, 0);
+      swiper.slideToLoop(0, 0);
     };
 
     // clicked card melts into a blur while the video window opens (neon.css → .is-opening)
@@ -456,6 +475,25 @@
   }
 
   window.addEventListener('load', initPortfolioSlider);
+
+  /**
+   * The light waves of .neon-flow start below Testimonials (none behind What
+   * we offer, Services and Testimonials): the section bottom inside the
+   * wrapper feeds the mask (neon.css → INFO PLATES)
+   */
+  function initWavesStart() {
+    const flow = document.querySelector('.neon-flow');
+    const last = document.querySelector('#testimonials');
+    if (!flow || !last) return;
+    const update = () => {
+      const bottom = last.getBoundingClientRect().bottom - flow.getBoundingClientRect().top;
+      flow.style.setProperty('--waves-from', `${Math.round(bottom)}px`);
+    };
+    update();
+    if ('ResizeObserver' in window) new ResizeObserver(update).observe(flow);
+    window.addEventListener('load', update);
+  }
+  initWavesStart();
 
   /**
    * Correct scrolling position upon page load for URLs containing hash links.
@@ -496,6 +534,31 @@
   window.addEventListener('load', navmenuScrollspy);
   document.addEventListener('scroll', navmenuScrollspy);
 
+  // words to animate one by one; Chinese has no spaces, so it goes per character
+  const isCjk = (text) => /[\u3040-\u30ff\u3400-\u9fff]/.test(text);
+  const splitWords = (text) => (isCjk(text) ? Array.from(text.trim()) : text.trim().split(/\s+/));
+
+  /**
+   * The hero intro starts once the page has loaded (or after 3.5s at most)
+   * AND the sound gate is answered (sfx.js), so the first sounds are heard.
+   */
+  const whenIntroReady = (fn) => {
+    const loaded = new Promise((resolve) => {
+      if (document.readyState === 'complete') resolve();
+      else window.addEventListener('load', resolve, { once: true });
+      setTimeout(resolve, 3500);
+    });
+    const sound = window.sndrSound ? window.sndrSound.ready : Promise.resolve();
+    // with sound on, give the music a moment to start so the intro can follow its beat
+    const music = (on) => new Promise((resolve) => {
+      if (!on) return resolve();
+      const t0 = performance.now();
+      const wait = () => ((window.sndrBeat && window.sndrBeat.playing) || performance.now() - t0 > 500 ? resolve() : setTimeout(wait, 30));
+      wait();
+    });
+    Promise.all([loaded, sound]).then(([, on]) => music(on)).then(fn);
+  };
+
   /**
    * Hero subtitle \u2014 "Motion with intention. Code with connection."
    * Words come into focus one by one (rise + blur \u2192 sharp) after the title,
@@ -506,36 +569,46 @@
     const subtitle = document.querySelector('.hero-content__p p');
     if (!subtitle || subtitle.dataset.wordsInit === 'true') return;
 
-    const keyWords = ['intention', 'connection'];
-    const words = subtitle.textContent.trim().split(/\s+/);
-    subtitle.setAttribute('aria-label', words.join(' '));
-    subtitle.textContent = '';
-
-    words.forEach((word, index) => {
-      const span = document.createElement('span');
-      span.className = 'hero-word';
-      span.setAttribute('aria-hidden', 'true');
-      span.style.setProperty('--w', index);
-      span.textContent = word;
-      if (keyWords.includes(word.replace(/[^a-z]/gi, '').toLowerCase())) {
-        span.classList.add('hero-word--key');
-      }
-      subtitle.appendChild(span);
-      if (index < words.length - 1) subtitle.appendChild(document.createTextNode(' '));
-    });
-
-    subtitle.dataset.wordsInit = 'true';
-
-    // start together with the title reveal (after the preloader is gone)
-    let started = false;
-    const start = () => {
-      if (started) return;
-      started = true;
-      requestAnimationFrame(() => requestAnimationFrame(() => subtitle.classList.add('is-revealed')));
+    // key words get the light sweep: the 3rd and the last word in every language
+    const build = (text) => {
+      const parts = splitWords(text);
+      subtitle.setAttribute('aria-label', text.trim());
+      subtitle.textContent = '';
+      parts.forEach((word, index) => {
+        const span = document.createElement('span');
+        span.className = 'hero-word';
+        span.setAttribute('aria-hidden', 'true');
+        span.style.setProperty('--w', index);
+        span.textContent = word;
+        if (!isCjk(text) && (index === 2 || index === parts.length - 1)) span.classList.add('hero-word--key');
+        subtitle.appendChild(span);
+        if (index < parts.length - 1 && !isCjk(text)) subtitle.appendChild(document.createTextNode(' '));
+      });
+      return parts;
     };
-    if (document.readyState === 'complete') start();
-    else window.addEventListener('load', start, { once: true });
-    setTimeout(start, 3500);
+    const words = build(subtitle.textContent);
+    subtitle.dataset.wordsInit = 'true';
+    // language switch (i18n.js put the new text into aria-label): split again
+    window.addEventListener('sndr:lang', () => build(subtitle.getAttribute('aria-label') || ''));
+
+    // start together with the title reveal (after the preloader and the sound gate);
+    // with music the words follow its 8th notes after the title letters, each with a soft pluck
+    whenIntroReady(() => {
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        const grid = window.sndrSfx && window.sndrSfx.grid();
+        let start = 0.9;
+        let stepW = 0.12;
+        if (grid) {
+          const letters = document.querySelectorAll('#hero .hero-title-letter').length || 11;
+          start = grid.start + (letters + 1) * grid.step;
+          stepW = grid.step * 2;
+          subtitle.style.setProperty('--word-start', `${start.toFixed(3)}s`);
+          subtitle.style.setProperty('--word-step', `${stepW.toFixed(3)}s`);
+        }
+        subtitle.classList.add('is-revealed');
+        if (window.sndrSfx) window.sndrSfx.fwips(words.map((w, i) => start + 0.05 + i * stepW));
+      }));
+    });
   }
 
   initHeroSubtitleReveal();
@@ -593,17 +666,26 @@
     title.dataset.splitInit = 'true';
     title.classList.add('is-split');
 
-    // 1) Reveal: start once the preloader is gone (window load), with a safety timeout.
-    let revealed = false;
-    const reveal = () => {
-      if (revealed) return;
-      revealed = true;
+    // 1) Reveal: after the preloader and the sound gate; a soft pluck per letter.
+    // With music the letters land on its 16th notes (CSS reads --reveal-start/-step)
+    whenIntroReady(() => {
       // two frames so the initial (hidden) state is painted before the transition starts
-      requestAnimationFrame(() => requestAnimationFrame(() => title.classList.add('is-revealed')));
-    };
-    if (document.readyState === 'complete') reveal();
-    else window.addEventListener('load', reveal, { once: true });
-    setTimeout(reveal, 3500);
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        const grid = window.sndrSfx && window.sndrSfx.grid();
+        let start = 0.1;
+        let stepL = 0.08;
+        if (grid) {
+          start = grid.start;
+          stepL = grid.step;
+          title.style.setProperty('--reveal-start', `${start.toFixed(3)}s`);
+          title.style.setProperty('--reveal-step', `${stepL.toFixed(3)}s`);
+        }
+        title.classList.add('is-revealed');
+        if (window.sndrSfx) {
+          window.sndrSfx.pops(chars.map((ch, i) => (ch === ' ' ? -1 : start + 0.06 + i * stepL)).filter((s) => s >= 0));
+        }
+      }));
+    });
 
     // 2) Scatter on scroll: progress 0..1 over the first half of the hero height
     if (reduceMotion) return;
@@ -611,6 +693,7 @@
     const update = () => {
       const progress = Math.min(Math.max(window.scrollY / (hero.offsetHeight * 0.5), 0), 1);
       title.style.setProperty('--hero-p', progress.toFixed(4));
+      if (window.sndrSfx) window.sndrSfx.spring(progress); // spring "boing" on the beat
       ticking = false;
     };
     const onScroll = () => {
@@ -652,7 +735,6 @@
 
     let dpr = 1;
     let frameId = 0;
-    const VIDEO_ZOOM = 0.8; // video inside the letters: 20% smaller than "cover"
 
     const getRect = () => videoLayer.getBoundingClientRect();
     const titleText = (title.dataset.videoText || title.textContent || 'SNDR studio').trim();
@@ -762,12 +844,12 @@
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         drawMask();
 
-        // centred on the title itself and always covering it (+12% for the
-        // letters' scatter) on any screen size; otherwise "cover" zoomed out by VIDEO_ZOOM
+        // centred on the title, at least as wide as the whole viewport, and
+        // always covering the title (+12% for the letters' scatter)
         const titleRect = title.getBoundingClientRect();
-        const coverScale = Math.max(rect.width / video.videoWidth, rect.height / video.videoHeight);
+        const viewportScale = window.innerWidth / video.videoWidth;
         const titleScale = Math.max(titleRect.width / video.videoWidth, titleRect.height / video.videoHeight) * 1.12;
-        const scale = Math.max(coverScale * VIDEO_ZOOM, titleScale);
+        const scale = Math.max(viewportScale, titleScale);
         const drawWidth = video.videoWidth * scale;
         const drawHeight = video.videoHeight * scale;
         const centerX = titleRect.width ? titleRect.left - rect.left + titleRect.width / 2 : rect.width / 2;
@@ -854,34 +936,53 @@
 
     // 1) Lead paragraph lights up word by word, tied to scroll position
     if (lead && !lead.dataset.wordsInit) {
-      const words = lead.textContent.trim().split(/\s+/);
-      lead.setAttribute('aria-label', lead.textContent.trim());
-      lead.textContent = '';
-      words.forEach((w, i) => {
-        const span = document.createElement('span');
-        span.className = 'word';
-        span.setAttribute('aria-hidden', 'true');
-        span.textContent = w;
-        lead.appendChild(span);
-        if (i < words.length - 1) lead.appendChild(document.createTextNode(' '));
-      });
+      const dim = 0.16;
+      let wordEls = [];
+      const build = (text) => {
+        const words = splitWords(text);
+        lead.setAttribute('aria-label', text.trim());
+        lead.textContent = '';
+        words.forEach((w, i) => {
+          const span = document.createElement('span');
+          span.className = 'word';
+          span.setAttribute('aria-hidden', 'true');
+          span.textContent = w;
+          lead.appendChild(span);
+          if (i < words.length - 1 && !isCjk(text)) lead.appendChild(document.createTextNode(' '));
+        });
+        wordEls = lead.querySelectorAll('.word');
+        wordEls.forEach(el => el.style.setProperty('--word-o', dim));
+      };
+      build(lead.textContent);
       lead.dataset.wordsInit = 'true';
 
-      const wordEls = lead.querySelectorAll('.word');
-      const dim = 0.16;
-      wordEls.forEach(el => el.style.setProperty('--word-o', dim));
-      ScrollTrigger.create({
+      let lastLit = 0;
+      const leadTrigger = ScrollTrigger.create({
         trigger: lead,
         start: 'top 85%',
         end: 'bottom 45%',
         scrub: true,
         onUpdate: (self) => {
           const lit = self.progress * (wordEls.length + 2);
+          // a hushed key + breath for every word that lights up (scrolling down)
+          const litCount = Math.floor(lit);
+          if (litCount > lastLit && litCount <= wordEls.length && window.sndrSfx) window.sndrSfx.chime();
+          lastLit = litCount;
           wordEls.forEach((el, i) => {
             const o = Math.min(Math.max(lit - i, 0), 1);
             el.style.setProperty('--word-o', (dim + (1 - dim) * o).toFixed(3));
           });
         }
+      });
+      // language switch: split the new text and light it up to the current scroll
+      window.addEventListener('sndr:lang', () => {
+        build(lead.getAttribute('aria-label') || '');
+        const lit = leadTrigger.progress * (wordEls.length + 2);
+        wordEls.forEach((el, i) => {
+          const o = Math.min(Math.max(lit - i, 0), 1);
+          el.style.setProperty('--word-o', (dim + (1 - dim) * o).toFixed(3));
+        });
+        ScrollTrigger.refresh();
       });
     }
 
@@ -993,6 +1094,9 @@
           screen.appendChild(video);
         }
         current = device;
+        // the spot's own sound sits at 10% of the music volume (10% if no music plays)
+        const beat = window.sndrBeat;
+        video.volume = Math.max(beat && beat.playing ? beat.volume * 0.1 : 0.1, 0.01);
         window.dispatchEvent(new CustomEvent('sndr:spot', { detail: { playing: true } }));
         device.classList.add('is-playing');
         button.setAttribute('aria-pressed', 'true');
@@ -1014,28 +1118,6 @@
   initStreamScreens();
 
   /**
-   * Contact form — placeholder: validates and thanks, sends nothing yet
-   */
-  function initContactForm() {
-    const form = document.querySelector('#contactForm');
-    if (!form) return;
-    const status = form.querySelector('.contact-form__status');
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      if (!form.checkValidity()) {
-        form.classList.add('was-validated');
-        status.textContent = 'Please fill in your name, a valid email and a message.';
-        return;
-      }
-      status.textContent = 'Thanks! The form is a demo for now — please email us directly.';
-      form.reset();
-      form.classList.remove('was-validated');
-    });
-  }
-
-  initContactForm();
-
-  /**
    * FOUNDER CARD — on hover the frame takes an oily rainbow film and a
    * soap-bubble lens sticks to the cursor: inside it the card is magnified
    * with a fish-eye distortion (SVG displacement map built at runtime).
@@ -1049,7 +1131,8 @@
     if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
 
     const LENS = 150; // px
-    const ZOOM = 1.6;
+    const ZOOM = 2;
+    const LIFT = 50; // px: the lens floats above the cursor, so the cursor never hides it
 
     // fish-eye displacement map: R/G = where each lens pixel samples from
     // (pulled towards the centre, so the middle bulges like a drop of water)
@@ -1145,7 +1228,7 @@
     });
     card.addEventListener('pointermove', (e) => {
       const rect = card.getBoundingClientRect();
-      target = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+      target = { x: e.clientX - rect.left, y: e.clientY - rect.top - LIFT };
     });
   }
 
@@ -1262,6 +1345,45 @@
   }
 
   initBlobCursor();
+
+  /**
+   * TABLET DOCK — on tablets/phones (CSS shows it up to 1024px) the menu,
+   * language and music buttons are repeated in the bottom-right corner, in
+   * thumb reach. They only forward to the real controls at the top.
+   * Styles: neon.css → TABLET DOCK.
+   */
+  function initTabletDock() {
+    const dock = document.createElement('div');
+    dock.className = 'tablet-dock';
+
+    const btn = (icon, label, onClick) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = `tablet-dock__btn bi ${icon}`;
+      b.setAttribute('aria-label', label);
+      b.addEventListener('click', onClick);
+      return b;
+    };
+    const toggle = document.querySelector('.header-toggle');
+    if (toggle) dock.appendChild(btn('bi-list', 'Open menu', () => toggle.click()));
+    if (window.sndrLangButton) {
+      const lang = window.sndrLangButton();
+      lang.classList.add('tablet-dock__btn');
+      dock.appendChild(lang);
+    }
+    const dial = document.querySelector('.music-dial');
+    const play = dial && dial.querySelector('.music-dial__play');
+    if (play) {
+      const music = btn('bi-music-note-beamed', 'Play or pause music', () => play.click());
+      const sync = () => music.classList.toggle('is-on', dial.classList.contains('is-playing'));
+      new MutationObserver(sync).observe(dial, { attributes: true, attributeFilter: ['class'] });
+      sync();
+      dock.appendChild(music);
+    }
+    document.body.appendChild(dock);
+  }
+
+  initTabletDock();
 
 
 })();

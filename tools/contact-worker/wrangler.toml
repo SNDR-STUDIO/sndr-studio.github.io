@@ -1,0 +1,7 @@
+name = "sndr-contact"
+main = "worker.js"
+compatibility_date = "2026-10-01"
+
+[vars]
+ALLOWED_ORIGIN = "https://sndr-studio.github.io"
+POW_BITS = "15"

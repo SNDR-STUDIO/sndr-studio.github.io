@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="150" height="60" viewBox="0 0 150 60">
+  <!-- Xiaohongshu (RED): red rounded badge with the white wordmark -->
+  <rect x="2" y="4" width="146" height="52" rx="14" fill="#FF2442"/>
+  <text x="75" y="41" text-anchor="middle" fill="#fff" font-size="30" font-weight="700"
+        font-family="'PingFang SC','Microsoft YaHei','Noto Sans SC','Hiragino Sans GB',sans-serif">小红书</text>
+</svg>

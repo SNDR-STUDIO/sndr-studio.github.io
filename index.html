@@ -107,7 +107,7 @@
   </script>
   <!-- Lenis base styles + neon redesign layer (loaded last so it wins the cascade) -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lenis@1.3.17/dist/lenis.css">
-  <link rel="stylesheet" href="assets/css/neon.css">
+  <link rel="stylesheet" href="assets/css/neon.css?v=25">
 </head>
 
 <body class="index-page">
@@ -116,7 +116,7 @@
     <button type="button" class="header-toggle d-xl-none bi bi-list" aria-label="Open menu" aria-expanded="false" aria-controls="navmenu"></button>
 
     <div class="profile-img">
-      <img src="assets/img/hero_fullbody_PNG_SUIT.png" class="img-fluid rounded-circle" alt="Founder" style="margin:15px auto;display:block;width:200px;height:200px;border:8px solid color-mix(in srgb, var(--default-color), transparent 85%);object-fit:cover;object-position:top;">
+      <img src="assets/img/hero_fullbody_PNG_SUIT.png" class="img-fluid rounded-circle" alt="Founder" style="margin:15px auto;display:block;width:260px;height:260px;border:8px solid color-mix(in srgb, var(--default-color), transparent 85%);object-fit:cover;object-position:top;">
     </div>
 
     <a href="/" class="logo d-flex align-items-center justify-content-center">
@@ -150,9 +150,9 @@
 
         <!-- <li></li> -->
         <li><a href="#about" class="nav-link"><i class="bi bi-person navicon"></i> About</a></li>
-        <li><a href="#content-stream" class="nav-link"><i class="bi bi-phone navicon"></i> Content Stream</a></li>
         <!-- <li><a href="#resume"><i class="bi bi-file-earmark-text navicon"></i> Resume</a></li> -->
         <li><a href="#portfolio" class="nav-link"><i class="bi bi-images navicon"></i> Our Works</a></li>
+        <li><a href="#content-stream" class="nav-link"><i class="bi bi-phone navicon"></i> Content Stream</a></li>
         <li><a href="#what-we-offer" class="nav-link"><i class="bi bi-grid navicon"></i> What we offer</a></li>
         <li><a href="#services" class="nav-link"><i class="bi bi-hdd-stack navicon"></i> Services</a></li>
         <li><a href="#testimonials" class="nav-link"><i class="bi bi-person-badge navicon"></i> Testimonials</a></li>
@@ -244,6 +244,8 @@
           </div>
           <article class="founder-card" aria-label="Alex Savo, founder of SNDR">
             <img src="assets/img/hero_fullbody_PNG_SUIT.png" alt="Alex Savo, founder of SNDR" loading="lazy" style="object-position:top;">
+            <!-- same framing as the photo above; on hover only its smiling face shows (neon.css → FOUNDER SMILE) -->
+            <img class="founder-smile" src="assets/img/hero_fullbody_PNG_SMILE.png" alt="" aria-hidden="true" loading="lazy" style="object-position:top;">
             <div class="founder-mark"><span>Founder / 01</span><span>SNDR</span></div>
             <div class="founder-copy">
               <h3>ALEX<br>SAVO</h3>
@@ -260,119 +262,6 @@
 
 
 
-<!-- Content Stream Section -->
-    <section id="content-stream" class="content-stream section" data-bs-spy="scroll" data-bs-target="#list-example"
-        data-bs-smooth-scroll="true">
-        <!-- Section Title -->
-        <div class="container section-title" data-aos="fade-up">
-            <p class="section-kicker">02 — Content stream</p>
-            <h2>Content Stream</h2>
-            <p>Seamless flow of vertical content across platforms</p>
-        </div><!-- End Section Title -->
-
-        <div class="container" data-aos="fade-up" data-aos-delay="100">
-            <div class="swiper init-swiper content-stream-swiper">
-                <script type="application/json" class="swiper-config">
-                    {
-                        "loop": true,
-                        "speed": 600,
-                        "slidesPerView": "auto",
-                        "pagination": {
-                            "el": ".swiper-pagination",
-                            "type": "bullets",
-                            "clickable": true
-                        },
-                        "breakpoints": {
-                            "0": {
-                                "slidesPerView": 1.15,
-                                "spaceBetween": 16,
-                                "centeredSlides": true
-                            },
-                            "700": {
-                                "centeredSlides": false,
-                                "slidesPerView": 2,
-                                "spaceBetween": 24
-                            },
-                            "1200": {
-                                "slidesPerView": 3,
-                                "spaceBetween": 32
-                            }
-                        }
-                    }
-                </script>
-                <div class="swiper-wrapper">
-                    <!-- Phones: lava-lamp screen (own color scheme per slide), platform logo,
-                         play button -> 5s template spot from assets/video/stream (sources in video-src/) -->
-                    <div class="swiper-slide">
-                        <div class="stream-device stream-device--shorts" data-video="assets/video/stream/ad-01-mobile-app.mp4">
-                            <div class="stream-screen stream-screen--lava stream-screen--s1" data-screen="lava" aria-hidden="true"></div>
-                            <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
-                            <img src="assets/img/logo/shorts-light.png" alt="YouTube Shorts" class="stream-logo" loading="lazy">
-                            <button type="button" class="stream-play" aria-label="Play: Mobile app ad"><i class="bi bi-play-fill" aria-hidden="true"></i></button>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="stream-device stream-device--tiktok" data-video="assets/video/stream/ad-02-gambling.mp4">
-                            <div class="stream-screen stream-screen--lava stream-screen--s2" data-screen="lava" aria-hidden="true"></div>
-                            <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
-                            <img src="assets/img/logo/tiktok-light.svg" alt="TikTok" class="stream-logo" loading="lazy">
-                            <button type="button" class="stream-play" aria-label="Play: Casino bonus ad"><i class="bi bi-play-fill" aria-hidden="true"></i></button>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="stream-device stream-device--instagram" data-video="assets/video/stream/ad-03-delivery.mp4">
-                            <div class="stream-screen stream-screen--lava stream-screen--s3" data-screen="lava" aria-hidden="true"></div>
-                            <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
-                            <img src="assets/img/logo/instagram-light.png" alt="Instagram" class="stream-logo" loading="lazy">
-                            <button type="button" class="stream-play" aria-label="Play: Food delivery ad"><i class="bi bi-play-fill" aria-hidden="true"></i></button>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="stream-device stream-device--threads" data-video="assets/video/stream/ad-04-cosmetics.mp4">
-                            <div class="stream-screen stream-screen--lava stream-screen--s4" data-screen="lava" aria-hidden="true"></div>
-                            <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
-                            <img src="assets/img/logo/threads-light.png" alt="Threads" class="stream-logo" loading="lazy">
-                            <button type="button" class="stream-play" aria-label="Play: Cosmetics ad"><i class="bi bi-play-fill" aria-hidden="true"></i></button>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="stream-device stream-device--shorts" data-video="assets/video/stream/ad-05-geo-search.mp4">
-                            <div class="stream-screen stream-screen--lava stream-screen--s5" data-screen="lava" aria-hidden="true"></div>
-                            <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
-                            <img src="assets/img/logo/shorts-light.png" alt="YouTube Shorts" class="stream-logo" loading="lazy">
-                            <button type="button" class="stream-play" aria-label="Play: Family locator ad"><i class="bi bi-play-fill" aria-hidden="true"></i></button>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="stream-device stream-device--tiktok" data-video="assets/video/stream/ad-06-youtube.mp4">
-                            <div class="stream-screen stream-screen--lava stream-screen--s6" data-screen="lava" aria-hidden="true"></div>
-                            <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
-                            <img src="assets/img/logo/tiktok-light.svg" alt="TikTok" class="stream-logo" loading="lazy">
-                            <button type="button" class="stream-play" aria-label="Play: YouTube channel promo"><i class="bi bi-play-fill" aria-hidden="true"></i></button>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="stream-device stream-device--instagram" data-video="assets/video/stream/ad-07-ai-news.mp4">
-                            <div class="stream-screen stream-screen--lava stream-screen--s7" data-screen="lava" aria-hidden="true"></div>
-                            <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
-                            <img src="assets/img/logo/instagram-light.png" alt="Instagram" class="stream-logo" loading="lazy">
-                            <button type="button" class="stream-play" aria-label="Play: AI news promo"><i class="bi bi-play-fill" aria-hidden="true"></i></button>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="stream-device stream-device--threads" data-video="assets/video/stream/ad-01-mobile-app.mp4">
-                            <div class="stream-screen stream-screen--lava stream-screen--s8" data-screen="lava" aria-hidden="true"></div>
-                            <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
-                            <img src="assets/img/logo/threads-light.png" alt="Threads" class="stream-logo" loading="lazy">
-                            <button type="button" class="stream-play" aria-label="Play: Mobile app ad"><i class="bi bi-play-fill" aria-hidden="true"></i></button>
-                        </div>
-                    </div>
-                </div>
-                <!-- Add pagination -->
-                <div class="swiper-pagination"></div>
-            </div>
-        </div>
-    </section><!-- End Content Stream Section -->
 
 
 <!-- Stats Section -->
@@ -431,7 +320,7 @@
 
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
-        <p class="section-kicker">03 — Selected work</p>
+        <p class="section-kicker">02 — Selected work</p>
         <h2>Portfolio</h2>
         <p>This section features some of the projects I've worked on over the past few years. It includes examples of
           websites, animations, and design work created for different clients and purposes. I always try to make each
@@ -454,13 +343,14 @@
           <script type="application/json" class="swiper-config">
             {
               "speed": 700,
+              "loop": true,
               "slidesPerView": 1,
               "spaceBetween": 20,
               "grabCursor": true,
               "pagination": { "el": ".swiper-pagination", "type": "bullets", "clickable": true },
               "breakpoints": {
                 "768": { "slidesPerView": 2, "spaceBetween": 22 },
-                "1200": { "slidesPerView": 3, "spaceBetween": 24 }
+                "1024": { "slidesPerView": 3, "spaceBetween": 24 }
               }
             }
           </script>
@@ -557,6 +447,136 @@
 
     </section><!-- /Portfolio Section -->
 
+    <!-- Content Stream Section -->
+    <section id="content-stream" class="content-stream section" data-bs-spy="scroll" data-bs-target="#list-example"
+        data-bs-smooth-scroll="true">
+        <!-- Section Title -->
+        <div class="container section-title" data-aos="fade-up">
+            <p class="section-kicker">03 — Content stream</p>
+            <h2>Content Stream</h2>
+            <p>Seamless flow of vertical content across platforms</p>
+        </div><!-- End Section Title -->
+
+        <div class="container" data-aos="fade-up" data-aos-delay="100">
+            <div class="swiper init-swiper content-stream-swiper">
+                <script type="application/json" class="swiper-config">
+                    {
+                        "loop": true,
+                        "speed": 600,
+                        "slidesPerView": "auto",
+                        "pagination": {
+                            "el": ".swiper-pagination",
+                            "type": "bullets",
+                            "clickable": true
+                        },
+                        "breakpoints": {
+                            "0": {
+                                "slidesPerView": 1.15,
+                                "spaceBetween": 16,
+                                "centeredSlides": true
+                            },
+                            "700": {
+                                "centeredSlides": false,
+                                "slidesPerView": 2,
+                                "spaceBetween": 24
+                            },
+                            "1024": {
+                                "slidesPerView": 3,
+                                "spaceBetween": 32
+                            }
+                        }
+                    }
+                </script>
+                <div class="swiper-wrapper">
+                    <!-- Phones: lava-lamp screen (own color scheme per slide), platform logo,
+                         play button -> 5s template spot from assets/video/stream (sources in video-src/) -->
+                    <div class="swiper-slide">
+                        <div class="stream-device stream-device--shorts" data-video="assets/video/stream/ad-01-mobile-app.mp4">
+                            <div class="stream-screen stream-screen--lava stream-screen--s1" data-screen="lava" aria-hidden="true"></div>
+                            <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
+                            <img src="assets/img/logo/shorts-light.png" alt="YouTube Shorts" class="stream-logo" loading="lazy">
+                            <button type="button" class="stream-play" aria-label="Play: Mobile app ad"><i class="bi bi-play-fill" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="stream-device stream-device--tiktok" data-video="assets/video/stream/ad-02-gambling.mp4">
+                            <div class="stream-screen stream-screen--lava stream-screen--s2" data-screen="lava" aria-hidden="true"></div>
+                            <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
+                            <img src="assets/img/logo/tiktok-light.svg" alt="TikTok" class="stream-logo" loading="lazy">
+                            <button type="button" class="stream-play" aria-label="Play: Casino bonus ad"><i class="bi bi-play-fill" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="stream-device stream-device--instagram" data-video="assets/video/stream/ad-03-delivery.mp4">
+                            <div class="stream-screen stream-screen--lava stream-screen--s3" data-screen="lava" aria-hidden="true"></div>
+                            <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
+                            <img src="assets/img/logo/instagram-light.png" alt="Instagram" class="stream-logo" loading="lazy">
+                            <button type="button" class="stream-play" aria-label="Play: Food delivery ad"><i class="bi bi-play-fill" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="stream-device stream-device--threads" data-video="assets/video/stream/ad-04-cosmetics.mp4">
+                            <div class="stream-screen stream-screen--lava stream-screen--s4" data-screen="lava" aria-hidden="true"></div>
+                            <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
+                            <img src="assets/img/logo/threads-light.png" alt="Threads" class="stream-logo" loading="lazy">
+                            <button type="button" class="stream-play" aria-label="Play: Cosmetics ad"><i class="bi bi-play-fill" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="stream-device stream-device--shorts" data-video="assets/video/stream/ad-05-geo-search.mp4">
+                            <div class="stream-screen stream-screen--lava stream-screen--s5" data-screen="lava" aria-hidden="true"></div>
+                            <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
+                            <img src="assets/img/logo/shorts-light.png" alt="YouTube Shorts" class="stream-logo" loading="lazy">
+                            <button type="button" class="stream-play" aria-label="Play: Family locator ad"><i class="bi bi-play-fill" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="stream-device stream-device--tiktok" data-video="assets/video/stream/ad-06-youtube.mp4">
+                            <div class="stream-screen stream-screen--lava stream-screen--s6" data-screen="lava" aria-hidden="true"></div>
+                            <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
+                            <img src="assets/img/logo/tiktok-light.svg" alt="TikTok" class="stream-logo" loading="lazy">
+                            <button type="button" class="stream-play" aria-label="Play: YouTube channel promo"><i class="bi bi-play-fill" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="stream-device stream-device--instagram" data-video="assets/video/stream/ad-07-ai-news.mp4">
+                            <div class="stream-screen stream-screen--lava stream-screen--s7" data-screen="lava" aria-hidden="true"></div>
+                            <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
+                            <img src="assets/img/logo/instagram-light.png" alt="Instagram" class="stream-logo" loading="lazy">
+                            <button type="button" class="stream-play" aria-label="Play: AI news promo"><i class="bi bi-play-fill" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="stream-device stream-device--threads" data-video="assets/video/stream/ad-01-mobile-app.mp4">
+                            <div class="stream-screen stream-screen--lava stream-screen--s8" data-screen="lava" aria-hidden="true"></div>
+                            <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
+                            <img src="assets/img/logo/threads-light.png" alt="Threads" class="stream-logo" loading="lazy">
+                            <button type="button" class="stream-play" aria-label="Play: Mobile app ad"><i class="bi bi-play-fill" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="stream-device stream-device--xiaohongshu" data-video="assets/video/stream/ad-04-cosmetics.mp4">
+                            <div class="stream-screen stream-screen--lava stream-screen--s4" data-screen="lava" aria-hidden="true"></div>
+                            <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
+                            <img src="assets/img/logo/xiaohongshu-light.svg" alt="Xiaohongshu (RED)" class="stream-logo" loading="lazy">
+                            <button type="button" class="stream-play" aria-label="Play: Cosmetics ad"><i class="bi bi-play-fill" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="stream-device stream-device--douyin" data-video="assets/video/stream/ad-02-gambling.mp4">
+                            <div class="stream-screen stream-screen--lava stream-screen--s2" data-screen="lava" aria-hidden="true"></div>
+                            <img src="assets/video/iphon18.png" alt="" class="stream-phone" loading="lazy">
+                            <img src="assets/img/logo/douyin-light.svg" alt="Douyin" class="stream-logo" loading="lazy">
+                            <button type="button" class="stream-play" aria-label="Play: Casino bonus ad"><i class="bi bi-play-fill" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Add pagination -->
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+    </section><!-- End Content Stream Section -->
+
     <!-- 04–07 share one continuous background (.neon-flow in neon.css) -->
     <div class="neon-flow">
 
@@ -631,7 +651,7 @@
 
         <div class="row gy-4">
 
-          <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-delay="100">
+          <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-offset="220" data-aos-duration="900" data-aos-delay="350">
             <div class="icon flex-shrink-0">
               <i class="bi bi-laptop"></i>
               <!-- <i class="bi bi-briefcase"></i> -->
@@ -645,7 +665,7 @@
           </div>
           <!-- End Service Item -->
 
-          <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-delay="200">
+          <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-offset="220" data-aos-duration="900" data-aos-delay="500">
             <div class="icon flex-shrink-0">
               <i class="bi bi-play-circle"></i>
               <!-- <i class="bi bi-card-checklist"></i> -->
@@ -657,7 +677,7 @@
             </div>
           </div><!-- End Service Item -->
 
-          <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-delay="300">
+          <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-offset="220" data-aos-duration="900" data-aos-delay="650">
             <div class="icon flex-shrink-0">
               <i class="bi bi-palette"></i>
               <!-- <i class="bi bi-bar-chart"></i> -->
@@ -669,7 +689,7 @@
             </div>
           </div><!-- End Service Item -->
 
-          <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-delay="400">
+          <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-offset="220" data-aos-duration="900" data-aos-delay="350">
             <div class="icon flex-shrink-0">
               <!-- <i class="bi bi-binoculars"></i> -->
               <i class="bi bi-instagram"></i>
@@ -681,7 +701,7 @@
             </div>
           </div><!-- End Service Item -->
 
-          <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-delay="500">
+          <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-offset="220" data-aos-duration="900" data-aos-delay="500">
             <div class="icon flex-shrink-0">
               <!-- <i class="bi bi-brightness-high"></i> -->
               <i class="bi bi-window"></i>
@@ -693,7 +713,7 @@
             </div>
           </div><!-- End Service Item -->
 
-          <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-delay="600">
+          <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-offset="220" data-aos-duration="900" data-aos-delay="650">
             <div class="icon flex-shrink-0">
               <!-- <i class="bi bi-calendar4-week"></i> -->
               <i class="bi bi-camera-video"></i>
@@ -747,7 +767,7 @@
                   "slidesPerView": 1,
                   "spaceBetween": 40
                 },
-                "1200": {
+                "1024": {
                   "slidesPerView": 3,
                   "spaceBetween": 1
                 }
@@ -925,14 +945,16 @@
             <li>
               <span class="contact-info__label">Social</span>
               <span class="contact-info__social">
-                <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                <a href="#contact" data-protected-link="instagram" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
                 <a href="#" aria-label="Behance"><i class="bi bi-behance"></i></a>
-                <a href="#" aria-label="Telegram"><i class="bi bi-telegram"></i></a>
+                <a href="#contact" data-protected-link="telegram" aria-label="Telegram"><i class="bi bi-telegram"></i></a>
               </span>
             </li>
           </ul>
 
           <form class="contact-form" id="contactForm" novalidate>
+            <!-- honeypot: hidden from people, bots fill it (assets/js/contact.js) -->
+            <label class="contact-hp" aria-hidden="true">Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
             <div class="contact-form__row">
               <label class="contact-field">
                 <span>Name</span>
@@ -984,10 +1006,10 @@
             <a href="#about" class="nav-link px-2 text-body-secondary">About</a>
           </li>
           <li class="nav-item">
-            <a href="#content-stream" class="nav-link px-2 text-body-secondary">Content Stream</a>
+            <a href="#portfolio" class="nav-link px-2 text-body-secondary">Our Works</a>
           </li>
           <li class="nav-item">
-            <a href="#portfolio" class="nav-link px-2 text-body-secondary">Our Works</a>
+            <a href="#content-stream" class="nav-link px-2 text-body-secondary">Content Stream</a>
           </li>
           <li class="nav-item">
             <a href="#what-we-offer" class="nav-link px-2 text-body-secondary">What we offer</a>
@@ -1048,9 +1070,13 @@
 
   <script src="https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.min.js" defer></script>
   <!-- 3D: What we offer backdrop + floating blobs over the landing -->
-  <script src="assets/js/scene3d.js" defer></script>
+  <script src="assets/js/scene3d.js?v=24" defer></script>
   <!-- Generative lo-fi lounge music + its round 3-way control under the menu button -->
-  <script src="assets/js/lofi.js" defer></script>
+  <!-- localization (EN / 中文 / UA / DE / ES): before every script that shows text -->
+  <script src="assets/js/i18n.js?v=24" defer></script>
+  <script src="assets/js/lofi.js?v=24" defer></script>
+  <!-- contact form + protected social links: human check, Telegram delivery -->
+  <script src="assets/js/contact.js?v=24" defer></script>
 
   <!-- Main JS File -->
   <!-- Smooth scroll + scroll animations -->
@@ -1058,7 +1084,9 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.17/dist/lenis.min.js" defer></script>
 
-  <script src="assets/js/main.js" defer></script>
+  <!-- sound gate + UI sound effects; before main.js (the hero intro waits for it) -->
+  <script src="assets/js/sfx.js?v=24" defer></script>
+  <script src="assets/js/main.js?v=24" defer></script>
   <!-- Коли змінюєш картинки/відео — просто міняй CACHE_VERSION у sw.js і деплой. -->
 
   <script>
@@ -1144,13 +1172,17 @@
     /* ================= MARQUEE ================= */
     const marqueeItems = ['MOTION DESIGN','3D','WEB DEVELOPMENT','CREATIVE CODING','INTERACTIVE EXPERIENCES','UI / UX MOTION'];
     const track = document.getElementById('marqueeTrack');
-    let marqueeHTML = '';
     // every letter gets its own <b> so the hover lens can magnify it (neon.css → MARQUEE)
     const marqueeWord = t => `<em class="mq-word">${Array.from(t).map(ch => `<b class="mq-ch">${ch === ' ' ? '&nbsp;' : ch}</b>`).join('')}</em>`;
-    for(let r=0;r<2;r++){
-      marqueeItems.forEach(t=>{ marqueeHTML += `<span>${marqueeWord(t)}<i></i></span>`; });
-    }
-    track.innerHTML = marqueeHTML + marqueeHTML;
+    // rebuilt by i18n.js with the translated items
+    window.sndrMarquee = (items) => {
+      let marqueeHTML = '';
+      for(let r=0;r<2;r++){
+        items.forEach(t=>{ marqueeHTML += `<span>${marqueeWord(t)}<i></i></span>`; });
+      }
+      track.innerHTML = marqueeHTML + marqueeHTML;
+    };
+    window.sndrMarquee(marqueeItems);
     let marqueeX = 0, marqueeDir = -1, baseSpeed = 0.55;
     let lastScrollY = window.scrollY, scrollVel = 0;
     function marqueeLoop(){

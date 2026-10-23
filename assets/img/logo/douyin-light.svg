@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="150" height="52" viewBox="0 0 150 52">
+  <!-- Douyin: the note glyph with its cyan / red offset glow + white wordmark -->
+  <defs>
+    <path id="n" d="M21 4h7c.6 4.6 3.6 7.8 8.2 8.2v7c-3.1 0-6-.9-8.2-2.5V33a11 11 0 1 1-11-11c.7 0 1.4.1 2 .2v7.1a4.1 4.1 0 1 0 2 3.6V4z"/>
+  </defs>
+  <use href="#n" fill="#25F4EE" transform="translate(-1.6 -1.6)"/>
+  <use href="#n" fill="#FE2C55" transform="translate(1.6 1.6)"/>
+  <use href="#n" fill="#fff"/>
+  <text x="50" y="37" fill="#fff" font-size="29" font-weight="700"
+        font-family="'PingFang SC','Microsoft YaHei','Noto Sans SC','Hiragino Sans GB',sans-serif">抖音</text>
+</svg>

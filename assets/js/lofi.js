@@ -1,13 +1,18 @@
 /* =====================================================================
-   SNDR STUDIO — generative lo-fi lounge (Web Audio, no audio file)
-   72 bpm, ii–V–I–vi jazz chords on warm keys, soft bass and a bell
-   melody — no drums, no noise — with deep whale calls drifting through
-   a long reverb.
+   SNDR STUDIO — generative lo-fi beat (Web Audio, no audio file)
+   78 bpm boom-bap: dusty kick, snare with a rim layer, swung hats, a bed
+   of vinyl crackles (no hiss); ii–V–I–vi jazz chords on wobbly tape keys
+   that dip under every kick, soft bass and a sparse bell melody.
+   Starts at 30% volume. window.sndrBeat shares the beat grid and the
+   current chord with sfx.js, so the UI sounds land in time and in key.
 
    Control: one round button under the menu toggle, split into three
    sectors — top: play / pause, bottom-left: volume −, bottom-right: +.
-   Ducks while a Content Stream spot plays (event "sndr:spot" from main.js).
-   Starts only on a click (browsers block autoplay with sound).
+   Dips a little while a Content Stream spot plays (event "sndr:spot" from
+   main.js); the spot itself plays at 10% of the music volume. 4x quieter
+   while a portfolio video window is open ("sndr:video").
+   Starts with the sound gate's "Enter with sound" (sfx.js) or on a click
+   here (browsers block autoplay with sound).
    ===================================================================== */
 (function () {
   'use strict';
@@ -15,7 +20,7 @@
   const AC = window.AudioContext || window.webkitAudioContext;
   if (!AC) return;
 
-  const BPM = 72;
+  const BPM = 78;
   const STEP = 60 / BPM / 4; // a 16th note
   const LOOKAHEAD = 0.15;    // seconds scheduled ahead
   const midi = (n) => 440 * Math.pow(2, (n - 69) / 12);
@@ -36,10 +41,11 @@
   let ctx = null;
   let nodes = null;
   let playing = false;
-  let volume = Math.min(Math.max(parseFloat(store.get('sndr-lofi-volume', '0.5')) || 0.5, 0), 1);
+  let volume = Math.min(Math.max(parseFloat(store.get('sndr-lofi-volume', '0.3')) || 0.3, 0), 1);
   let step = 0;
   let nextTime = 0;
   let timer = 0;
+  let origin = 0; // ctx time of step 0 of the running grid
 
   /* ---------------- audio graph ---------------- */
   const noiseBuffer = (seconds, fill) => {
@@ -84,21 +90,50 @@
     tremDepth.gain.value = 0.12;
     trem.connect(tremDepth).connect(keys.gain);
     trem.start();
-    keys.connect(bus);
-    keys.connect(reverb);
+    // tape wobble: a slowly modulated short delay bends the keys a little
+    const tape = ctx.createDelay(0.05);
+    tape.delayTime.value = 0.008;
+    const wow = ctx.createOscillator();
+    const wowDepth = ctx.createGain();
+    wow.frequency.value = 0.55;
+    wowDepth.gain.value = 0.0016;
+    wow.connect(wowDepth).connect(tape.delayTime);
+    wow.start();
+    // sidechain feel: the keys dip under each kick (pump gain, driven per kick)
+    const pump = ctx.createGain();
+    keys.connect(tape).connect(pump);
+    pump.connect(bus);
+    pump.connect(reverb);
+
+    // drums: own bus, a little darker and drier than the keys
+    const drums = ctx.createGain();
+    drums.gain.value = 0.55;
+    const drumTone = ctx.createBiquadFilter();
+    drumTone.type = 'lowpass';
+    drumTone.frequency.value = 5200;
+    drums.connect(drumTone).connect(bus);
+    const drumVerb = ctx.createGain();
+    drumVerb.gain.value = 0.12;
+    drums.connect(drumVerb).connect(reverb);
+
+    // vinyl: only the record's sparse crackles, no hiss underneath
+    const crackle = ctx.createBufferSource();
+    crackle.buffer = noiseBuffer(4, () => (Math.random() < 0.0009 ? (Math.random() * 2 - 1) * 0.9 : 0));
+    crackle.loop = true;
+    const crackleTone = ctx.createBiquadFilter();
+    crackleTone.type = 'bandpass';
+    crackleTone.frequency.value = 2400;
+    crackleTone.Q.value = 0.5;
+    const crackleGain = ctx.createGain();
+    crackleGain.gain.value = 0.22;
+    crackle.connect(crackleTone).connect(crackleGain).connect(bus);
+    crackle.start();
+
+    // one shared noise buffer for snare and hats
+    const noise = noiseBuffer(1, () => Math.random() * 2 - 1);
 
 
-    // whales get their own big, dark reverb
-    const ocean = ctx.createConvolver();
-    ocean.buffer = noiseBuffer(6, (i, len) => (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2));
-    const oceanWet = ctx.createGain();
-    oceanWet.gain.value = 0.6;
-    const oceanTone = ctx.createBiquadFilter();
-    oceanTone.type = 'lowpass';
-    oceanTone.frequency.value = 900;
-    ocean.connect(oceanTone).connect(oceanWet).connect(bus);
-
-    nodes = { master, duck, bus, reverb, keys, ocean };
+    nodes = { master, duck, bus, reverb, keys, pump, drums, noise };
   };
 
   /* ---------------- instruments ---------------- */
@@ -158,50 +193,58 @@
     });
   };
 
-  // whale call: a slow moaning glide with vibrato, low-passed and drowned in reverb
-  const whale = (t) => {
-    const dur = 3 + Math.random() * 2.5;
-    const f0 = 140 + Math.random() * 90;
-    const peak = f0 * (1.6 + Math.random() * 0.9);
-    const out = ctx.createGain();
-    const lp = ctx.createBiquadFilter();
-    lp.type = 'lowpass';
-    lp.frequency.value = 700;
-    lp.Q.value = 3; // a little vocal resonance
-    const vib = ctx.createOscillator();
-    const vibDepth = ctx.createGain();
-    vib.frequency.value = 4 + Math.random() * 2;
-    vibDepth.gain.value = 5;
-    vib.start(t);
-    vib.stop(t + dur + 0.5);
-    [[1, 1], [2, 0.35], [0.5, 0.5]].forEach(([ratio, level]) => {
-      const o = ctx.createOscillator();
-      const g = ctx.createGain();
-      o.type = 'sine';
-      o.frequency.setValueAtTime(f0 * ratio, t);
-      o.frequency.exponentialRampToValueAtTime(peak * ratio, t + dur * 0.45);
-      o.frequency.exponentialRampToValueAtTime(f0 * 0.8 * ratio, t + dur);
-      vib.connect(vibDepth).connect(o.frequency);
-      g.gain.value = level;
-      o.connect(g).connect(lp);
-      o.start(t);
-      o.stop(t + dur + 0.3);
-    });
-    lp.connect(out);
-    out.connect(nodes.ocean);
-    out.connect(nodes.bus);
-    out.gain.setValueAtTime(0.0001, t);
-    out.gain.linearRampToValueAtTime(0.05, t + dur * 0.3);
-    out.gain.linearRampToValueAtTime(0.035, t + dur * 0.7);
-    out.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  const kick = (t, vel) => {
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(118, t);
+    o.frequency.exponentialRampToValueAtTime(44, t + 0.13);
+    o.connect(g).connect(nodes.drums);
+    env(g, t, 0.95 * vel, 0.004, 0.42);
+    o.start(t);
+    o.stop(t + 0.5);
+    // the keys duck under it and swell back
+    nodes.pump.gain.cancelScheduledValues(t);
+    nodes.pump.gain.setValueAtTime(0.55, t);
+    nodes.pump.gain.setTargetAtTime(1, t + 0.04, 0.12);
   };
+
+  const noiseHit = (t, vel, type, freq, q, decay, level) => {
+    const src = ctx.createBufferSource();
+    src.buffer = nodes.noise;
+    const flt = ctx.createBiquadFilter();
+    flt.type = type;
+    flt.frequency.value = freq;
+    flt.Q.value = q;
+    const g = ctx.createGain();
+    src.connect(flt).connect(g).connect(nodes.drums);
+    env(g, t, level * vel, 0.002, decay);
+    src.start(t, Math.random() * 0.5);
+    src.stop(t + decay + 0.05);
+  };
+
+  const snare = (t, vel) => {
+    noiseHit(t, vel, 'bandpass', 1900, 0.7, 0.2, 0.38);
+    // body / rim
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = 'triangle';
+    o.frequency.setValueAtTime(210, t);
+    o.frequency.exponentialRampToValueAtTime(160, t + 0.06);
+    o.connect(g).connect(nodes.drums);
+    env(g, t, 0.16 * vel, 0.002, 0.09);
+    o.start(t);
+    o.stop(t + 0.15);
+  };
+
+  const hat = (t, vel, open) => noiseHit(t, vel, 'highpass', 7600, 0.6, open ? 0.22 : 0.045, open ? 0.07 : 0.09);
 
   /* ---------------- sequencer ---------------- */
   const scheduleStep = (s, t) => {
     const bar = Math.floor(s / 16) % CHORDS.length;
     const i = s % 16;
     const chord = CHORDS[bar];
-    const swing = i % 4 === 2 ? STEP * 0.22 : 0; // relaxed off-beat feel
+    const swing = i % 2 === 1 ? STEP * 0.24 : 0; // lazy swung 16ths
     const at = t + swing;
     const human = () => 0.85 + Math.random() * 0.15;
 
@@ -214,13 +257,18 @@
     if (i === 8) bassNote(chord.bass + 7, at, STEP * 4, 0.8);
     if (i === 14) bassNote(chord.bass + (Math.random() < 0.5 ? 12 : 10), at, STEP * 2, 0.6);
 
-    // bell melody from the chord's scale
-    if ((i % 4 === 2 && Math.random() < 0.55) || (i === 7 && Math.random() < 0.3)) {
+    // drums: boom-bap kick, snare on 2 and 4, swung hats with ghost notes
+    if (i === 0 || i === 10 || (i === 7 && Math.random() < 0.35)) kick(at, i === 0 ? 1 : 0.8);
+    if (i === 4 || i === 12) snare(at + 0.012, human()); // a hair late
+    if (i === 15 && Math.random() < 0.25) snare(at, 0.3); // ghost
+    if (i % 2 === 0) hat(at, (i % 4 === 0 ? 0.9 : 0.55) * human(), false);
+    else if (Math.random() < 0.18) hat(at, 0.35, false);
+    if (i === 14 && Math.floor(s / 16) % 2 === 1) hat(at, 0.7, true);
+
+    // bell melody from the chord's scale (sparser over the beat)
+    if ((i % 4 === 2 && Math.random() < 0.3) || (i === 7 && Math.random() < 0.15)) {
       bellNote(chord.scale[Math.floor(Math.random() * chord.scale.length)], at, human());
     }
-
-    // a whale calls from the deep every few bars
-    if (i === 0 && Math.floor(s / 16) % 3 === 1 && Math.random() < 0.8) whale(at + Math.random() * STEP * 4);
   };
 
   const tick = () => {
@@ -239,6 +287,7 @@
     await ctx.resume();
     if (!timer) {
       nextTime = ctx.currentTime + 0.05;
+      origin = nextTime - step * STEP;
       timer = setInterval(tick, 25);
     }
     nodes.master.gain.cancelScheduledValues(ctx.currentTime);
@@ -266,13 +315,42 @@
     store.set('sndr-lofi-volume', String(volume));
     if (ctx && playing) nodes.master.gain.setTargetAtTime(level(), ctx.currentTime, 0.1);
     render();
+    window.dispatchEvent(new CustomEvent('sndr:volume', { detail: { volume } })); // sfx.js follows it
+  };
+
+  // the sound gate (sfx.js) was answered "with sound": the music starts at 30%
+  window.addEventListener('sndr:sound', (e) => {
+    if (!e.detail || !e.detail.on || playing) return;
+    setVolume(0.3);
+    play();
+  });
+
+  // beat clock for sfx.js: seconds until the next grid line, current chord
+  window.sndrBeat = {
+    step: STEP,
+    get playing() { return playing && !!ctx; },
+    get volume() { return volume; },
+    until(div = 1) {
+      if (!playing || !ctx) return 0;
+      const g = STEP * div;
+      const t = ctx.currentTime - origin;
+      return (g - (((t % g) + g) % g)) % g;
+    },
+    scale() {
+      const s = ctx && playing ? Math.floor((ctx.currentTime - origin) / STEP) : 0;
+      return CHORDS[Math.floor(Math.max(s, 0) / 16) % CHORDS.length].scale;
+    },
   };
 
   // quieter while a Content Stream spot plays
-  window.addEventListener('sndr:spot', (e) => {
-    if (!ctx) return;
-    nodes.duck.gain.setTargetAtTime(e.detail && e.detail.playing ? 0.12 : 1, ctx.currentTime, 0.25);
-  });
+  // a light dip while a phone spot plays, 4x quieter while a portfolio video is open
+  let spotOn = false;
+  let videoOn = false;
+  const duckTo = () => {
+    if (ctx) nodes.duck.gain.setTargetAtTime((spotOn ? 0.8 : 1) * (videoOn ? 0.25 : 1), ctx.currentTime, 0.25);
+  };
+  window.addEventListener('sndr:spot', (e) => { spotOn = !!(e.detail && e.detail.playing); duckTo(); });
+  window.addEventListener('sndr:video', (e) => { videoOn = !!(e.detail && e.detail.open); duckTo(); });
 
   /* ---------------- UI: one circle, three sectors ---------------- */
   const dial = document.createElement('div');

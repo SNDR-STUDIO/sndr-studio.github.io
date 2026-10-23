@@ -5,10 +5,10 @@
                             moon, star dome, breathing wireframe terrain, star
                             streaks. Procedural textures in the site palette,
                             slower motion, camera follows the section scroll.
-   2) initFloatingBlobs() — from Content Stream down: gradient "bulbs" along
+   2) initFloatingBlobs() — from Portfolio down: gradient "bulbs" along
                             the page edges, mostly far back (depth haze, glow
                             halo + soft shadow, long scroll parallax, surface
-                            smears under the cursor) and electric jellyfish
+                            smears under the cursor) and softly glowing jellyfish
                             rising from the bottom; plus a small scene deep
                             behind the Content Stream phones. (Line-art sea
                             creatures live in sea.js.)
@@ -363,14 +363,14 @@
     let vw = 1;
     let vh = 1;
     let docH = 1;
-    let startY = 0;   // page Y where the blobs begin (top of Content Stream)
+    let startY = 0;   // page Y where the edge blobs begin (middle of the Portfolio title)
     let edge = 0;     // px between the viewport edge and the main .container
     const measure = () => {
       vw = window.innerWidth;
       vh = window.innerHeight;
       docH = document.documentElement.scrollHeight;
-      const cs = document.querySelector('#content-stream');
-      startY = cs ? cs.getBoundingClientRect().top + window.scrollY : vh;
+      const title = document.querySelector('#portfolio .section-title h2');
+      startY = title ? title.getBoundingClientRect().top + window.scrollY + title.offsetHeight / 2 : vh;
       const box = document.querySelector('#about .container') || document.querySelector('.container');
       edge = box ? Math.max((vw - box.clientWidth) / 2, 0) : 0;
       renderer.setSize(vw, vh, false);
@@ -520,10 +520,10 @@
     // exactly one of each; they hover in place instead of leaving the screen
     const SLOTS = {
       blobs: [
-        { x: 'left', y: 0.42, z: 1, size: 220, period: 26, phase: 0.05, k: 0.55 },
+        { x: 'left', y: 0.42, z: 1, size: 175, period: 26, phase: 0.05, k: 0.55, dim: 0.7 },
       ],
       jellies: [
-        { x: 'right', y: 0.36, z: -1, size: 105, period: 34, phase: 0.55, k: 0.5 },
+        { x: 'right', y: 0.36, z: -1, size: 85, period: 34, phase: 0.55, k: 0.5, dim: 0.7 },
       ],
     };
     const slotX = (slot, sizePx, extent) => {
@@ -564,7 +564,7 @@
       return mesh;
     });
 
-    /* ---------- electric jellyfish ---------- */
+    /* ---------- jellyfish ---------- */
     const glowTexture = (() => {
       const c = document.createElement('canvas');
       c.width = c.height = 64;
@@ -691,26 +691,15 @@
         }
       }
 
-      // electric arcs: jagged segments that only show during a discharge
-      const SPARKS = 22;
-      const sparkGeo = new THREE.BufferGeometry();
-      sparkGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(SPARKS * 6), 3));
-      const sparkMat = new THREE.LineBasicMaterial({ color: '#e8fbff', transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
-      const sparks = new THREE.LineSegments(sparkGeo, sparkMat);
-      sparks.frustumCulled = false;
-      group.add(sparks);
-
       group.renderOrder = 100;
       target.add(group);
       return {
-        group, bellMat, glow, tentMat, armMat, tentacles, arms, sparkGeo, sparkMat,
+        group, bellMat, glow, tentMat, armMat, tentacles, arms,
         z: Z_FAR + (Z_NEAR - 2 - Z_FAR) * Math.pow(Math.random(), 1.4),
         side: i % 2 ? -1 : 1,
         sizePx: small ? rand(28, 46) : rand(40, 95),
         period: rand(30, 48),          // seconds to rise through the viewport
         offset: i / 5 + rand(0, 0.15), // stagger along the cycle
-        nextFlash: rand(1.5, 4),
-        flashUntil: 0,
         swim: rand(0, 6),
       };
     };
@@ -725,6 +714,36 @@
       });
       jellies.push(j);
     });
+
+    /* ---------- section guests: a few small, far-back blobs and jellies in
+       the middle of Stats, Services and Portfolio; they ride with their section
+       (x, y = share of the section box, size in px) ---------- */
+    const GUESTS = [
+      { sel: '#stats', kind: 'jelly', x: 0.29, y: 0.15, z: -4, size: 30 },
+      { sel: '#stats', kind: 'jelly', x: 0.71, y: 0.17, z: -5, size: 24 },
+      { sel: '#services', kind: 'blob', x: 0.42, y: 0.32, z: -13, size: 38, pal: 1 },
+      { sel: '#services', kind: 'blob', x: 0.6, y: 0.66, z: -15, size: 28, pal: 4 },
+      { sel: '#services', kind: 'jelly', x: 0.54, y: 0.18, z: -9, size: 26 },
+      { sel: '#services', kind: 'jelly', x: 0.4, y: 0.58, z: -11, size: 20 },
+      { sel: '#portfolio', kind: 'jelly', x: 0.36, y: 0.48, z: -9, size: 26 },
+      { sel: '#portfolio', kind: 'jelly', x: 0.63, y: 0.89, z: -11, size: 20 },
+    ].map((g, i) => {
+      g.section = document.querySelector(g.sel);
+      g.bob = rand(0, Math.PI * 2);
+      g.appear = 0;
+      if (g.kind === 'blob') {
+        const [a, b] = palettes[g.pal];
+        g.mesh = new THREE.Mesh(geometry, makeBlobMaterial(a, b, 40 + i * 2.3));
+        g.mesh.material.uniforms.uHaze.value = (1 - depthK(g.z)) * 0.55;
+        g.mesh.renderOrder = Math.round(g.z * 10);
+        scene.add(g.mesh);
+      } else {
+        g.jelly = makeJelly(i + 1);
+        g.mesh = g.jelly.group;
+      }
+      g.mesh.visible = false;
+      return g;
+    }).filter(g => g.section);
 
 
 
@@ -819,14 +838,44 @@
     window.addEventListener('load', measure, { once: true });
     if ('ResizeObserver' in window) new ResizeObserver(() => { docH = document.documentElement.scrollHeight; }).observe(document.body);
 
-    const tmp = new THREE.Vector3();
-    const tmp2 = new THREE.Vector3();
     const clock = new THREE.Clock();
     let t = 0;
     let smoothScroll = window.scrollY;
     let lastScroll = window.scrollY;
     let tilt = 0;
     let gate = 0;
+    let guestGate = 0;
+
+    // pulse, tentacle swim and a soft glow pulse of one jelly (fade = 0..1)
+    const animateJelly = (j, fade) => {
+      // no flicker: the inner light swells and fades slowly (~7s), never flashes
+      const flash = 0.35 * Math.pow(0.5 + 0.5 * Math.sin(t * 0.9 + j.swim * 2.1), 2);
+      j.bellMat.uniforms.uTime.value = t + j.swim;
+      j.bellMat.uniforms.uFlash.value = flash;
+      j.bellMat.uniforms.uFade.value = fade;
+      j.tentMat.opacity = (0.42 + flash * 0.58) * fade;
+      j.armMat.opacity = (0.5 + flash * 0.4) * fade;
+      j.glow.material.opacity = (j.glow.userData.baseOpacity + flash * 0.5) * fade;
+
+      // tentacles and oral arms trail below the bell, waving with the swim pulse
+      const pulse = Math.sin((t + j.swim) * 2.2);
+      const wavy = (strand, amp, freq) => {
+        const arr = strand.line.geometry.attributes.position.array;
+        const n = arr.length / 3;
+        const r0 = strand.r * (1 + 0.12 * pulse);
+        for (let p = 0; p < n; p++) {
+          const f = p / (n - 1);
+          const wave = Math.sin(f * freq - (t + j.swim) * 2.6 + strand.phase) * amp * f;
+          const rr = r0 * (1 - f * 0.55) + (strand.off || 0);
+          arr[p * 3] = Math.cos(strand.angle) * rr + wave * Math.cos(strand.angle + 1.57);
+          arr[p * 3 + 1] = -f * strand.len * (1 + 0.08 * pulse);
+          arr[p * 3 + 2] = Math.sin(strand.angle) * rr + wave * Math.sin(strand.angle + 1.57);
+        }
+        strand.line.geometry.attributes.position.needsUpdate = true;
+      };
+      j.tentacles.forEach(tn => wavy(tn, 0.25, 7));
+      j.arms.forEach(arm => wavy(arm, 0.38, 11)); // frillier
+    };
 
     const frame = () => {
       requestAnimationFrame(frame);
@@ -842,18 +891,25 @@
 
       if (under) under.render(t, dt);
 
-      // nothing above Content Stream: fades in once its "02 — Content stream"
-      // kicker is well inside the screen; fades out again while What we offer
-      // (with its own planet scene) fills the screen
-      let target = THREE.MathUtils.clamp((smoothScroll + vh * 0.7 - startY) / (vh * 0.5), 0, 1);
+      // edge blob + jelly: nothing above Portfolio, they fade in once its title
+      // passes the middle of the screen; everything fades out again while
+      // What we offer (with its own planet scene) fills the screen
+      let offerFade = 1;
       if (offerSection) {
         const r = offerSection.getBoundingClientRect();
         const cover = Math.max(0, Math.min(r.bottom, vh) - Math.max(r.top, 0)) / vh;
-        target *= 1 - THREE.MathUtils.clamp(cover * 1.6, 0, 1);
+        offerFade = 1 - THREE.MathUtils.clamp(cover * 1.6, 0, 1);
       }
+      const target = THREE.MathUtils.clamp((smoothScroll + vh * 0.5 - startY) / (vh * 0.4), 0, 1) * offerFade;
       gate += (target - gate) * 0.03;
-      // above Content Stream the layer is simply hidden (nothing to draw)
-      const hidden = gate < 0.003;
+      guestGate += (offerFade - guestGate) * 0.03;
+      // the section guests (Stats, Portfolio, Services) have their own gate
+      const guestsNear = GUESTS.some((g) => {
+        const r = g.section.getBoundingClientRect();
+        return r.bottom > -vh * 0.2 && r.top < vh * 1.2;
+      });
+      // nothing to draw -> the layer is simply hidden
+      const hidden = gate < 0.003 && !guestsNear;
       if (canvas.hidden !== hidden) canvas.hidden = hidden;
       if (hidden) return;
 
@@ -875,7 +931,7 @@
         m.scale.setScalar(rWorld * (1 + Math.sin(t * 0.5 + d.bob) * 0.05));
         d.halo.position.copy(m.position);
         d.halo.scale.setScalar(rWorld * 3.2);
-        d.halo.material.opacity = (0.12 + depthK(d.z) * 0.22) * fade;
+        d.halo.material.opacity = (0.12 + depthK(d.z) * 0.22) * fade * d.slot.dim;
         placeLights(d.lights, m.position.x, m.position.y + rWorld, m.position.y - rWorld, d.z, rWorld, fade);
         m.rotation.x += d.spin.x * dt + tilt * 0.03;
         m.rotation.y += d.spin.y * dt;
@@ -894,7 +950,7 @@
         u.uPointerAmt.value = d.pointer;
         u.uRadius.value = rWorld * 0.75;
         u.uTime.value = t;
-        u.uOpacity.value = (0.35 + depthK(d.z) * 0.57) * fade;
+        u.uOpacity.value = (0.35 + depthK(d.z) * 0.57) * fade * d.slot.dim;
       }
 
       for (const j of jellies) {
@@ -905,7 +961,7 @@
         const xPx = slotX(j.slot, sizePx, 1.1) + Math.sin(t * 0.4 + j.swim) * 10;
         const onScreen = yPx > -sizePx * 5 && yPx < vh + sizePx * 1.2;
         if (onScreen) j.appear = Math.min(j.appear + dt / 3, 1);
-        const fade = gate * j.appear * j.appear * (3 - 2 * j.appear);
+        const fade = gate * j.appear * j.appear * (3 - 2 * j.appear) * j.slot.dim;
         j.group.visible = j.lights.oval.visible = onScreen;
         if (!onScreen) continue;
         toWorld(xPx, yPx, j.z, j.group.position);
@@ -913,53 +969,30 @@
         j.group.rotation.z = Math.sin(t * 0.5 + j.swim) * 0.15 - tilt * 0.4;
         placeLights(j.lights, j.group.position.x, j.group.position.y + sizeWorld, j.group.position.y - sizeWorld * 4.6, j.z, sizeWorld * 1.1, fade);
 
-        // electric discharge: a few quick flickers every few seconds
-        if (t > j.nextFlash) {
-          j.flashUntil = t + rand(0.25, 0.5);
-          j.nextFlash = t + rand(2.5, 6);
-        }
-        const flashing = t < j.flashUntil;
-        const flash = flashing ? (Math.random() > 0.35 ? rand(0.6, 1) : 0) : 0;
-        j.bellMat.uniforms.uTime.value = t + j.swim;
-        j.bellMat.uniforms.uFlash.value += (flash - j.bellMat.uniforms.uFlash.value) * 0.5;
-        j.bellMat.uniforms.uFade.value = fade;
-        j.tentMat.opacity = (0.42 + flash * 0.58) * fade;
-        j.armMat.opacity = (0.5 + flash * 0.4) * fade;
-        j.glow.material.opacity = (j.glow.userData.baseOpacity + flash * 0.5) * fade;
+        animateJelly(j, fade);
+      }
 
-        // tentacles and oral arms trail below the bell, waving with the swim pulse
-        const pulse = Math.sin((t + j.swim) * 2.2);
-        const wavy = (strand, amp, freq) => {
-          const arr = strand.line.geometry.attributes.position.array;
-          const n = arr.length / 3;
-          const r0 = strand.r * (1 + 0.12 * pulse);
-          for (let p = 0; p < n; p++) {
-            const f = p / (n - 1);
-            const wave = Math.sin(f * freq - (t + j.swim) * 2.6 + strand.phase) * amp * f;
-            const rr = r0 * (1 - f * 0.55) + (strand.off || 0);
-            arr[p * 3] = Math.cos(strand.angle) * rr + wave * Math.cos(strand.angle + 1.57);
-            arr[p * 3 + 1] = -f * strand.len * (1 + 0.08 * pulse);
-            arr[p * 3 + 2] = Math.sin(strand.angle) * rr + wave * Math.sin(strand.angle + 1.57);
-          }
-          strand.line.geometry.attributes.position.needsUpdate = true;
-        };
-        j.tentacles.forEach(tn => wavy(tn, 0.25, 7));
-        j.arms.forEach(arm => wavy(arm, 0.38, 11)); // frillier
-
-        // arcs: jagged bolts between random tentacle points while flashing
-        j.sparkMat.opacity = flash * fade;
-        if (flash > 0) {
-          const sa = j.sparkGeo.attributes.position.array;
-          for (let s = 0; s < sa.length / 6; s++) {
-            const tn = j.tentacles[Math.floor(Math.random() * j.tentacles.length)];
-            const arr = tn.line.geometry.attributes.position.array;
-            const p = Math.floor(Math.random() * (TENT_POINTS - 1));
-            tmp.fromArray(arr, p * 3);
-            tmp2.set(tmp.x + rand(-0.35, 0.35), tmp.y + rand(-0.4, 0.1), tmp.z + rand(-0.35, 0.35));
-            tmp.toArray(sa, s * 6);
-            tmp2.toArray(sa, s * 6 + 3);
-          }
-          j.sparkGeo.attributes.position.needsUpdate = true;
+      for (const g of GUESTS) {
+        const r = g.section.getBoundingClientRect();
+        const sizePx = small ? g.size * 0.7 : g.size;
+        const xPx = r.left + r.width * g.x + Math.sin(t * 0.25 + g.bob) * 18;
+        const yPx = r.top + r.height * g.y + Math.cos(t * 0.2 + g.bob) * 14;
+        const onScreen = yPx > -sizePx * 5 && yPx < vh + sizePx * 2;
+        if (onScreen) g.appear = Math.min(g.appear + dt / 3, 1);
+        const fade = guestGate * g.appear * g.appear * (3 - 2 * g.appear);
+        g.mesh.visible = onScreen;
+        if (!onScreen) continue;
+        toWorld(xPx, yPx, g.z, g.mesh.position);
+        const sizeWorld = sizePx / pxPerUnit(g.z);
+        g.mesh.scale.setScalar(sizeWorld);
+        if (g.jelly) {
+          g.mesh.rotation.z = Math.sin(t * 0.5 + g.bob) * 0.15;
+          animateJelly(g.jelly, fade * 0.55); // small background jellies: dimmer
+        } else {
+          g.mesh.rotation.y += dt * 0.15;
+          const u = g.mesh.material.uniforms;
+          u.uTime.value = t;
+          u.uOpacity.value = (0.35 + depthK(g.z) * 0.57) * fade;
         }
       }
 
