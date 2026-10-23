@@ -253,14 +253,46 @@
     });
   });
 
+  /* ---------------- sending (contact form, order brief, CV request) ---------------- */
+  // counted from page load: people scroll down and type, bots post at once
+  // (not from the first focus — autofill + one click is a real person too)
+  const openedAt = Date.now();
+
+  // one way out for every form: honeypot + time, the human check, then the Worker.
+  // Resolves to a status key: 'sent', 'fake' (bot: pretend), 'cancelled', 'offline' (no endpoint)
+  window.sndrSend = async (data) => {
+    if (data.website || Date.now() - openedAt < MIN_FILL_MS) return 'fake';
+    let proof;
+    try {
+      proof = await ensureHuman();
+    } catch (err) {
+      return 'cancelled';
+    }
+    if (!CONTACT.endpoint) return 'offline';
+    const res = await fetch(CONTACT.endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...data, proof, elapsed: Date.now() - openedAt, page: location.href }),
+    });
+    if (!res.ok) throw new Error(String(res.status));
+    passed = null; // next message needs a fresh proof
+    return 'sent';
+  };
+  // the brief's file upload asks for the check before it takes files (order.js)
+  window.sndrEnsureHuman = ensureHuman;
+  window.sndrSendStatus = {
+    fake: 'Thanks! Your message is on its way.',
+    cancelled: 'The check was closed — the message was not sent.',
+    offline: 'Sending is not set up yet — please email us directly.',
+    sent: 'Thanks! We will get back to you within one business day.',
+    failed: 'Could not send right now — please try again or email us.',
+  };
+
   /* ---------------- contact form ---------------- */
   const form = document.querySelector('#contactForm');
   if (!form) return;
   const status = form.querySelector('.contact-form__status');
   const submit = form.querySelector('.contact-submit');
-  // counted from page load: people scroll down and type, bots post at once
-  // (not from the first focus — autofill + one click is a real person too)
-  const openedAt = Date.now();
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -269,41 +301,19 @@
       status.textContent = T('Please fill in your name, a valid email and a message.');
       return;
     }
-    const data = Object.fromEntries(new FormData(form));
-    // honeypot filled or the form "typed" in no time: quietly pretend it worked
-    if (data.website || Date.now() - openedAt < MIN_FILL_MS) {
-      status.textContent = T('Thanks! Your message is on its way.');
-      form.reset();
-      return;
-    }
-    let proof;
-    try {
-      proof = await ensureHuman();
-    } catch (err) {
-      status.textContent = T('The check was closed — the message was not sent.');
-      return;
-    }
-    if (!CONTACT.endpoint) {
-      status.textContent = T('Sending is not set up yet — please email us directly.');
-      return;
-    }
     submit.disabled = true;
     status.textContent = T('Sending…');
+    let result;
     try {
-      const res = await fetch(CONTACT.endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...data, proof, elapsed: Date.now() - openedAt, page: location.href }),
-      });
-      if (!res.ok) throw new Error(String(res.status));
-      status.textContent = T('Thanks! We will get back to you within one business day.');
+      result = await window.sndrSend(Object.fromEntries(new FormData(form)));
+    } catch (err) {
+      result = 'failed';
+    }
+    submit.disabled = false;
+    status.textContent = T(window.sndrSendStatus[result]);
+    if (result === 'sent' || result === 'fake') {
       form.reset();
       form.classList.remove('was-validated');
-      passed = null; // next message needs a fresh proof
-    } catch (err) {
-      status.textContent = T('Could not send right now — please try again or email us.');
-    } finally {
-      submit.disabled = false;
     }
   });
 })();

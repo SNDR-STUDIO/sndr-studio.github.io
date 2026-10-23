@@ -455,7 +455,7 @@
    rules (var(--surface-color), var(--heading-color)…) follow along.
    ===================================================================== */
 
-#services,
+#process,
 #testimonials {
   --background-color: var(--neon-bg);
   --default-color: rgb(234 246 255 / 0.82);
@@ -468,28 +468,28 @@
 }
 
 /* Services cards */
-#services .service-item .icon {
+#process .service-item .icon {
   background: rgb(var(--neon-cyan-rgb) / 0.08);
   border-color: rgb(var(--neon-cyan-rgb) / 0.45);
 }
-#services .service-item .icon i {
+#process .service-item .icon i {
   color: var(--neon-cyan);
 }
-#services .service-item:hover .icon {
+#process .service-item:hover .icon {
   background: var(--neon-cyan);
 }
-#services .service-item:hover .icon i {
+#process .service-item:hover .icon i {
   color: var(--neon-bg);
 }
-#services .service-item .title {
+#process .service-item .title {
   font-family: var(--font-display);
   color: var(--neon-text);
   transition: color var(--dur-ui) var(--ease-out);
 }
-#services .service-item:hover .title {
+#process .service-item:hover .title {
   color: var(--neon-cyan);
 }
-#services .service-item .description {
+#process .service-item .description {
   font-size: var(--fs-small);
   line-height: var(--lh-body);
   color: rgb(234 246 255 / 0.78);
@@ -1027,14 +1027,14 @@ body {
    the circle edge); inset shadow anti-aliases cleanly
    ===================================================================== */
 
-#services .service-item .icon {
+#process .service-item .icon {
   border: 0;
   box-shadow:
     inset 0 0 0 2px rgb(var(--neon-cyan-rgb) / 0.55),
     0 0 14px rgb(var(--neon-cyan-rgb) / 0.12);
   transition: background-color var(--dur-ui) var(--ease-out), box-shadow var(--dur-ui) var(--ease-out);
 }
-#services .service-item:hover .icon {
+#process .service-item:hover .icon {
   box-shadow: inset 0 0 0 2px var(--neon-cyan), 0 0 18px rgb(var(--neon-cyan-rgb) / 0.3);
 }
 
@@ -1625,13 +1625,13 @@ body {
 }
 
 /* Services: the icon glyph changed color instantly while its circle faded */
-#services .service-item .icon i {
+#process .service-item .icon i {
   transition: color var(--dur-hover) var(--ease-out), transform var(--dur-hover) var(--ease-out);
 }
-#services .service-item:hover .icon i {
+#process .service-item:hover .icon i {
   transform: scale(1.06);
 }
-#services .service-item .icon {
+#process .service-item .icon {
   transition:
     background-color var(--dur-hover) var(--ease-out),
     box-shadow var(--dur-hover) var(--ease-out),
@@ -1682,7 +1682,7 @@ body {
 }
 
 /* Services: lead text across the whole block */
-#services .section-title p:not(.section-kicker) {
+#process .section-title p:not(.section-kicker) {
   max-width: none;
 }
 
@@ -2171,7 +2171,7 @@ html.has-blob-cursor textarea {
 
 /* text: the letters are filled with the gradient; the solid fill fades away */
 .what-we-offer .service-row h3,
-#services .service-item .title,
+#process .service-item .title,
 .navmenu a,
 #footer .nav-link.text-body-secondary,
 #footer .footer-contacts a,
@@ -2188,7 +2188,7 @@ html.has-blob-cursor textarea {
 }
 .what-we-offer .service-row:hover h3,
 .what-we-offer .service-row.open h3,
-#services .service-item:hover .title,
+#process .service-item:hover .title,
 .navmenu a:hover,
 .navmenu a.active,
 #footer .nav-link.text-body-secondary:hover,
@@ -2199,13 +2199,13 @@ html.has-blob-cursor textarea {
 }
 
 /* circles and pills: a gradient layer cross-fades in underneath */
-#services .service-item .icon,
+#process .service-item .icon,
 #contact .contact-info__social a,
 #portfolio .portfolio-filters li {
   position: relative;
   isolation: isolate;
 }
-#services .service-item .icon::before,
+#process .service-item .icon::before,
 #contact .contact-info__social a::before,
 #portfolio .portfolio-filters li::before {
   content: '';
@@ -2219,13 +2219,13 @@ html.has-blob-cursor textarea {
   transition: opacity var(--dur-hover, 0.45s) var(--ease-out);
   animation: grad-slide 4s linear infinite;
 }
-#services .service-item:hover .icon::before,
+#process .service-item:hover .icon::before,
 #contact .contact-info__social a:hover::before,
 #portfolio .portfolio-filters li.filter-active::before {
   opacity: 1;
 }
 /* the flat cyan fills these replaced */
-#services .service-item:hover .icon,
+#process .service-item:hover .icon,
 #contact .contact-info__social a:hover,
 #portfolio .portfolio-filters li.filter-active {
   background: transparent;
@@ -2243,9 +2243,9 @@ html.has-blob-cursor textarea {
 
 @media (prefers-reduced-motion: reduce) {
   .what-we-offer .service-row h3,
-  #services .service-item .title,
+  #process .service-item .title,
   .navmenu a,
-  #services .service-item .icon::before,
+  #process .service-item .icon::before,
   #contact .contact-info__social a::before,
   #portfolio .portfolio-filters li::before { animation: none !important; }
 }
@@ -2711,7 +2711,7 @@ html.has-blob-cursor textarea {
    ===================================================================== */
 
 .neon-flow,
-#services,
+#process,
 #testimonials,
 #portfolio,
 #stats,
@@ -3360,4 +3360,43 @@ html.has-blob-cursor textarea {
   .stats .stats-item i::after,
   .stats .stats-item:hover .purecounter,
   .stats .stats-item:hover p strong { animation: none; }
+}
+
+/* Founder card → alex-profile.html: the link covers the whole card (the lens
+   still follows the cursor, pointer events bubble to the card); its label
+   sits top-right and lights up on hover */
+#about .founder-card__link {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 54px clamp(21px, 3vw, 38px) 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  text-decoration: none;
+  color: rgb(234 246 255 / 0.7);
+  border-radius: inherit;
+}
+#about .founder-card__link span,
+#about .founder-card__link i {
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity var(--dur-hover, 0.45s) var(--ease-out), transform var(--dur-hover, 0.45s) var(--ease-out), color var(--dur-hover, 0.45s) var(--ease-out);
+}
+#about .founder-card__link i { margin-left: 6px; }
+#about .founder-card:hover .founder-card__link span,
+#about .founder-card:hover .founder-card__link i,
+#about .founder-card__link:focus-visible span,
+#about .founder-card__link:focus-visible i {
+  opacity: 1;
+  transform: none;
+  color: var(--neon-cyan);
+}
+#about .founder-card__link:focus-visible {
+  outline: 2px solid var(--neon-cyan);
+  outline-offset: -4px;
 }

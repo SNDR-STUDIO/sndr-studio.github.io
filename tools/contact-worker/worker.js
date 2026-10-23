@@ -3,7 +3,8 @@
 
    The site posts JSON here (assets/js/contact.js). The Worker checks it
    again (origin, honeypot, fill time, proof-of-work, sizes, rate limit)
-   and sends it to your Telegram chat through your bot. The bot token
+   and sends it to your Telegram chat through your bot; files from the
+   order brief (images / PDF, up to 5 × 10 MB) follow as documents. The bot token
    never reaches the browser.
 
    Secrets (set once, see README.md):
@@ -14,8 +15,30 @@
      POW_BITS       — must match POW_BITS in contact.js
    ===================================================================== */
 
-const MAX = { name: 120, email: 160, service: 60, message: 4000 };
+const MAX = { name: 120, email: 160, service: 300, message: 4000 };
 const PROOF_TTL_MS = 10 * 60 * 1000;
+// brief attachments (brand book, photos, PDF): checked again here
+const FILES = { max: 5, maxBytes: 10 * 1024 * 1024, types: /^(image\/(jpeg|png|webp|gif|svg\+xml|heic)|application\/pdf)$/ };
+
+function decodeFiles(list) {
+  if (list === undefined) return [];
+  if (!Array.isArray(list) || list.length > FILES.max) return null;
+  const out = [];
+  for (const f of list) {
+    if (!f || typeof f.data !== 'string' || !FILES.types.test(String(f.type))) return null;
+    let bytes;
+    try {
+      const bin = atob(f.data);
+      bytes = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    } catch (e) {
+      return null;
+    }
+    if (bytes.length > FILES.maxBytes) return null;
+    out.push({ name: String(f.name || 'file').slice(0, 120), type: f.type, bytes });
+  }
+  return out;
+}
 const seen = new Map(); // proofs already used / requests per IP (per isolate)
 
 const json = (body, status, origin) => new Response(JSON.stringify(body), {
@@ -87,6 +110,8 @@ export default {
       if (String(data[field] || '').length > max) return json({ ok: false, error: field }, 400, allowed);
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) return json({ ok: false, error: 'email' }, 400, allowed);
+    const files = decodeFiles(data.files);
+    if (!files) return json({ ok: false, error: 'files' }, 400, allowed);
 
     const text = [
       '<b>New message — SNDR STUDIO</b>',
@@ -103,6 +128,16 @@ export default {
       body: JSON.stringify({ chat_id: env.TG_CHAT_ID, text, parse_mode: 'HTML', disable_web_page_preview: true }),
     });
     if (!tg.ok) return json({ ok: false, error: 'telegram' }, 502, allowed);
+
+    // attachments follow the message as documents
+    for (const file of files) {
+      const form = new FormData();
+      form.append('chat_id', env.TG_CHAT_ID);
+      form.append('caption', `From ${data.name} <${data.email}>`.slice(0, 1000));
+      form.append('document', new Blob([file.bytes], { type: file.type }), file.name);
+      const doc = await fetch(`https://api.telegram.org/bot${env.TG_BOT_TOKEN}/sendDocument`, { method: 'POST', body: form });
+      if (!doc.ok) return json({ ok: false, error: 'telegram-file' }, 502, allowed);
+    }
     return json({ ok: true }, 200, allowed);
   },
 };

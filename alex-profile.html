@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Alex Savo — SNDR STUDIO</title>
+  <meta name="description" content="Alex Savo — founder of SNDR STUDIO, motion designer and creative developer: showreel, services, process, stack and CV.">
+  <link rel="icon" href="assets/img/fav1-min.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Roboto:wght@400;500&family=Noto+Sans+SC:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="assets/css/profile.css?v=28">
+</head>
+<body class="profile">
+
+  <div class="progress" aria-hidden="true"><span></span></div>
+  <div class="cursor" aria-hidden="true"></div>
+
+  <!-- HEADER — the language button (i18n.js) sits at its right end -->
+  <header class="nav">
+    <a class="nav__logo" href="index.html" aria-label="SNDR STUDIO — back to the studio">SNDR<span>STUDIO</span></a>
+    <nav class="nav__links" aria-label="Profile sections">
+      <a href="#about">About</a>
+      <a href="#showreel">Showreel</a>
+      <a href="#help">How I can help</a>
+      <a href="#process">How I work</a>
+      <a href="#stack">Stack</a>
+      <a href="#cv">CV</a>
+    </nav>
+    <a class="nav__back" href="index.html"><i class="bi bi-arrow-left" aria-hidden="true"></i> <span>Studio</span></a>
+  </header>
+
+  <main>
+    <!-- HERO — layered parallax, the same landscape as the studio page.
+         data-speed: 0 = moves with the page, 1 = stays in place (the far sky) -->
+    <section class="hero" id="top">
+      <div class="hero__layers" aria-hidden="true">
+        <div class="layer layer--img" data-speed="0.85" style="background-image: url(assets/img/layer-11-min.png)"></div>
+        <div class="layer layer--img" data-speed="0.55" style="background-image: url(assets/img/layer-22-min.webp)"></div>
+        <div class="layer layer--cloud" data-speed="0.35" style="background-image: url(assets/img/cld-min500.png)"></div>
+      </div>
+      <div class="hero__title layer" data-speed="0.45" data-fade>
+        <p class="eyebrow">Founder · Motion designer · Creative developer</p>
+        <h1>ALEX<br>SAVO</h1>
+        <p class="hero__lead">Motion with intention. Code with connection.</p>
+      </div>
+      <div class="hero__layers hero__layers--front" aria-hidden="true">
+        <div class="layer layer--img" data-speed="0.12" style="background-image: url(assets/img/layer-55-min.webp)"></div>
+      </div>
+      <a class="hero__scroll" href="#about" aria-label="Scroll down"><span></span></a>
+    </section>
+
+    <!-- ABOUT — the text lights up word by word while the section is pinned -->
+    <section class="about glow" id="about" style="--length: 220vh">
+      <div class="about__sticky">
+        <figure class="about__photo">
+          <img data-inner="0.12" src="assets/img/hero_fullbody_PNG_SUIT.png" alt="Alex Savo">
+        </figure>
+        <div class="about__text">
+          <p class="eyebrow num">About</p>
+          <p class="words">I’m Alex Savo — a motion designer and creative developer, founder of SNDR. I started in web development and grew into motion, 3D and AI content. I build visuals for YouTube, TikTok and brands, and websites that feel alive.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SHOWREEL — the gates open on scroll and the reel fills the screen -->
+    <section class="gates" id="showreel" style="--length: 280vh">
+      <div class="gates__sticky">
+        <div class="gates__media">
+          <video src="assets/video/Main-min.mp4" muted loop playsinline preload="metadata" poster="assets/img/motin.png"></video>
+        </div>
+        <div class="gates__door gates__door--left" aria-hidden="true"><span>SHOW</span></div>
+        <div class="gates__door gates__door--right" aria-hidden="true"><span>REEL</span></div>
+        <div class="gates__title">
+          <p class="eyebrow num">Showreel</p>
+          <h2>Showreel <span class="gates__year">2026</span></h2>
+        </div>
+        <button type="button" class="gates__sound" aria-pressed="false"><i class="bi bi-volume-mute" aria-hidden="true"></i> <span>Sound</span></button>
+      </div>
+    </section>
+
+    <!-- HOW I CAN HELP — the cards stack on top of each other -->
+    <section class="help glow" id="help" style="--gx: 85%; --gy: 15%; --gx2: 10%; --gy2: 75%">
+      <div class="help__head">
+        <p class="eyebrow num reveal-up">Services</p>
+        <h2 class="reveal-up">How I can help</h2>
+      </div>
+      <div class="stack">
+        <article class="stack__card" style="--hue: 190">
+          <span class="stack__num">01</span>
+          <div><h3>Motion design &amp; video</h3><p>Logo animation, promo videos, explainers and content for social media — from the idea to the final edit.</p></div>
+        </article>
+        <article class="stack__card" style="--hue: 255">
+          <span class="stack__num">02</span>
+          <div><h3>3D &amp; CGI</h3><p>Product renders, scenes and animation in Blender and Cinema 4D.</p></div>
+        </article>
+        <article class="stack__card" style="--hue: 320">
+          <span class="stack__num">03</span>
+          <div><h3>AI video &amp; generation</h3><p>Key frames in Midjourney, Flux and ComfyUI, animation in Runway, Kling and Veo.</p></div>
+        </article>
+        <article class="stack__card" style="--hue: 160">
+          <span class="stack__num">04</span>
+          <div><h3>Web &amp; creative coding</h3><p>Fast, animated websites with WebGL, GSAP and Three.js — interactive and alive.</p></div>
+        </article>
+      </div>
+    </section>
+
+    <!-- HOW I WORK — the line draws itself while you scroll -->
+    <section class="process glow" id="process" style="--gx: 0%; --gy: 30%; --gx2: 100%; --gy2: 70%">
+      <p class="eyebrow num reveal-up">Process</p>
+      <h2 class="reveal-up">How I work</h2>
+      <div class="timeline">
+        <svg class="timeline__line" viewBox="0 0 4 100" preserveAspectRatio="none" aria-hidden="true">
+          <line x1="2" y1="0" x2="2" y2="100" pathLength="1" />
+        </svg>
+        <div class="step reveal-up"><span>01</span><h3>Immersion</h3><p>I study the business, the audience and the competitors.</p></div>
+        <div class="step reveal-up"><span>02</span><h3>Concept</h3><p>Two or three directions with moodboards and AI sketches.</p></div>
+        <div class="step reveal-up"><span>03</span><h3>Design</h3><p>The chosen direction grows into the final piece.</p></div>
+        <div class="step reveal-up"><span>04</span><h3>Launch</h3><p>Sources, a guide and support for the start.</p></div>
+      </div>
+    </section>
+
+    <!-- STACK — a 3D sphere of tools: it spins, follows the cursor and can be dragged.
+         --c = monogram color, --tb = tile background, data-cat = motion | ai | web (filter) -->
+    <section class="tools" id="stack">
+      <div class="tools__text">
+        <p class="eyebrow num reveal-up">Stack</p>
+        <h2 class="reveal-up">Tools for motion, 3D, AI and web</h2>
+        <p class="reveal-up">A classic motion pipeline plus generative models and a modern web stack: from a storyboard in Midjourney to the final render in Cinema 4D and a living website in Three.js.</p>
+        <div class="tools__filter reveal-up" role="group" aria-label="Filter">
+          <button type="button" class="is-active" data-filter="all" aria-pressed="true"><b>All</b> <span data-n="all"></span></button>
+          <button type="button" data-filter="motion" aria-pressed="false"><b>Motion &amp; 3D</b> <span data-n="motion"></span></button>
+          <button type="button" data-filter="ai" aria-pressed="false"><b>AI models</b> <span data-n="ai"></span></button>
+          <button type="button" data-filter="web" aria-pressed="false"><b>Web</b> <span data-n="web"></span></button>
+        </div>
+        <p class="tools__hint reveal-up">Move the cursor over the sphere or drag it</p>
+      </div>
+      <div class="sphere" data-sphere>
+        <ul class="sphere__list">
+          <li class="sphere__item" data-cat="motion" style="--c:#9999ff; --tb:#00005b"><span class="sphere__logo">Ae</span><span class="sphere__name">After Effects</span></li>
+          <li class="sphere__item" data-cat="motion" style="--c:#ea77ff; --tb:#00005b"><span class="sphere__logo">Pr</span><span class="sphere__name">Premiere Pro</span></li>
+          <li class="sphere__item" data-cat="motion" style="--c:#31a8ff; --tb:#001e36"><span class="sphere__logo">Ps</span><span class="sphere__name">Photoshop</span></li>
+          <li class="sphere__item" data-cat="motion" style="--c:#ff9a00; --tb:#330000"><span class="sphere__logo">Ai</span><span class="sphere__name">Illustrator</span></li>
+          <li class="sphere__item" data-cat="motion" style="--c:#a259ff; --tb:#1e1e1e"><span class="sphere__logo">Fg</span><span class="sphere__name">Figma</span></li>
+          <li class="sphere__item" data-cat="motion" style="--c:#ffffff; --tb:#011a6a"><span class="sphere__logo">C4D</span><span class="sphere__name">Cinema 4D</span></li>
+          <li class="sphere__item" data-cat="motion" style="--c:#f5792a; --tb:#17283a"><span class="sphere__logo">Bl</span><span class="sphere__name">Blender</span></li>
+          <li class="sphere__item" data-cat="motion" style="--c:#ffb800; --tb:#232323"><span class="sphere__logo">Dv</span><span class="sphere__name">DaVinci Resolve</span></li>
+          <li class="sphere__item" data-cat="motion" style="--c:#e2231a; --tb:#1a1a1a"><span class="sphere__logo">Rs</span><span class="sphere__name">Redshift</span></li>
+          <li class="sphere__item" data-cat="motion" style="--c:#ff6bb5; --tb:#1a1027"><span class="sphere__logo">Sp</span><span class="sphere__name">Spline</span></li>
+          <li class="sphere__item" data-cat="motion" style="--c:#00ddb3; --tb:#0b2a24"><span class="sphere__logo">Lt</span><span class="sphere__name">Lottie</span></li>
+          <li class="sphere__item" data-cat="ai" style="--c:#ffffff; --tb:#000000"><span class="sphere__logo">MJ</span><span class="sphere__name">Midjourney</span></li>
+          <li class="sphere__item" data-cat="ai" style="--c:#ececec; --tb:#232323"><span class="sphere__logo">Rw</span><span class="sphere__name">Runway</span></li>
+          <li class="sphere__item" data-cat="ai" style="--c:#00e0a4; --tb:#111111"><span class="sphere__logo">Kl</span><span class="sphere__name">Kling</span></li>
+          <li class="sphere__item" data-cat="ai" style="--c:#4285f4; --tb:#0f172a"><span class="sphere__logo">Veo</span><span class="sphere__name">Google Veo</span></li>
+          <li class="sphere__item" data-cat="ai" style="--c:#ff6b4a; --tb:#14141a"><span class="sphere__logo">Lu</span><span class="sphere__name">Luma</span></li>
+          <li class="sphere__item" data-cat="ai" style="--c:#a855f7; --tb:#0f0a1f"><span class="sphere__logo">SD</span><span class="sphere__name">Stable Diffusion</span></li>
+          <li class="sphere__item" data-cat="ai" style="--c:#ffffff; --tb:#202020"><span class="sphere__logo">Fx</span><span class="sphere__name">Flux</span></li>
+          <li class="sphere__item" data-cat="ai" style="--c:#f0ff41; --tb:#171717"><span class="sphere__logo">Cf</span><span class="sphere__name">ComfyUI</span></li>
+          <li class="sphere__item" data-cat="ai" style="--c:#ffffff; --tb:#1446ff"><span class="sphere__logo">Kr</span><span class="sphere__name">Krea</span></li>
+          <li class="sphere__item" data-cat="ai" style="--c:#2fd0ff; --tb:#0b1420"><span class="sphere__logo">Tp</span><span class="sphere__name">Topaz Video</span></li>
+          <li class="sphere__item" data-cat="ai" style="--c:#ffffff; --tb:#000000"><span class="sphere__logo">11</span><span class="sphere__name">ElevenLabs</span></li>
+          <li class="sphere__item" data-cat="ai" style="--c:#ff8a00; --tb:#111111"><span class="sphere__logo">Su</span><span class="sphere__name">Suno</span></li>
+          <li class="sphere__item" data-cat="ai" style="--c:#d97757; --tb:#1f1a17"><span class="sphere__logo">Cl</span><span class="sphere__name">Claude</span></li>
+          <li class="sphere__item" data-cat="ai" style="--c:#ffffff; --tb:#10a37f"><span class="sphere__logo">GPT</span><span class="sphere__name">ChatGPT</span></li>
+          <li class="sphere__item" data-cat="web" style="--c:#f7df1e; --tb:#1a1a1a"><span class="sphere__logo">JS</span><span class="sphere__name">JavaScript</span></li>
+          <li class="sphere__item" data-cat="web" style="--c:#ffffff; --tb:#000000"><span class="sphere__logo">3js</span><span class="sphere__name">Three.js</span></li>
+          <li class="sphere__item" data-cat="web" style="--c:#88ce02; --tb:#0e100f"><span class="sphere__logo">GS</span><span class="sphere__name">GSAP</span></li>
+          <li class="sphere__item" data-cat="web" style="--c:#61dafb; --tb:#20232a"><span class="sphere__logo">Re</span><span class="sphere__name">React</span></li>
+          <li class="sphere__item" data-cat="web" style="--c:#5ccfe6; --tb:#0d1426"><span class="sphere__logo">WGL</span><span class="sphere__name">WebGL</span></li>
+          <li class="sphere__item" data-cat="web" style="--c:#21759b; --tb:#f1f1f1"><span class="sphere__logo">WP</span><span class="sphere__name">WordPress</span></li>
+          <li class="sphere__item" data-cat="web" style="--c:#f05032; --tb:#1a1a1a"><span class="sphere__logo">Git</span><span class="sphere__name">Git</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- CV — sent by email on request (contact.js → human check + Telegram) -->
+    <section class="cv glow" id="cv" style="--gx: 80%; --gy: 20%; --gx2: 10%; --gy2: 90%">
+      <div class="cv__card reveal-up">
+        <div class="cv__text">
+          <p class="eyebrow num">CV</p>
+          <h2>Download my CV</h2>
+          <p>The CV goes out on request: leave your email and I will send the PDF personally, usually within a day.</p>
+        </div>
+        <form class="cv__form" id="cvForm" novalidate>
+          <label class="contact-hp" aria-hidden="true">Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+          <label class="field">
+            <span>Name</span>
+            <input type="text" name="name" autocomplete="name" required>
+          </label>
+          <label class="field">
+            <span>Email</span>
+            <input type="email" name="email" autocomplete="email" required placeholder="you@company.com">
+          </label>
+          <button type="submit" class="btn btn--fill"><i class="bi bi-file-earmark-arrow-down" aria-hidden="true"></i> <span>Request the CV</span></button>
+          <p class="cv__status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER — the landscape rises from below, the button is drawn to the cursor -->
+  <footer class="footer" id="contact">
+    <div class="footer__layers" aria-hidden="true">
+      <div class="layer layer--img" data-speed="-0.2" style="background-image: url(assets/img/layer-22-min.webp)"></div>
+      <div class="layer layer--img" data-speed="-0.08" style="background-image: url(assets/img/layer-55-min.webp)"></div>
+    </div>
+    <div class="footer__content">
+      <p class="eyebrow">Contact</p>
+      <h2 class="footer__title">Let’s make something that moves</h2>
+      <a class="btn magnetic" href="mailto:hello@example.com">hello@example.com</a>
+      <ul class="socials">
+        <li><a href="index.html#portfolio">Portfolio</a></li>
+        <li><a href="index.html#order">Order</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+        <li><a href="index.html">SNDR STUDIO</a></li>
+      </ul>
+      <p class="footer__copy">© 2026 SNDR studio</p>
+    </div>
+  </footer>
+
+  <!-- localization (shared with the studio page), the CV request (human check), the page effects -->
+  <script src="assets/js/i18n.js?v=28" defer></script>
+  <script src="assets/js/contact.js?v=28" defer></script>
+  <script src="assets/js/profile.js?v=28" defer></script>
+</body>
+</html>

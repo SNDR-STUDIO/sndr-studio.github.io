@@ -716,15 +716,15 @@
     });
 
     /* ---------- section guests: a few small, far-back blobs and jellies in
-       the middle of Stats, Services and Portfolio; they ride with their section
+       the middle of Stats, How we work and Portfolio; they ride with their section
        (x, y = share of the section box, size in px) ---------- */
     const GUESTS = [
       { sel: '#stats', kind: 'jelly', x: 0.29, y: 0.15, z: -4, size: 30 },
       { sel: '#stats', kind: 'jelly', x: 0.71, y: 0.17, z: -5, size: 24 },
-      { sel: '#services', kind: 'blob', x: 0.42, y: 0.32, z: -13, size: 38, pal: 1 },
-      { sel: '#services', kind: 'blob', x: 0.6, y: 0.66, z: -15, size: 28, pal: 4 },
-      { sel: '#services', kind: 'jelly', x: 0.54, y: 0.18, z: -9, size: 26 },
-      { sel: '#services', kind: 'jelly', x: 0.4, y: 0.58, z: -11, size: 20 },
+      { sel: '#process', kind: 'blob', x: 0.42, y: 0.32, z: -13, size: 38, pal: 1 },
+      { sel: '#process', kind: 'blob', x: 0.6, y: 0.66, z: -15, size: 28, pal: 4 },
+      { sel: '#process', kind: 'jelly', x: 0.54, y: 0.18, z: -9, size: 26 },
+      { sel: '#process', kind: 'jelly', x: 0.4, y: 0.58, z: -11, size: 20 },
       { sel: '#portfolio', kind: 'jelly', x: 0.36, y: 0.48, z: -9, size: 26 },
       { sel: '#portfolio', kind: 'jelly', x: 0.63, y: 0.89, z: -11, size: 20 },
     ].map((g, i) => {

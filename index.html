@@ -107,7 +107,9 @@
   </script>
   <!-- Lenis base styles + neon redesign layer (loaded last so it wins the cascade) -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lenis@1.3.17/dist/lenis.css">
-  <link rel="stylesheet" href="assets/css/neon.css?v=25">
+  <link rel="stylesheet" href="assets/css/neon.css?v=28">
+  <!-- How we work, Pricing, Order, FAQ -->
+  <link rel="stylesheet" href="assets/css/sales.css?v=28">
 </head>
 
 <body class="index-page">
@@ -153,9 +155,11 @@
         <!-- <li><a href="#resume"><i class="bi bi-file-earmark-text navicon"></i> Resume</a></li> -->
         <li><a href="#portfolio" class="nav-link"><i class="bi bi-images navicon"></i> Our Works</a></li>
         <li><a href="#content-stream" class="nav-link"><i class="bi bi-phone navicon"></i> Content Stream</a></li>
-        <li><a href="#what-we-offer" class="nav-link"><i class="bi bi-grid navicon"></i> What we offer</a></li>
-        <li><a href="#services" class="nav-link"><i class="bi bi-hdd-stack navicon"></i> Services</a></li>
+        <li><a href="#what-we-offer" class="nav-link"><i class="bi bi-hdd-stack navicon"></i> Services</a></li>
+        <li><a href="#pricing" class="nav-link"><i class="bi bi-tag navicon"></i> Pricing</a></li>
         <li><a href="#testimonials" class="nav-link"><i class="bi bi-person-badge navicon"></i> Testimonials</a></li>
+        <li><a href="#order" class="nav-link"><i class="bi bi-bag-check navicon"></i> Order</a></li>
+        <li><a href="#faq" class="nav-link"><i class="bi bi-question-circle navicon"></i> FAQ</a></li>
         <!-- <li class="dropdown"><a href="#"><i class="bi bi-menu-button navicon"></i> <span>Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
           <ul>
             <li><a href="#">Dropdown 1</a></li>
@@ -251,6 +255,8 @@
               <h3>ALEX<br>SAVO</h3>
               <p>Founder / Motion designer / Creative developer</p>
             </div>
+            <!-- the whole card opens the founder profile page -->
+            <a class="founder-card__link" href="alex-profile.html"><span>View profile</span> <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
             <div class="founder-capabilities" aria-label="Founder capabilities">
               <span>Motion design</span><span>Web development</span><span>Generative AI</span><span>3D / Comfy UI</span><span>Visual content</span>
             </div>
@@ -583,16 +589,16 @@
     <section id="what-we-offer" class="what-we-offer section" data-bs-spy="scroll" data-bs-target="#list-example" data-bs-smooth-scroll="true">
       <div class="container">
         <div class="section-title">
-          <p class="eyebrow section-kicker">04 — What we offer</p>
-          <h2>What we offer</h2>
+          <p class="eyebrow section-kicker">04 — Services</p>
+          <h2>Services</h2>
           <p>Motion, 3D, code and AI under one roof — open any direction to see what it covers.</p>
         </div>
         <div class="services-list">
           <div class="service-row" data-cursor="view" role="button" tabindex="0" aria-expanded="false">
             <span class="num">01</span>
-            <h3>Motion Design</h3>
+            <h3>Motion Design &amp; Video</h3>
             <span class="arrow" aria-hidden="true">＋</span>
-            <div class="service-detail"><p>We bring ideas to life through dynamic visuals, fluid transitions, and expressive animation. Every frame is crafted to capture attention and communicate with impact.</p></div>
+            <div class="service-detail"><p>We bring ideas to life through dynamic visuals, fluid transitions, and expressive animation — from logo reveals to full video production, idea to final edit. Every frame is crafted to capture attention and communicate with impact.</p></div>
           </div>
           <div class="service-row" data-cursor="view" role="button" tabindex="0" aria-expanded="false">
             <span class="num">02</span>
@@ -630,114 +636,122 @@
             <span class="arrow" aria-hidden="true">＋</span>
             <div class="service-detail"><p>We combine AI tools with creative direction to produce unique visuals, cinematic scenes, and next-generation content. From concept to final frame, we transform ideas into compelling imagery.</p></div>
           </div>
+          <div class="service-row" data-cursor="view" role="button" tabindex="0" aria-expanded="false">
+            <span class="num">08</span>
+            <h3>Brand Identity</h3>
+            <span class="arrow" aria-hidden="true">＋</span>
+            <div class="service-detail"><p>We craft unique brand systems — from logo design to visual language — ensuring consistency and recognition across all platforms.</p></div>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- Services Section -->
-    <section id="services" class="services section">
+    <!-- How we work: the four steps of every project (the old Services grid style) -->
+    <section id="process" class="services process section">
 
-      <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
-        <p class="section-kicker">05 — Services</p>
-        <h2>Services</h2>
-        <p>At our studio, we merge creativity, technology, and motion to deliver complete digital solutions.
-          From websites and branding to motion design and social media visuals — we help brands move, connect, and
-          grow
-          in the digital world.</p>
-      </div><!-- End Section Title -->
-
-      <div class="container">
-
-        <div class="row gy-4">
-
-          <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-offset="220" data-aos-duration="900" data-aos-delay="350">
-            <div class="icon flex-shrink-0">
-              <i class="bi bi-laptop"></i>
-              <!-- <i class="bi bi-briefcase"></i> -->
-            </div>
-            <div>
-              <h4 class="title">Web Development</h4>
-              <p class="description">Clean, responsive, and scalable websites built with performance and user experience
-                in mind. From landing pages to full-scale platforms — we turn design into functional digital spaces.
-              </p>
-            </div>
-          </div>
-          <!-- End Service Item -->
-
-          <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-offset="220" data-aos-duration="900" data-aos-delay="500">
-            <div class="icon flex-shrink-0">
-              <i class="bi bi-play-circle"></i>
-              <!-- <i class="bi bi-card-checklist"></i> -->
-            </div>
-            <div>
-              <h4 class="title">Motion Design</h4>
-              <p class="description">Dynamic motion graphics, logo reveals, and brand animations that tell stories
-                through movement. We make visuals come alive across websites, videos, and social media.</p>
-            </div>
-          </div><!-- End Service Item -->
-
-          <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-offset="220" data-aos-duration="900" data-aos-delay="650">
-            <div class="icon flex-shrink-0">
-              <i class="bi bi-palette"></i>
-              <!-- <i class="bi bi-bar-chart"></i> -->
-            </div>
-            <div>
-              <h4 class="title">Brand Identity</h4>
-              <p class="description">We craft unique brand systems — from logo design to visual language — ensuring
-                consistency and recognition across all platforms.</p>
-            </div>
-          </div><!-- End Service Item -->
-
-          <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-offset="220" data-aos-duration="900" data-aos-delay="350">
-            <div class="icon flex-shrink-0">
-              <!-- <i class="bi bi-binoculars"></i> -->
-              <i class="bi bi-instagram"></i>
-            </div>
-            <div>
-              <h4 class="title">Social Media Content</h4>
-              <p class="description">Eye-catching animations, posts, and short videos tailored for social media
-                engagement. Designed to make your brand stand out in every scroll.</p>
-            </div>
-          </div><!-- End Service Item -->
-
-          <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-offset="220" data-aos-duration="900" data-aos-delay="500">
-            <div class="icon flex-shrink-0">
-              <!-- <i class="bi bi-brightness-high"></i> -->
-              <i class="bi bi-window"></i>
-            </div>
-            <div>
-              <h4 class="title">UI / UX Design</h4>
-              <p class="description">Modern, intuitive interfaces designed to feel smooth and responsive. Every detail
-                is tested to enhance usability and aesthetic harmony.</p>
-            </div>
-          </div><!-- End Service Item -->
-
-          <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-offset="220" data-aos-duration="900" data-aos-delay="650">
-            <div class="icon flex-shrink-0">
-              <!-- <i class="bi bi-calendar4-week"></i> -->
-              <i class="bi bi-camera-video"></i>
-            </div>
-            <div>
-              <h4 class="title">Video Production</h4>
-              <p class="description">From idea to edit — we create engaging video content that connects emotionally
-                with
-                your audience and strengthens your brand story.</p>
-            </div>
-          </div><!-- End Service Item -->
-
-        </div>
-
+        <p class="section-kicker">05 — How we work</p>
+        <h2>How we work</h2>
+        <p>A clear path from the first message to the final file — no surprises on the way.</p>
       </div>
 
-    </section><!-- /Services Section -->
+      <div class="container">
+        <div class="row gy-4">
+          <div class="col-lg-3 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-offset="220" data-aos-duration="900" data-aos-delay="350">
+            <div class="icon flex-shrink-0"><i class="bi bi-chat-dots"></i></div>
+            <div>
+              <p class="process-step">01</p>
+              <h4 class="title">Brief</h4>
+              <p class="description">A short brief and a 15–20 minute call: goals, audience, references, timing.</p>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-offset="220" data-aos-duration="900" data-aos-delay="500">
+            <div class="icon flex-shrink-0"><i class="bi bi-lightbulb"></i></div>
+            <div>
+              <p class="process-step">02</p>
+              <h4 class="title">Concept</h4>
+              <p class="description">Two or three directions with moodboards, styleframes and AI sketches.</p>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-offset="220" data-aos-duration="900" data-aos-delay="650">
+            <div class="icon flex-shrink-0"><i class="bi bi-film"></i></div>
+            <div>
+              <p class="process-step">03</p>
+              <h4 class="title">Production</h4>
+              <p class="description">Animation, 3D, code — with interim previews and 2–3 rounds of edits.</p>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-offset="220" data-aos-duration="900" data-aos-delay="800">
+            <div class="icon flex-shrink-0"><i class="bi bi-rocket-takeoff"></i></div>
+            <div>
+              <p class="process-step">04</p>
+              <h4 class="title">Delivery</h4>
+              <p class="description">Final files in every format you need, sources and launch support.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section><!-- /How we work -->
+
+    <!-- Pricing: packages; "Choose" fills in the order brief (assets/js/order.js) -->
+    <section id="pricing" class="pricing section">
+      <div class="container section-title" data-aos="fade-up">
+        <p class="section-kicker">06 — Pricing</p>
+        <h2>Transparent pricing</h2>
+        <p>Pick a package — the brief below fills itself in.</p>
+      </div>
+      <div class="container">
+        <div class="pricing__grid">
+          <article class="plan" data-aos="fade-up" data-aos-delay="100" data-package="Start" data-services="Logo animation" data-budget="up to $300" data-length="up to 15 s">
+            <p class="plan__name">Start</p>
+            <p class="plan__price"><small>from</small> $200</p>
+            <p class="plan__desc">Logo animation for social media and the website</p>
+            <ul>
+              <li>Logo animation up to 10 s</li>
+              <li>2 rounds of edits</li>
+              <li>MP4 + Lottie for the web</li>
+              <li>From 3 days</li>
+            </ul>
+            <button type="button" class="plan__btn">Choose</button>
+          </article>
+          <article class="plan plan--hot" data-aos="fade-up" data-aos-delay="200" data-package="Standard" data-services="Motion video" data-budget="$300–1000" data-length="15–30 s">
+            <p class="plan__badge">Popular</p>
+            <p class="plan__name">Standard</p>
+            <p class="plan__price"><small>from</small> $300</p>
+            <p class="plan__desc">A motion video for a launch or an ad</p>
+            <ul>
+              <li>Video of 15–30 s</li>
+              <li>Script and storyboard</li>
+              <li>Music and sound design</li>
+              <li>9:16, 16:9 and 1:1 formats</li>
+              <li>From 7 days</li>
+            </ul>
+            <button type="button" class="plan__btn plan__btn--fill">Choose</button>
+          </article>
+          <article class="plan" data-aos="fade-up" data-aos-delay="300" data-package="Premium" data-services="Logo,Brand identity,Motion video,AI video" data-budget="$300–1000" data-length="30–60 s">
+            <p class="plan__name">Premium</p>
+            <p class="plan__price"><small>from</small> $500</p>
+            <p class="plan__desc">Identity + motion + AI production</p>
+            <ul>
+              <li>Logo and brand identity</li>
+              <li>Logo animation</li>
+              <li>Promo video up to 60 s</li>
+              <li>AI-generated key frames</li>
+              <li>From 3 weeks</li>
+            </ul>
+            <button type="button" class="plan__btn">Choose</button>
+          </article>
+        </div>
+      </div>
+    </section><!-- /Pricing -->
 
     <!-- Testimonials Section -->
     <section id="testimonials" class="testimonials section light-background">
 
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
-        <p class="section-kicker">06 — Testimonials</p>
+        <p class="section-kicker">07 — Testimonials</p>
         <h2>Testimonials</h2>
         <p>I’m thankful for the opportunity to work with different clients and teams. Their feedback inspires me to
           keep
@@ -917,11 +931,184 @@
 
     </section><!-- /Testimonials Section -->
 
+    <!-- Order: the brief slides sideways while the page scrolls (assets/js/order.js);
+         it is sent like the contact form (human check + Telegram, assets/js/contact.js) -->
+    <section id="order" class="hscroll brief section">
+      <div class="hscroll__sticky">
+        <div class="hscroll__head container">
+          <p class="section-kicker">08 — Order</p>
+          <h2>How to order an animation, a video or a logo</h2>
+        </div>
+        <form class="hscroll__track brief__form" id="brief" novalidate>
+          <input type="hidden" name="package" value="">
+
+          <div class="brief__panel brief__panel--intro">
+            <p class="brief__step">How it works</p>
+            <ol class="brief__how">
+              <li><b>Brief</b><span>5 short questions, ~2 minutes. Scroll on →</span></li>
+              <li><b>Call</b><span>15–20 minutes to clarify the task</span></li>
+              <li><b>Proposal</b><span>Timing, stages and cost within a day</span></li>
+              <li><b>Work</b><span>50% upfront, interim previews, edits</span></li>
+            </ol>
+            <div class="brief__prices">
+              <div><b>Logo animation</b><span>from 3 days</span></div>
+              <div><b>Motion video</b><span>from 7 days</span></div>
+              <div><b>Logo</b><span>from 10 days</span></div>
+            </div>
+          </div>
+
+          <fieldset class="brief__panel">
+            <p class="brief__step">Step 1 / 5</p>
+            <legend>What needs to be done?</legend>
+            <p class="brief__package" hidden><span>Package chosen:</span> <b></b> <button type="button" data-clear-package aria-label="Clear">×</button></p>
+            <p class="brief__hint">You can pick several</p>
+            <div class="chips">
+                <label class="chip"><input type="checkbox" name="service" value="Logo animation"><span>Logo animation</span></label>
+                <label class="chip"><input type="checkbox" name="service" value="Motion video"><span>Motion video</span></label>
+                <label class="chip"><input type="checkbox" name="service" value="AI video"><span>AI video</span></label>
+                <label class="chip"><input type="checkbox" name="service" value="Video / editing"><span>Video / editing</span></label>
+                <label class="chip"><input type="checkbox" name="service" value="Logo"><span>Logo</span></label>
+                <label class="chip"><input type="checkbox" name="service" value="Brand identity"><span>Brand identity</span></label>
+                <label class="chip"><input type="checkbox" name="service" value="Website"><span>Website</span></label>
+                <label class="chip"><input type="checkbox" name="service" value="3D"><span>3D</span></label>
+                <label class="chip"><input type="checkbox" name="service" value="Other"><span>Other</span></label>
+            </div>
+          </fieldset>
+
+          <fieldset class="brief__panel">
+            <p class="brief__step">Step 2 / 5</p>
+            <legend>Tell us about the project</legend>
+            <label class="field">
+              <span>What does the company do and what is the task?</span>
+              <textarea name="about" rows="5" placeholder="For example: a coffee shop, we need a video for the opening of a second place"></textarea>
+            </label>
+            <label class="field">
+              <span>Website or social media</span>
+              <input type="text" name="links" placeholder="https://…">
+            </label>
+            <!-- brand book / photos / PDF: only after the human check (order.js + contact.js) -->
+            <div class="field file-drop" data-file-drop>
+              <span>Brand book, photos or PDF (optional)</span>
+              <label class="file-drop__zone">
+                <input type="file" name="files" multiple accept="image/*,application/pdf,.pdf">
+                <i class="bi bi-cloud-arrow-up" aria-hidden="true"></i>
+                <b>Drop files here or click to choose</b>
+                <small>JPG, PNG, WebP or PDF · up to 5 files, 10 MB each</small>
+              </label>
+              <ul class="file-drop__list" aria-live="polite"></ul>
+            </div>
+          </fieldset>
+
+          <fieldset class="brief__panel">
+            <p class="brief__step">Step 3 / 5</p>
+            <legend>Format and style</legend>
+            <p class="brief__hint">Length (for video and animation)</p>
+            <div class="chips">
+                <label class="chip"><input type="radio" name="length" value="up to 15 s"><span>up to 15 s</span></label>
+                <label class="chip"><input type="radio" name="length" value="15–30 s"><span>15–30 s</span></label>
+                <label class="chip"><input type="radio" name="length" value="30–60 s"><span>30–60 s</span></label>
+                <label class="chip"><input type="radio" name="length" value="over a minute"><span>over a minute</span></label>
+            </div>
+            <p class="brief__hint">Where it will be shown</p>
+            <div class="chips">
+                <label class="chip"><input type="checkbox" name="format" value="Reels / TikTok 9:16"><span>Reels / TikTok</span></label>
+                <label class="chip"><input type="checkbox" name="format" value="YouTube 16:9"><span>YouTube</span></label>
+                <label class="chip"><input type="checkbox" name="format" value="Website"><span>Website</span></label>
+                <label class="chip"><input type="checkbox" name="format" value="Presentation / TV"><span>Presentation / TV</span></label>
+            </div>
+            <label class="field">
+              <span>References: what you like and what you don’t</span>
+              <textarea name="refs" rows="3" placeholder="Links to examples"></textarea>
+            </label>
+          </fieldset>
+
+          <fieldset class="brief__panel">
+            <p class="brief__step">Step 4 / 5</p>
+            <legend>Timing and budget</legend>
+            <p class="brief__hint">When do you need the result</p>
+            <div class="chips">
+                <label class="chip"><input type="radio" name="deadline" value="Urgent, within a week"><span>Urgent</span></label>
+                <label class="chip"><input type="radio" name="deadline" value="2–3 weeks"><span>2–3 weeks</span></label>
+                <label class="chip"><input type="radio" name="deadline" value="A month or more"><span>Month+</span></label>
+                <label class="chip"><input type="radio" name="deadline" value="No hard deadline"><span>No hard deadline</span></label>
+            </div>
+            <p class="brief__hint">Budget estimate</p>
+            <div class="chips">
+                <label class="chip"><input type="radio" name="budget" value="up to $300"><span>up to $300</span></label>
+                <label class="chip"><input type="radio" name="budget" value="$300–1000"><span>$300–1000</span></label>
+                <label class="chip"><input type="radio" name="budget" value="$1000–3000"><span>$1000–3000</span></label>
+                <label class="chip"><input type="radio" name="budget" value="over $3000"><span>$3000+</span></label>
+                <label class="chip"><input type="radio" name="budget" value="Need advice"><span>Not sure</span></label>
+            </div>
+          </fieldset>
+
+          <fieldset class="brief__panel">
+            <p class="brief__step">Step 5 / 5</p>
+            <legend>How can we reach you?</legend>
+            <label class="field">
+              <span>Name</span>
+              <input type="text" name="name" autocomplete="name" required>
+            </label>
+            <label class="field">
+              <span>Email</span>
+              <input type="email" name="email" autocomplete="email" required placeholder="you@company.com">
+            </label>
+            <label class="field">
+              <span>Telegram (optional)</span>
+              <input type="text" name="telegram" placeholder="@username">
+            </label>
+            <div class="brief__actions">
+              <button class="brief__btn brief__btn--fill" type="submit">Send the brief</button>
+              <button class="brief__btn" type="button" data-copy>Copy</button>
+            </div>
+            <p class="brief__status" role="status" aria-live="polite"></p>
+          </fieldset>
+        </form>
+        <div class="hscroll__bar container" aria-hidden="true"><span></span></div>
+      </div>
+    </section><!-- /Order -->
+
+    <!-- FAQ: accordion with a smooth height (assets/js/order.js) -->
+    <section id="faq" class="faq section">
+      <div class="container section-title" data-aos="fade-up">
+        <p class="section-kicker">09 — FAQ</p>
+        <h2>Frequently asked questions</h2>
+      </div>
+      <div class="container">
+        <div class="faq__list">
+          <div class="faq__item" data-aos="fade-up">
+            <button type="button" class="faq__q" aria-expanded="false"><span>How much does a logo animation cost?</span><i aria-hidden="true"></i></button>
+            <div class="faq__a"><div><p>From $200 for an animation up to 10 seconds. The exact price depends on how complex the logo is and how many versions you need.</p></div></div>
+          </div>
+          <div class="faq__item" data-aos="fade-up">
+            <button type="button" class="faq__q" aria-expanded="false"><span>How long does the work take?</span><i aria-hidden="true"></i></button>
+            <div class="faq__a"><div><p>A logo animation takes from 3 days, a video from 7, a brand identity from 3 weeks. We fix the timing in the contract.</p></div></div>
+          </div>
+          <div class="faq__item" data-aos="fade-up">
+            <button type="button" class="faq__q" aria-expanded="false"><span>How many rounds of edits are included?</span><i aria-hidden="true"></i></button>
+            <div class="faq__a"><div><p>2–3 rounds of edits at every stage. More can be agreed separately.</p></div></div>
+          </div>
+          <div class="faq__item" data-aos="fade-up">
+            <button type="button" class="faq__q" aria-expanded="false"><span>Which files will I get?</span><i aria-hidden="true"></i></button>
+            <div class="faq__a"><div><p>MP4/MOV in the formats you need, Lottie for the web, and After Effects or Blender sources by agreement.</p></div></div>
+          </div>
+          <div class="faq__item" data-aos="fade-up">
+            <button type="button" class="faq__q" aria-expanded="false"><span>Do you use AI?</span><i aria-hidden="true"></i></button>
+            <div class="faq__a"><div><p>Yes: to find ideas and to generate backgrounds and key frames. The final quality, the finishing and the rights to the result stay with us.</p></div></div>
+          </div>
+          <div class="faq__item" data-aos="fade-up">
+            <button type="button" class="faq__q" aria-expanded="false"><span>How does payment work?</span><i aria-hidden="true"></i></button>
+            <div class="faq__a"><div><p>50% upfront, 50% on delivery. We work under a contract and accept cards, PayPal and USDT.</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section><!-- /FAQ -->
+
     <!-- Contact Section (placeholder details + form; no backend yet) -->
     <section id="contact" class="contact-block section">
 
       <div class="container section-title" data-aos="fade-up">
-        <p class="section-kicker">07 — Contact</p>
+        <p class="section-kicker">10 — Contact</p>
         <h2>Let’s build something that moves</h2>
         <p>Tell us about your project — motion, web or content. We usually reply within one business day.</p>
       </div>
@@ -1012,13 +1199,19 @@
             <a href="#content-stream" class="nav-link px-2 text-body-secondary">Content Stream</a>
           </li>
           <li class="nav-item">
-            <a href="#what-we-offer" class="nav-link px-2 text-body-secondary">What we offer</a>
+            <a href="#what-we-offer" class="nav-link px-2 text-body-secondary">Services</a>
           </li>
           <li class="nav-item">
-            <a href="#services" class="nav-link px-2 text-body-secondary">Services</a>
+            <a href="#pricing" class="nav-link px-2 text-body-secondary">Pricing</a>
           </li>
           <li class="nav-item">
             <a href="#testimonials" class="nav-link px-2 text-body-secondary">Testimonials</a>
+          </li>
+          <li class="nav-item">
+            <a href="#order" class="nav-link px-2 text-body-secondary">Order</a>
+          </li>
+          <li class="nav-item">
+            <a href="#faq" class="nav-link px-2 text-body-secondary">FAQ</a>
           </li>
           <li class="nav-item">
             <a href="#contact" class="nav-link px-2 text-body-secondary">Contact</a>
@@ -1070,13 +1263,15 @@
 
   <script src="https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.min.js" defer></script>
   <!-- 3D: What we offer backdrop + floating blobs over the landing -->
-  <script src="assets/js/scene3d.js?v=24" defer></script>
+  <script src="assets/js/scene3d.js?v=28" defer></script>
   <!-- Generative lo-fi lounge music + its round 3-way control under the menu button -->
   <!-- localization (EN / 中文 / UA / DE / ES): before every script that shows text -->
-  <script src="assets/js/i18n.js?v=24" defer></script>
-  <script src="assets/js/lofi.js?v=24" defer></script>
+  <script src="assets/js/i18n.js?v=28" defer></script>
+  <script src="assets/js/lofi.js?v=28" defer></script>
   <!-- contact form + protected social links: human check, Telegram delivery -->
-  <script src="assets/js/contact.js?v=24" defer></script>
+  <script src="assets/js/contact.js?v=28" defer></script>
+  <!-- Pricing tilt, horizontal order brief, FAQ -->
+  <script src="assets/js/order.js?v=28" defer></script>
 
   <!-- Main JS File -->
   <!-- Smooth scroll + scroll animations -->
@@ -1085,8 +1280,8 @@
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.17/dist/lenis.min.js" defer></script>
 
   <!-- sound gate + UI sound effects; before main.js (the hero intro waits for it) -->
-  <script src="assets/js/sfx.js?v=24" defer></script>
-  <script src="assets/js/main.js?v=24" defer></script>
+  <script src="assets/js/sfx.js?v=28" defer></script>
+  <script src="assets/js/main.js?v=28" defer></script>
   <!-- Коли змінюєш картинки/відео — просто міняй CACHE_VERSION у sw.js і деплой. -->
 
   <script>

@@ -510,7 +510,7 @@
 }
 
 /* Remove overlay for Services and Testimonials section titles */
-#services .container.section-title,
+#process .container.section-title,
 #testimonials .container.section-title {
   background: transparent !important;
 }
