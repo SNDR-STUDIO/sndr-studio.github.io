@@ -544,3 +544,46 @@
 /* the real file input stays focusable for the keyboard, visually hidden */
 .file-drop__zone { position: relative; }
 .file-drop__zone input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+
+/* =====================================================================
+   ORDER BACKDROP — soft round gradients that drift and blend into each
+   other (no light waves). They live on the pinned layer, so they stay on
+   screen while the brief slides by; content sits above them.
+   ===================================================================== */
+#order .hscroll__sticky::before,
+#order .hscroll__sticky::after {
+  content: '';
+  position: absolute;
+  inset: -20%;
+  z-index: -1;
+  pointer-events: none;
+  filter: blur(30px);
+  mix-blend-mode: screen;
+  will-change: transform;
+}
+#order .hscroll__sticky::before {
+  background:
+    radial-gradient(circle at 30% 35%, rgb(var(--neon-cyan-rgb) / 0.22), transparent 22%),
+    radial-gradient(circle at 72% 62%, rgb(157 140 255 / 0.22), transparent 24%);
+  animation: orbs-drift-a 22s ease-in-out infinite alternate;
+}
+#order .hscroll__sticky::after {
+  background:
+    radial-gradient(circle at 60% 28%, rgb(255 138 198 / 0.16), transparent 20%),
+    radial-gradient(circle at 38% 74%, rgb(var(--neon-cyan-rgb) / 0.14), transparent 22%);
+  animation: orbs-drift-b 28s ease-in-out infinite alternate;
+}
+@keyframes orbs-drift-a {
+  0%   { transform: translate3d(-6%, -4%, 0) scale(1); }
+  50%  { transform: translate3d(5%, 3%, 0) scale(1.08); }
+  100% { transform: translate3d(-2%, 6%, 0) scale(0.96); }
+}
+@keyframes orbs-drift-b {
+  0%   { transform: translate3d(6%, 4%, 0) rotate(0deg) scale(1.04); }
+  50%  { transform: translate3d(-5%, -2%, 0) rotate(12deg) scale(0.95); }
+  100% { transform: translate3d(3%, -6%, 0) rotate(-8deg) scale(1.1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  #order .hscroll__sticky::before,
+  #order .hscroll__sticky::after { animation: none; }
+}

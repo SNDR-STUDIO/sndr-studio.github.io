@@ -477,13 +477,14 @@
   window.addEventListener('load', initPortfolioSlider);
 
   /**
-   * The light waves of .neon-flow start below Testimonials (none behind What
-   * we offer, Services and Testimonials): the section bottom inside the
-   * wrapper feeds the mask (neon.css → INFO PLATES)
+   * The light waves of .neon-flow only run behind Contact: they start below
+   * FAQ (Services, How we work, Pricing, Testimonials, Order and FAQ have
+   * their own backdrops); that bottom inside the wrapper feeds the mask
+   * (neon.css → INFO PLATES)
    */
   function initWavesStart() {
     const flow = document.querySelector('.neon-flow');
-    const last = document.querySelector('#testimonials');
+    const last = document.querySelector('#faq') || document.querySelector('#testimonials');
     if (!flow || !last) return;
     const update = () => {
       const bottom = last.getBoundingClientRect().bottom - flow.getBoundingClientRect().top;

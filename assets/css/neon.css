@@ -2733,8 +2733,8 @@ html.has-blob-cursor textarea {
   z-index: 6;
 }
 
-/* What we offer, Services, Testimonials: no light waves behind them; the
-   waves fade in after Testimonials (main.js → initWavesStart sets where) */
+/* the light waves fade in only after FAQ, behind Contact
+   (main.js → initWavesStart sets where) */
 .neon-flow::after {
   -webkit-mask: linear-gradient(180deg, transparent var(--waves-from, 0px), #000 calc(var(--waves-from, 0px) + 160px));
   mask: linear-gradient(180deg, transparent var(--waves-from, 0px), #000 calc(var(--waves-from, 0px) + 160px));
