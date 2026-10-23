@@ -587,3 +587,8 @@
   #order .hscroll__sticky::before,
   #order .hscroll__sticky::after { animation: none; }
 }
+
+/* Order: air below the pinned brief before FAQ starts */
+#order.hscroll {
+  margin-bottom: clamp(70px, 12vh, 140px);
+}

@@ -1,5 +1,5 @@
 // sw.js (GitHub Pages / static HTML)
-const CACHE_VERSION = "v29";         // ПІДНІМАЙ при релізі
+const CACHE_VERSION = "v30";         // ПІДНІМАЙ при релізі
 const STATIC_CACHE = `static-${CACHE_VERSION}`;
 
 // що кешуємо (картинки/стилі/скрипти/шрифти)

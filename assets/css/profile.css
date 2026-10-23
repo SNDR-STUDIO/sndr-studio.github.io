@@ -717,3 +717,14 @@ button { font: inherit; color: inherit; cursor: pointer; }
   .cursor { display: none; }
 }
 .footer__title { max-width: 14ch; }
+
+/* Hero: the title comes to the front, over the foreground mountains;
+   the mountains sit a little smaller and lower so the text has room */
+.hero__title { z-index: 4; }
+.hero__layers--front .layer--img {
+  background-size: 115% auto;
+  background-position: center bottom;
+}
+@media (max-aspect-ratio: 4 / 3) {
+  .hero__layers--front .layer--img { background-size: cover; }
+}
